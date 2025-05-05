@@ -1,0 +1,718 @@
+mqtt:
+  enabled: false
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
+tls:
+  enabled: true # Optional: Enable TLS for port 8971
+
+auth:
+  # Optional: Reset the admin user password on startup (default: false)
+  # New password is printed in the logs
+  reset_admin_password: false
+  failed_login_rate_limit: 1/second;5/minute;20/hour
+  #trusted_proxies:
+  #  - 172.18.0.0/16 # <---- this is the subnet for the internal docker compose network
+
+audio:
+  enabled: false
+
+birdseye:
+  enabled: true
+  # NOTE: Enabling this will set birdseye to run 24/7 which may increase CPU usage somewhat.
+  restream: false
+  # Optional: Mode of the view. Available options are: objects, motion, and continuous
+  #   objects - cameras are included if they have had a tracked object within the last 30 seconds
+  #   motion - cameras are included if motion was detected in the last 30 seconds
+  #   continuous - all cameras are included always
+  mode: objects
+  # Optional: Threshold for camera activity to stop showing camera
+  inactivity_threshold: 30
+  # Optional: Configure the birdseye layout
+  layout:
+    # Optional: Scaling factor for the layout calculator, range 1.0-5.0
+    scaling_factor: 2.0
+    # Optional: Maximum number of cameras to show at one time, showing the most recent
+    max_cameras: 12
+
+ffmpeg:
+  #hwaccel_args: preset-intel-qsv-h265 # More information about presets at https://docs.frigate.video/configuration/ffmpeg_presets
+  hwaccel_args: preset-vaapi # More information about presets at https://docs.frigate.video/configuration/ffmpeg_presets
+  input_args: preset-rtsp-generic
+  output_args:
+    # Optional: output args for detect streams
+    detect: -threads 2 -f rawvideo -pix_fmt yuv420p
+    # Optional: output args for record streams
+    record: preset-record-generic
+  # Optional: Time in seconds to wait before ffmpeg retries connecting to the camera.
+  # If set too low, frigate will retry a connection to the camera's stream too frequently, using up the limited streams some cameras can allow at once
+  # If set too high, then if a ffmpeg crash or camera stream timeout occurs, you could potentially lose up to a maximum of retry_interval second(s) of footage
+  # NOTE: this can be a useful setting for Wireless / Battery cameras to reduce how much footage is potentially lost during a connection timeout.
+  retry_interval: 10
+
+detect:
+  fps: 5 # Optional: desired fps for your camera for the input with the detect role. Recommended value of 5. Ideally, try and reduce your FPS on the camera.
+  enabled: true
+  stationary:
+    interval: 50
+    threshold: 50
+
+objects:
+  track: # Optional: list of objects to track - https://docs.frigate.video/configuration/objects/
+    - person
+    - car
+    - bicycle
+    - motorcycle
+    - cat
+    - dog
+
+motion:
+  # NOTE: Motion detection is required for object detection, setting this to False and leaving detect enable will result in an error on startup.
+  enabled: true
+  # Optional: The threshold passed to cv2.threshold to determine if a pixel is different enough to be counted as motion.
+  # Increasing this value will make motion detection less sensitive and decreasing it will make motion detection more sensitive.
+  # The value should be between 1 and 255.
+  threshold: 100
+  # Optional: The percentage of the image used to detect lightning or other substantial changes where motion detection
+  #           needs to recalibrate. (default: 0.8)
+  # Increasing this value will make motion detection more likely to consider lightning or ir mode changes as valid motion.
+  # Decreasing this value will make motion detection more likely to ignore large amounts of motion such as a person approaching
+  # a doorbell camera.
+  lightning_threshold: 0.8
+  # Optional: Minimum size in pixels in the resized motion image that counts as motion
+  # Increasing this value will prevent smaller areas of motion from being detected. Decreasing will
+  # make motion detection more sensitive to smaller moving objects.
+  # As a rule of thumb:
+  #  - 10 - high sensitivity
+  #  - 30 - medium sensitivity
+  #  - 50 - low sensitivity
+  contour_area: 30
+
+notifications:
+  enabled: 'true'
+
+  email: email@email.com
+record:
+  # WARNING: If recording is disabled in the config, turning it on via the UI or MQTT later will have no effect.
+  enabled: true
+  #
+  #(3 x 8TB)*(10.9/12) = 21.8TB = 22,323.2GB = 20,090.88GB @ 90% used capacaity
+  #150 GB / 0.05 days = 3000GB / day
+  #20,090.88GB / 3000GB/day = 6.69 days worth of recordings if recording non-stop 24/7
+  #
+  sync_recordings: false # Optional: Sync recordings with disk on startup and once a day.
+  retain:
+    days: 0.05 #set this to 1.0 days for final 4x 8TB drive array
+    #   all - save all recording segments regardless of activity
+    #   motion - save all recordings segments with any detected motion
+    #   active_objects - save all recording segments with active/moving objects
+    # NOTE: this mode only applies when the days setting above is greater than 0
+    mode: all
+  export:
+    # Optional: Timelapse Output Args.
+    # NOTE: The default args are set to fit 24 hours of recording into 1 hour playback.
+    # See https://stackoverflow.com/a/58268695 for more info on how these args work.
+    # As an example: if you wanted to go from 24 hours to 30 minutes that would be going
+    # from 86400 seconds to 1800 seconds which would be 1800 / 86400 = 0.02.
+    # The -r (framerate) dictates how smooth the output video is.
+    # So the args would be -vf setpts=0.02*PTS -r 30 in that case.
+    timelapse_args: -vf setpts=PTS/60 -r 25
+  alerts:
+    pre_capture: 15 # Optional: Number of seconds before the alert to include
+    post_capture: 15 # Optional: Number of seconds after the alert to include
+    retain:
+      days: 0.05 #set this to 6.5 days for final 4x 8TB drive array and see how full drives get
+      #   all - save all recording segments for alerts regardless of activity
+      #   motion - save all recordings segments for alerts with any detected motion
+      #   active_objects - save all recording segments for alerts with active/moving objects
+      mode: active_objects
+  detections:
+    pre_capture: 15 # Optional: Number of seconds before the detection to include
+    post_capture: 15 # Optional: Number of seconds after the detection to include
+    retain:
+      days: 0.05  #set this to 6.5 days for final 4x 8TB drive array and see how full drives get
+      #   all - save all recording segments for detections regardless of activity
+      #   motion - save all recordings segments for detections with any detected motion
+      #   active_objects - save all recording segments for detections with active/moving objects
+      mode: motion
+
+# Optional: Configuration for the jpg snapshots written to the clips directory for each tracked object
+snapshots:
+  enabled: true # Optional: Enable writing jpg snapshot to /media/frigate/clips
+  clean_copy: true # Optional: save a clean PNG copy of the snapshot image
+  retain:
+    default: .5
+    objects:
+      person: .5
+      car: .5
+  quality: 70 # Optional: quality of the encoded jpeg, 0-100
+
+semantic_search:
+  enabled: false
+
+genai:
+  enabled: false
+
+go2rtc:
+  streams:
+    #FRONT LEFT CANMERA
+    front_left:
+      - rtsp://admin:password@192.168.100.4:554/Streaming/Channels/101
+    front_left_sub:
+      - rtsp://admin:password@192.168.100.4:554/Streaming/Channels/102
+    #FRONT RIGHT CAMERA
+    front_right:
+      - rtsp://admin:password@192.168.100.8:554/Streaming/Channels/101
+    front_right_sub:
+      - rtsp://admin:password@192.168.100.8:554/Streaming/Channels/102
+    #DRIVEWAY CAMERA
+    drive:
+      - rtsp://admin:password@192.168.100.11:554/Streaming/Channels/101
+    drive_sub:
+      - rtsp://admin:password@192.168.100.11:554/Streaming/Channels/102
+    #PATIO CAMERA
+    patio:
+      - rtsp://admin:password@192.168.100.12:554/Streaming/Channels/101
+    patio_sub:
+      - rtsp://admin:password@192.168.100.12:554/Streaming/Channels/102
+    #GARAGE CAMERA
+    garage:
+      - rtsp://admin:password@192.168.100.13:554/Streaming/Channels/101
+    garage_sub:
+      - rtsp://admin:password@192.168.100.13:554/Streaming/Channels/102
+    #SHED CAMERA
+    shed:
+      - rtsp://admin:password@192.168.100.14:554/Streaming/Channels/101
+    shed_sub:
+      - rtsp://admin:password@192.168.100.14:554/Streaming/Channels/102
+    #NORTH EAST CAMERA
+    north_east:
+      - rtsp://admin:password@192.168.100.5:554/Streaming/Channels/101
+    north_east_sub:
+      - rtsp://admin:password@192.168.100.5:554/Streaming/Channels/102
+    #NORTH WEST CAMERA
+    north_west:
+      - rtsp://admin:password@192.168.100.6:554/Streaming/Channels/101
+    north_west_sub:
+      - rtsp://admin:password@192.168.100.6:554/Streaming/Channels/102
+    #BACKYARD CAMERA
+    backyard:
+      - rtsp://admin:password@192.168.100.7:554/Streaming/Channels/101
+    backyard_sub:
+      - rtsp://admin:password@192.168.100.7:554/Streaming/Channels/102
+    #FRONTDOOR CAMERA
+    frontdoor:
+      - rtsp://admin:password@192.168.100.9:554/Streaming/Channels/101
+    frontdoor_sub:
+      - rtsp://admin:password@192.168.100.9:554/Streaming/Channels/102
+    #REARDOOR CAMERA
+    reardoor:
+      - rtsp://admin:password@192.168.100.10:554/Streaming/Channels/101
+    reardoor_sub:
+      - rtsp://admin:password@192.168.100.10:554/Streaming/Channels/102
+
+cameras:
+  ###########################
+  #FRONT LEFT CANMERA
+  ###########################
+  front_left:
+    enabled: true
+    webui_url: http://192.168.100.4
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/front_left # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/front_left_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      Outside-front-left:
+        coordinates: 
+          0.123,0.303,0,0.394,0,1,0.924,1,0.917,0.691,0.777,0.747,0.708,0.704,0.648,0.612,0.637,0.532,0.647,0.462,0.676,0.354,0.747,0.358,0.786,0.18,0.668,0.149,0.449,0.2
+        inertia: 3
+        loitering_time: 0
+    motion:
+      mask: 
+        0.907,0.242,0.828,0.192,0.784,0.205,0.773,0.248,0.768,0.328,0.751,0.365,0.717,0.362,0.689,0.364,0.674,0.374,0.667,0.402,0.654,0.457,0.647,0.494,0.644,0.528,0.648,0.568,0.658,0.605,0.679,0.64,0.709,0.682,0.736,0.708,0.773,0.733,0.882,0.604,0.895,0.509
+      threshold: 60
+      contour_area: 30
+      improve_contrast: true
+    review:
+      detections:
+        required_zones: Outside-front-left
+      alerts:
+        required_zones: Outside-front-left
+    record:
+      enabled: true
+    live:
+      stream_name: front_left_sub
+    ui:
+      order: 0
+      dashboard: true
+    birdseye:
+      order: 0
+  ###########################
+  #FRONT RIGHT CANMERA
+  ###########################
+  front_right:
+    enabled: true
+    webui_url: http://192.168.100.8
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/front_right # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/front_right_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    zones:
+      Outside-Front-Right:
+        coordinates: 
+          0.006,0.987,0.7,0.92,0.729,0.758,0.892,0.653,0.997,0.66,0.997,0.164,0.827,0.113,0.641,0.082,0.387,0.089,0.184,0.129,0.037,0.182,0.005,0.204
+        inertia: 3
+        loitering_time: 0
+    motion:
+      mask: 
+        0.215,0.979,0.623,0.943,0.705,0.923,0.732,0.765,0.892,0.662,0.996,0.666,0.996,0.99
+    review:
+      detections:
+        required_zones: Outside-Front-Right
+      alerts:
+        required_zones: Outside-Front-Right
+    record:
+      enabled: true
+    live:
+      stream_name: front_right_sub
+    ui:
+      order: 1
+    birdseye:
+      order: 1
+  ###########################
+  #DRIVEWAY CANMERA
+  ###########################
+  drive:
+    enabled: true
+    webui_url: http://192.168.100.11
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/drive # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/drive_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: drive_sub
+    ui:
+      order: 2
+    birdseye:
+      order: 2
+    zones:
+      driveway:
+        coordinates: 
+          0.002,0.995,0.76,0.991,0.779,0.622,0.828,0.313,0.848,0.26,0.85,0.16,0.845,0.099,0.643,0.017,0.632,0.104,0.568,0.147,0.469,0.082,0.392,0.094,0.456,0.193,0.352,0.26,0.279,0.142,0.004,0.075
+        loitering_time: 0
+    motion:
+      mask:
+        - 0.279,0.135,0.354,0.256,0.45,0.192,0.39,0.095
+        - 0.474,0.003,0.475,0.077,0.567,0.139,0.629,0.098,0.642,0.012
+        - 0.867,0.005,0.847,0.095,0.855,0.183,0.853,0.246,0.841,0.298,0.828,0.334,0.806,0.478,0.787,0.598,0.767,0.991,0.999,0.992,0.997,0.006
+    review:
+      detections:
+        required_zones: driveway
+  ###########################
+  #PATIO CANMERA
+  ###########################
+      alerts:
+        required_zones: driveway
+  patio:
+    enabled: true
+    webui_url: http://192.168.100.12
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/patio # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/patio_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: patio_sub
+    ui:
+      order: 3
+    birdseye:
+      order: 3
+    zones:
+      Patio:
+        coordinates: 0.002,0.121,0.001,0.995,0.997,0.992,0.991,0.013,0.257,0.006
+        loitering_time: 0
+    review:
+      detections:
+        required_zones: Patio
+  ###########################
+  #GARAGE CANMERA
+  ###########################
+      alerts:
+        required_zones: Patio
+  garage:
+    enabled: true
+    webui_url: http://192.168.100.13
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/garage # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/garage_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: garage_sub
+    ui:
+      order: 4
+    birdseye:
+      order: 4
+    zones:
+      garage_zone:
+        coordinates: 0.989,0.013,0.004,0.013,0.003,0.995,0.995,0.991
+        loitering_time: 0
+    review:
+      detections:
+        required_zones: garage_zone
+  ###########################
+  #SHED CANMERA
+  ###########################
+      alerts:
+        required_zones: garage_zone
+    objects:
+      filters:
+        car:
+          mask: 0.002,0.006,0.002,0.992,0.999,0.997,0.994,0.008
+  shed:
+    enabled: true
+    webui_url: http://192.168.100.14
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/shed # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/shed_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: shed_sub
+    ui:
+      order: 5
+    birdseye:
+      order: 5
+    zones:
+      shed_zone:
+        coordinates: 
+          0.327,0.992,0.999,0.993,0.995,0.857,0.746,0.819,0.733,0.264,0.814,0.279,0.805,0.619,0.949,0.61,0.971,0.3,0.616,0.208,0.522,0.217,0.515,0.372,0.492,0.384,0.485,0.213,0.302,0.233,0.274,0.178,0.176,0.192,0.205,0.611
+        loitering_time: 0
+        inertia: 3
+    motion:
+      mask:
+        - 0.003,0.003,0.206,0.008,0.165,0.097,0.201,0.61,0.326,0.994,0.002,0.995
+        - 0.999,0.854,0.747,0.819,0.735,0.267,0.813,0.277,0.813,0.614,0.952,0.612,0.974,0.299,0.613,0.202,0.524,0.207,0.515,0.374,0.496,0.385,0.487,0.211,0.306,0.232,0.277,0.178,0.173,0.19,0.167,0.103,0.214,0.001,0.999,0.002
+    review:
+      detections:
+        required_zones: shed_zone
+  ###########################
+  #NORTH EAST CANMERA
+  ###########################
+      alerts:
+        required_zones: shed_zone
+    objects:
+      filters:
+        person:
+          mask: 0.479,0.269,0.48,0.39,0.526,0.396,0.534,0.273
+  north_east:
+    enabled: true
+    webui_url: http://192.168.100.5
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/north_east # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/north_east_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: north_east_sub
+    ui:
+      order: 6
+    birdseye:
+      order: 6
+    zones:
+      northeast_zone:
+        coordinates: 0.224,0.01,0.23,0.992,0.896,0.992,0.665,0.485,0.542,0.255,0.547,0.004
+        loitering_time: 0
+    motion:
+      mask:
+        - 0.55,0.003,0.547,0.253,0.9,0.994,0.998,0.996,0.998,0.005
+        - 0.003,0.003,0.003,0.995,0.226,0.995,0.218,0.006
+    review:
+      detections:
+        required_zones: northeast_zone
+  ###########################
+  #NORTH WEST CANMERA
+  ###########################
+      alerts:
+        required_zones: northeast_zone
+  north_west:
+    enabled: true
+    webui_url: http://192.168.100.6
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/north_west # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/north_west_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: north_west_sub
+    ui:
+      order: 7
+    birdseye:
+      order: 7
+    zones:
+      northwest1:
+        coordinates: 
+          0.845,0.684,0.629,0.591,0.446,0.732,0.446,0.902,0.592,0.991,0.866,0.994,0.916,0.579,0.862,0.419
+        loitering_time: 0
+      northwest2:
+        coordinates: 0.001,0.634,0.234,0.845,0.242,0.988,0.003,0.99
+        loitering_time: 0
+    motion:
+      mask: 
+        0.001,0.008,0.004,0.625,0.232,0.831,0.445,0.736,0.624,0.585,0.841,0.674,0.86,0.407,0.921,0.541,0.995,0.452,0.995,0.005
+    review:
+      detections:
+        required_zones:
+          - northwest1
+          - northwest2
+      alerts:
+        required_zones:
+          - northwest1
+          - northwest2
+  backyard:
+    enabled: true
+    webui_url: http://192.168.100.7
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/backyard # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/backyard_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: backyard_sub
+    ui:
+      order: 8
+    birdseye:
+      order: 8
+    zones:
+      backyard_zone:
+        coordinates: 
+          0.003,0.006,0.003,0.988,0.994,0.988,0.996,0.393,0.947,0.393,0.932,0.683,0.866,0.666,0.857,0.425,0.761,0.403,0.764,0.68,0.748,0.749,0.688,0.756,0.673,0.894,0.615,0.903,0.617,0.777,0.653,0.298,0.49,0.32,0.355,0.399,0.361,0.483,0.214,0.479,0.234,0.012
+        loitering_time: 0
+    motion:
+      mask: 
+        0.239,0.004,0.217,0.472,0.357,0.478,0.35,0.393,0.491,0.314,0.654,0.291,0.618,0.898,0.671,0.888,0.687,0.745,0.745,0.745,0.761,0.674,0.755,0.398,0.859,0.414,0.871,0.664,0.929,0.679,0.946,0.385,0.999,0.385,0.998,0
+    review:
+      detections:
+        required_zones: backyard_zone
+  ###########################
+  #FRONTDOOR CANMERA
+  ###########################
+      alerts:
+        required_zones: backyard_zone
+  frontdoor:
+    enabled: true
+    webui_url: http://192.168.100.9
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/frontdoor # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/frontdoor_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: frontdoor_sub
+    ui:
+      order: 9
+    birdseye:
+      order: 9
+    zones:
+      front_door_zone:
+        coordinates: 0.001,0.004,0.003,0.986,0.995,0.979,0.98,0.019
+        loitering_time: 0
+    review:
+      detections:
+        required_zones: front_door_zone
+  ###########################
+  #REARDOOR CANMERA
+  ###########################
+      alerts:
+        required_zones: front_door_zone
+  reardoor:
+    enabled: true
+    webui_url: http://192.168.100.9
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/reardoor # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/reardoor_sub # <--- the name here must match the name of the camera_sub in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+    live:
+      stream_name: reardoor_sub
+    ui:
+      order: 10
+    birdseye:
+      order: 10
+    zones:
+      rear_zone:
+        coordinates: 
+          0.003,0.012,0.003,0.988,0.995,0.987,0.991,0.014,0.65,0.009,0.637,0.46,0.366,0.499,0.347,0.015
+        loitering_time: 0
+    review:
+      detections:
+        required_zones: rear_zone
+###########################
+#CANMERA GROUPS
+###########################
+      alerts:
+        required_zones: rear_zone
+camera_groups:
+  front:
+    cameras:
+      - front_left
+      - front_right
+      - drive
+    icon: house #https://lucide.dev/icons/
+    order: 0
+  back:
+    cameras:
+      - patio
+      - shed
+      - backyard
+    icon: house #https://lucide.dev/icons/
+    order: 1
+  inside:
+    cameras:
+      - garage
+      - frontdoor
+      - reardoor
+    icon: house #https://lucide.dev/icons/
+    order: 2
+  north:
+    cameras:
+      - north_east
+      - north_west
+    icon: house #https://lucide.dev/icons/
+    order: 3
+version: 0.15-1
