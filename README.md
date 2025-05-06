@@ -8,13 +8,21 @@ My Guide when I moved from Synology to TrueNAS
     <li>
       <a href="#About_the_project_Details">About The Project</a> 
    </li>
-		<li><a href="#Current_Applications_Used_on_My_Various_Synology_Systems">Current Applications Used on My Various Synology Systems</a> </li>
-		<li><a href="#Does_My_System_Have_Enough_RAM">Does My System Have Enough RAM?</a></li>
-		<li><a href="#Change_TrueNAS_GUI_Port_settings">Change TrueNAS GUI Port settings</a></li>
-		<li><a href="#Security_Measures_To_Lock_Down_Your_NAS">Security Measures To Lock Down Your NAS</a> </li>
-		<li><a href="#Create_storage_pool_using_available_drives_as_desired">Create storage pool using available drives as desired. </a></li>
-  		<li><a href="#Create_new_data_sets_as_required">Create new data sets as required </a></li>
-    		<li><a href="#Create_new_user">Create new user</a></li>
+	<li><a href="#Current_Applications_Used_on_My_Various_Synology_Systems">Current Applications Used on My Various Synology Systems</a> </li>
+	<li><a href="#Does_My_System_Have_Enough_RAM">Does My System Have Enough RAM?</a></li>
+	<li><a href="#Change_TrueNAS_GUI_Port_settings">Change TrueNAS GUI Port settings</a></li>
+	<li><a href="#Security_Measures_To_Lock_Down_Your_NAS">Security Measures To Lock Down Your NAS</a> </li>
+	<li><a href="#Create_storage_pool_using_available_drives_as_desired">Create storage pool using available drives as desired. </a></li>
+  	<li><a href="#Create_new_data_sets_as_required">Create new data sets as required </a></li>
+	<li><a href="#Create_new_user">Create new user</a></li>
+      	<li><a href="#Create_needed_SMB">Create needed SMB</a></li>
+      	<li><a href="#Create_needed_NFS_shares">Create needed NFS shares</a></li>
+      	<li><a href="#Create_snapshots">Create snapshots</a></li>
+      	<li><a href="#Install_required_Apps">Install required Apps</a></li>
+     	<li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
+     	<li><a href="#Setup_Web_site_Details">Setup Web site Details</a></li>
+      	<li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
+     	<li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
 
 <!-- ABOUT THE PROJECT -->
 ## 1.) About the project Details
