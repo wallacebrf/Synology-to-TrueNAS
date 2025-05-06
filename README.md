@@ -111,10 +111,78 @@ I performed the following actions:
   - https://www.youtube.com/watch?v=11bWnvCwTOU
   - https://www.youtube.com/watch?v=uPCrDmjWV_I
 
-<div id="drives_testing_individually_disk_3_of_3_scanning"></div>
-### 2.5.) drives testing individually, disk 3 of 3 scanning, the first and 2nd marked complete
 
-<div id="email_of_a_disk_starting_testing"></div>
-### 2.6.) email of a disk starting testing
+## 7.)  Create new data sets as required 
+<div id="Create_new_data_sets_as_required"></div>
 
+1.) Useful explanation: 
+- https://www.youtube.com/watch?v=0d4_nvdZdOc
+- https://www.youtube.com/watch?v=59NGNZ0kO04
+  
+2.) For example:
+- I have 1 storage pool “volume1”
+- On /mnt/volume1” I have the following data sets
+	- Apps [Note, only make the data sets / folders as needed for your desired apps]. Ensure the “Dataset Preset” is set to “Apps”
+		- Frigate [Ensure the “Dataset Preset” is set to “Apps”]
+			- Then created the following “regular folders”
+   				- Cache
+      			- Config
+		- InfluxDB [Ensure the “Dataset Preset” is set to “Apps”]
+			- Then created the following “regular folders”
+   				- Config
+       			- data
+		- Jackett [Ensure the “Dataset Preset” is set to “Apps”]
+			- Then created the following “regular folders”
+   				- Blackhole
+   				- config
+		- Plex [Ensure the “Dataset Preset” is set to “Apps”]
+			- Then created the following “regular folders”
+   				- Config
+       			- Data
+				- logs
+		- Radar [Ensure the “Dataset Preset” is set to “Apps”]
+		- GraphiteExporter [Ensure the “Dataset Preset” is set to “Apps”]
+		- Surveillance [For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]
+			- Then created the following “regular folders”
+				- Frigate
+	- Users [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+		- Then created the following additional nested data set [And more for other user as needed/desired]
+			- John_Doe_User
+	- Video [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+		- Then created the following additional nested data sets
+			- 4k_Movies
+			- Home_Video
+			- Movies
+			- TV_Shows
+	- Backups [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+	- Web [Ensure the “Dataset Preset” is set to “Apps”]
+		- Then created the following “regular folders”
+			- Config
+			- logging
+	- Pictures [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+
+## 6.)  Create storage pool using available drives as desired.  
+<div id="Create_storage_pool_using_available_drives_as_desired"></div>
 
