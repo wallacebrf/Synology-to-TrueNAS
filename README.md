@@ -13,6 +13,8 @@ My Guide when I moved from Synology to TrueNAS
 		<li><a href="#Change_TrueNAS_GUI_Port_settings">Change TrueNAS GUI Port settings</a></li>
 		<li><a href="#Security_Measures_To_Lock_Down_Your_NAS">Security Measures To Lock Down Your NAS</a> </li>
 		<li><a href="#Create_storage_pool_using_available_drives_as_desired">Create storage pool using available drives as desired. </a></li>
+  		<li><a href="#Create_new_data_sets_as_required">Create new data sets as required </a></li>
+    		<li><a href="#Create_new_user">Create new user</a></li>
 
 <!-- ABOUT THE PROJECT -->
 ## 1.) About the project Details
@@ -161,28 +163,48 @@ I performed the following actions:
 			- logging
 	- Pictures [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
 
+## 8.)  Create new user
+<div id="Create_new_user"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+- Create new user “Credentials --> Users”
+- Full Name: Full name of user, for example “John Doe”
+- Username: Actual user name, for example “John_Doe_User”
+- Email: set user’s contact email
+- Passwords: either set password or use other form of authorization
+- UID: leave as default
+- Auxiliary Groups: builtin_users
+- Primary Group: builtin_administrators
+- Home Directory: set to “/mnt/volume1/users/ John_Doe_User”
+- Home Directory Permissions: ensure user can read/write/execute
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+## 9.)  Create needed SMB   
+<div id="Create_needed_SMB"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+- Go to “Shares -> Windows (SMB) Shares --> View All
+- Ensure all of the main data sets are being shared. If not, click “add”. Choose the missing main data set(s) 
+- Under the “Audit Logging” column, ensure all say “Yes” except for the “apps” share.
+- If they do not say Yes, then click the pencil edit icon, click on “Advanced Options” and under Audit Logging, click the “enabled” check box, click Save
+- Ensure all shares are enabled
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+## 10.)  Create needed NFS shares  
+<div id="Create_needed_NFS_shares"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+## 11.)  Create snapshots
+<div id="Create_snapshots"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+## 12.)  Install required Apps 
+<div id="Install_required_Apps"></div>
 
-## 6.)  Create storage pool using available drives as desired.  
-<div id="Create_storage_pool_using_available_drives_as_desired"></div>
+## 13.)  Data Logging Exporting to Influx DB v2  
+<div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
+
+## 14.)  Setup Web site Details
+<div id="Setup_Web_site_Details"></div>
+
+## 15.)  Cloud backups to BackBlaze B2 Bucket
+<div id="Cloud_backups_to_BackBlaze_B2_Bucket"></div>
+
+## 16.)  Replace “DS File” app – Android Only
+<div id="Replace_DS_File_app_Android_Only"></div>
 
