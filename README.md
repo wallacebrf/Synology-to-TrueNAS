@@ -294,18 +294,96 @@ The PID and GID created for this user, in this example “Plex” will be used t
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
-## 14.)  Setup Web site Details
+1. Setup TrueNAS exporter under `Reporting --> Exporters`
+- **Name**: netdata
+- **Type**: Graphite
+- **Destination IP**: 192.168.1.8 (TrueNAS System IP)
+- **Destination Port**: 9109
+- **Prefix**: truenas
+- **Update Every**: 10
+- **Buffer On Failures**: 10
+- **Matching Charts**: *
+- Click Save
+2. Create Custom App per *https://github.com/Supporterino/truenas-graphite-to-prometheus/blob/main/TRUENAS.md*
+- Install App through `Apps --> Discover Apps --> Custom App`
+  - **Application Name**: netdata
+  - **Image -> Repository**: ghcr.io/supporterino/truenas-graphite-to-prometheus
+  - **Tag**: latest
+  - **Pull Policy**: Pull the image if it is not already present on the host.
+  - **Hostname**: <leave blank>
+  - **Entrypoint**: No items have been added yet
+  - **Command**: No items have been added yet
+  - **Timezone**: 'America/Chicago' timezone
+  - **Environment Variables**: No items have been added yet.
+  - **Restart Policy**: Unless Stopped - Restarts the container irrespective of the exit code but stops restarting when the service is stopped or removed.
+  - **Disable Builtin Healthcheck**: unchecked
+  - **TTY**: unchecked
+  - **Stdin**: unchecked
+  - **Devices**: No items have been added yet.
+  - **Security Context Configuration Privileged**: unchecked
+  - **Capabilities add**: No items have been added yet.
+  - **Custom User**: checked
+  - **User ID**: 568
+  - **Group ID**: 568
+  - **Network Configuration Host Network**: unchecked
+  - **Ports**:
+    - Add #1:
+      - Container Port: 9109
+      - Host Port: 9109
+      - Protocol: TCP
+    - Add #2:
+      - Container Port: 9108
+      - Host Port: 9108
+      - Protocol: TCP
+  - **Custom DNS Setup**: No items have been added yet.
+  - **Search Domains**: No items have been added yet.
+  - **DNS Options**: No items have been added yet.
+  - **Portal Configuration**: No items have been added yet.
+  - **Storage Configuration**:
+    - Mount Path: `/config`
+    - Host Path: choose to store on an “app” data set that you already created, in my example `/volume1/apps/netdata`
+  - **Labels Configuration**: No items have been added yet.
+  - **Resources Configuration**:
+    - Enable it, choose 2 CPUs and 2048 MB of memory. Leave `Passthrough available (non-NVIDIA) GPUs` unchecked
+3. InfluxDB Scrapper Configuration
+- Open a new browser window and browse to `http://<server-IP>:9108`
+- On the page titled `Graphite Exporter` click on the “metrics” link
+- There should be a ton of text displayed showing the last set of data received from TrueNAS
+- Copy the URL, in my case that is `http://192.168.1.8:9108/metrics`
+- Launch influxDB web portal in the apps page
+- On the left click the Up arrow and select “buckets”
+- Select `create bucket` Give the bucket a desired name, in my example “TrueNAS” and select the length of time to keep the data as desired, I chose “older than” and chose “90 days”
+- Click “create”
+- On the left click the Up arrow and the option “Scrapers”
+- Click “create scraper”
+- Give the scraper a name, in my example “TrueNAS”, select the bucket we just created
+- In the “Target URL” enter the URL for the Graphite Exporter, in this example `http://192.168.1.8:9108/metrics`
+- Click “create”
+- Data will now be saved into InfluxDB
+
+## 14.)  Install script to pull TrueNAS SNMP data
+<div id="Install_script_to_pull_TrueNAS_SNMP_data"></div>
+
+## 15.)  Setup Grafana Dashboard for TrueNAS
+<div id="Setup_Grafana_Dashboard_for_TrueNAS"></div>
+
+## 16.)  Setup Web site Details
 <div id="Setup_Web_site_Details"></div>
 
-## 15.)  Cloud backups to BackBlaze B2 Bucket
+## 17.)  Setup Custom Logging Scripts and Configure CRON
+<div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
+
+## 18.)  Cloud backups to BackBlaze B2 Bucket
 <div id="Cloud_backups_to_BackBlaze_B2_Bucket"></div>
 
-## 16.)  Replace “DS File” app – Android Only
+## 19.)  Replace “DS File” app – Android Only
 <div id="Replace_DS_File_app_Android_Only"></div>
 
-## 17.)  Configure Data Scrubs
+## 20.)  Configure Data Scrubs
 <div id="Configure_Data_Scrubs"></div>
 
-## 16.)  Schedule SMART tests
+## 21.)  Schedule SMART tests
 <div id="Schedule_SMART_tests"></div>
+
+There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler here: https://github.com/wallacebrf/Synology-SMART-test-scheduler. I will describe how to setup both. 
 
