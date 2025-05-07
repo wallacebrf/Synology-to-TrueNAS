@@ -373,6 +373,9 @@ The PID and GID created for this user, in this example “Plex” will be used t
 ## 17.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
 
+## 18.)  Configure Disk Standby
+<div id="Configure_Disk_Standby"></div>
+
 ## 18.)  Cloud backups to BackBlaze B2 Bucket
 <div id="Cloud_backups_to_BackBlaze_B2_Bucket"></div>
 
