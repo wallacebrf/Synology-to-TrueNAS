@@ -235,6 +235,62 @@ To schedule snapshots:
 ## 12.)  Install required Apps 
 <div id="Install_required_Apps"></div>
 
+1. Create required users/groups
+- On a **per-app basis**, create a user and user group
+  - Create new user `Credentials --> Users`
+    - **Full Name**: Full name of user based on app name, for example “Plex”
+    - **Username**: “Plex”
+    - **Email**: leave blank
+    - **Passwords**: check the box `disable password`
+    - **UID**: leave as is, however record the UID being assigned to this user, as this will be needed later
+    - **Auxiliary Groups**: leave blank
+    - **Primary Group**: check box `Create New Primary Group`
+    - **Home Directory**: leave blank
+    - **Create Home Directory**: leave unchecked
+    - **SSH password login enabled**: leave unchecked
+    - **Allow all sudo commands**: leave unchecked
+    - **Allow all sudo commands with no password**: leave unchecked
+    - **SMB User**: uncheck the box
+    - Record the **GID** of the newly created group `Credentials --> Groups`
+    - Find the group with the name of the user just created and in the `GID` column, record the number assigned.
+The PID and GID created for this user, in this example “Plex” will be used to assign that app rights to ONLY the data sets required and desired for the app. Otherwise by default the app will be placed inside the system default “apps” user and we will otherwise not be able to have as much fine grain detail and control over what this particular app can and cannot access.
+2. Go to the `Datasets` page
+- Select the data set the app will have access to for example `apps`
+- On the right side scroll down to `Permissions` and click `edit`
+- Click `add item`
+- In the `Access Control Entry` area, under `who` select `group` and under `group` select the user needed in this example “Plex”
+- Under the `Permissions` area, `Permission Type` should be set to `Basic` and the `Permissions` should be set to `Traverse` so this app can enter the `apps` data set to get access to the `PLEX` data set within it. 
+- Click button `Apply permissions recursively`, agree to the confirmation popup
+  - IF the desire is to have this app (Plex) be able to traverse ALL data sets inside the current data set, click the `Apply permissions to child data sets`. In this example we will NOT be doing that as we want PLEX to only have access to its data set we created under the apps data set.
+- Click `Save Access Control List`
+- We now need to give the app (PLEX) access to the data `PLEX` set under “apps” in this case the `/volume1/apps/plex` data set. Click on the plex data set and repeat steps above for that data set. However for the permissions set it to `Full Control` so the App (PLEX) can control it’s assigned app directory `/volume1/apps/plex`. <ins>For other data sets outside of the apps area</ins>, the default can be used, or limited to just read as desired.
+- Repeat these steps for ANY and ALL other data sets you wish this particular app to access. In our example, we would also want to make sure plex had access to the `video` data set we created, and in this instance, we WOULD want to check the box `Apply permissions to child data sets` and the box `Apply permissions recursively`, to ensure plex can access all of the needed media files in the /volume1/video directory. 
+2. **Frigate**
+- Refer to additional details here: https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate
+- **TBD**
+3. Grafana
+4. influxDB
+5. jackett
+6. plex
+7. radar
+8. sickchill
+9. nginx reverse proxy
+- https://www.youtube.com/watch?v=jx6T6lqX-QM
+10. jellyfin
+11. tautulli
+12. PhP My Admin
+13. Firefox
+14. Portainer
+15. Torrent downloader + VPN
+16. ngninx + PHP + Maria DB Stack (replaces web station)
+17. DIUN – Docker Image Update Notifier
+18. TrueCommand
+19. Veeam *[Replaces Active Backup for Business]*
+20. Grey log	
+- https://www.youtube.com/watch?v=PoP9BTktlFc
+- https://www.youtube.com/watch?v=DwYwrADwCmg
+
+
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
@@ -246,4 +302,10 @@ To schedule snapshots:
 
 ## 16.)  Replace “DS File” app – Android Only
 <div id="Replace_DS_File_app_Android_Only"></div>
+
+## 17.)  Configure Data Scrubs
+<div id="Configure_Data_Scrubs"></div>
+
+## 16.)  Schedule SMART tests
+<div id="Schedule_SMART_tests"></div>
 
