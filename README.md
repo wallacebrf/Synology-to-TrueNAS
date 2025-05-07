@@ -41,6 +41,8 @@ In the long run in about 1-year's time I plan to build a custom system that can 
 ## 2.) Current Applications Used on My Various Synology Systems
 <div id="Current_Applications_Used_on_My_Various_Synology_Systems"></div>
 
+PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacemrnt I can try. However since I have no experiance with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. 
+
 First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps i am using. This guide willdetail what I chose to replace the Synology Apps. 
 
 1.) My Main DS920 with attached DX517
@@ -88,7 +90,7 @@ I plan to have 128GB of RAM in the system I will eventually build as it will hav
 
 I am planning to use the TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI. 
 
-- System --> General Settings --> GUI --> Settings
+- `System --> General Settings --> GUI --> Settings`
 - Change Web Interface HTTP Port from 80 to 5000
 - Change Web Interface HTTPS Port from 443 to 5001
 
@@ -98,18 +100,18 @@ I am planning to use the TrueNAS system to host my internal web pages and so I n
 This guide is very helpful: https://www.youtube.com/watch?v=u0btB6IkkEk
 
 I performed the following actions:
-1.) System --> Advanced Settings --> Console --> Configure and turn off “Show Text Console without Password Prompt”
-2.) Adjust auto-time out as desired. The default is 300 seconds
-  - System --> Advanced Settings --> Access -> Configure
+1. `System --> Advanced Settings --> Console --> Configure` and turn off `Show Text Console without Password Prompt`
+2. Adjust auto-time out as desired. The default is 300 seconds
+  - `System --> Advanced Settings --> Access -> Configure`
   - I set mine to 1800 seconds (30 mins) which is probably longer than I should but I like extended log in times.
-3.) Setup two factor authentication 
-  - Under your user(s) click on the user name in the upper right and select “Two-Factor Authentication” and generate a QR code to use in an app like Microsoft Authenticator.
-  - System --> Advanced Settings --> Global Two Factor Authentication – Configure
+3. Setup two factor authentication 
+  - Under your user(s) click on the user name in the upper right and select `Two-Factor Authentication` and generate a QR code to use in an app like Microsoft Authenticator.
+  - `System --> Advanced Settings --> Global Two Factor Authentication – Configure`
   - Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH. 
-4.) Bind SSH to only certain ethernet port
-  - System --> Services -> SSH --> Click on the pencil edit icon on the right
+4. Bind SSH to only certain ethernet port
+  - `System --> Services -> SSH` --> Click on the pencil edit icon on the right
   - Click advanced settings
-  - Under “Bind Interfaces” choose the correct interface so only that interface will allow SSH
+  - Under `Bind Interfaces` choose the correct interface so only that interface will allow SSH
   - SSH is off by default but if it is enabled this increases security
 
 
@@ -125,73 +127,72 @@ I performed the following actions:
 ## 7.)  Create new data sets as required 
 <div id="Create_new_data_sets_as_required"></div>
 
-1.) Useful explanation: 
+1. Useful explanation: 
 - https://www.youtube.com/watch?v=0d4_nvdZdOc
 - https://www.youtube.com/watch?v=59NGNZ0kO04
   
-2.) For example:
-- I have 1 storage pool “volume1”
-- On /mnt/volume1” I have the following data sets
-	- Apps [Note, only make the data sets / folders as needed for your desired apps]. Ensure the “Dataset Preset” is set to “Apps”
-		- Frigate [Ensure the “Dataset Preset” is set to “Apps”]
+2. For example I have 1 storage pool `volume1`
+- On `/mnt/volume1` I have the following data sets
+	- **Apps** *[Note, only make the data sets / folders as needed for your desired apps]*. *[Ensure the “Dataset Preset” is set to “Apps”]*
+		- <ins>Frigate</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
 			- Then created the following “regular folders”
    				- Cache
       			- Config
-		- InfluxDB [Ensure the “Dataset Preset” is set to “Apps”]
+		- <ins>InfluxDB</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
 			- Then created the following “regular folders”
    				- Config
        			- data
-		- Jackett [Ensure the “Dataset Preset” is set to “Apps”]
+		- <ins>Jackett</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
 			- Then created the following “regular folders”
    				- Blackhole
    				- config
-		- Plex [Ensure the “Dataset Preset” is set to “Apps”]
+		- <ins>Plex</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
 			- Then created the following “regular folders”
    				- Config
        			- Data
 				- logs
-		- Radar [Ensure the “Dataset Preset” is set to “Apps”]
-		- GraphiteExporter [Ensure the “Dataset Preset” is set to “Apps”]
-		- Surveillance [For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]
+		- <ins>Radar</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
+		- <ins>GraphiteExporter</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
+		- <ins>Surveillance</ins> *[For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]*
 			- Then created the following “regular folders”
 				- Frigate
-	- Users [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
-		- Then created the following additional nested data set [And more for other user as needed/desired]
+	- **Users** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
+		- Then created the following additional nested data set *[And more for other user as needed/desired]*
 			- John_Doe_User
-	- Video [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+	- **Video** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
 		- Then created the following additional nested data sets
 			- 4k_Movies
 			- Home_Video
 			- Movies
 			- TV_Shows
-	- Backups [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
-	- Web [Ensure the “Dataset Preset” is set to “Apps”]
+	- **Backups** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
+	- **Web** *[Ensure the “Dataset Preset” is set to “Apps”]*
 		- Then created the following “regular folders”
 			- Config
 			- logging
-	- Pictures [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]
+	- **Pictures** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
 
 ## 8.)  Create new user
 <div id="Create_new_user"></div>
 
-- Create new user “Credentials --> Users”
-- Full Name: Full name of user, for example “John Doe”
-- Username: Actual user name, for example “John_Doe_User”
+- Create new user `Credentials --> Users`
+- Full Name: Full name of user, for example `John Doe`
+- Username: Actual user name, for example `John_Doe_User`
 - Email: set user’s contact email
 - Passwords: either set password or use other form of authorization
 - UID: leave as default
 - Auxiliary Groups: builtin_users
 - Primary Group: builtin_administrators
-- Home Directory: set to “/mnt/volume1/users/ John_Doe_User”
+- Home Directory: set to `/mnt/volume1/users/ John_Doe_User`
 - Home Directory Permissions: ensure user can read/write/execute
 
 ## 9.)  Create needed SMB   
 <div id="Create_needed_SMB"></div>
 
-- Go to “Shares -> Windows (SMB) Shares --> View All
-- Ensure all of the main data sets are being shared. If not, click “add”. Choose the missing main data set(s) 
-- Under the “Audit Logging” column, ensure all say “Yes” except for the “apps” share.
-- If they do not say Yes, then click the pencil edit icon, click on “Advanced Options” and under Audit Logging, click the “enabled” check box, click Save
+- Go to `Shares -> Windows (SMB) Shares --> View All`
+- Ensure all of the main data sets are being shared. If not, click `add`. Choose the missing main data set(s) 
+- Under the `Audit Logging` column, ensure all say `Yes` except for the “apps” share.
+- If they do not say Yes, then click the pencil edit icon, click on `Advanced Options` and under Audit Logging, click the “enabled” check box, click Save
 - Ensure all shares are enabled
 
 
