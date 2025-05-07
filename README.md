@@ -199,8 +199,38 @@ I performed the following actions:
 ## 10.)  Create needed NFS shares  
 <div id="Create_needed_NFS_shares"></div>
 
+NFS shares are not required unless you are sharing this TrueNAS system's data with other linux systems. I am doing so in the beginning to use the shares currently on my Synology units so I can expose PLEX to my movies and TV shows. If you do not need NFS shares, skip this section
+
+Useful information: https://www.youtube.com/watch?v=mdHmcwWTNWA
+
+For each share created for NFS, it is suggested to define the IP address of the host(s) that will connect to limit who can connect for added security 
+1. Ensure NFS is turned on
+- Go to `System --> Services` and ensure NFS is set to running and to sart automatically
+2. create needed shares
+- Go to `Shares --> UNIX (NFS) Shares --> Add'
+- Path: Choose the correct path to the folder to share
+- Description: add a description for the share
+- if desired, the NFS shares can be limited to specific networks and specific host IP addresses for added security. configure as desired
+- click save
+3. repeat step 2 as needed for addtional shares
+
 ## 11.)  Create snapshots
 <div id="Create_snapshots"></div>
+
+Snapshots work the same with TrueNAS as they do with Synology as they can be restored if needed to recover data
+
+To schedule snapshots:
+1. go to `Data Protection -> Periodic Snapshot Tasks -> Add`
+2. choose the desired data set
+- Be aware that when restoring a data set, everyting under that data set is restored. So in this example, if I made a snapshot of the root /volume1 and restored it, i will loose anything in ALL child data sets made since that snap shot was made.
+- Due to this, i would recommend to make scheduled snapshots for each separate data set to allow for flexibility in possible future data recovery. To assist with this, an option check box `recursive` is available when schedulign snapshots. 
+- also be aware that on our SMB shares, by defualt the option `Enable Shaow Copies` is enabled. This allows windows users to use the `Previous Versions` feature to recover older copies of individual files and folders. This allows for granualr per-file recovery in an easy to use manner
+3. Choose the amount of time the snap shot is retained
+- this is accomplished using the `Snapshot Lifetime` and `Unit` options. I am choosing 1 week
+4. I am leaving the naming process `Naming Schema` as the default of `auto-%Y-%m-%d_%H-%M`
+5. Choose how often the snap shots are taken, the main options are Hourly, Daily, Weekly, Monthly. However custom options are also available. I am going with Daily.
+6. I am leaving the `Allow Taking Empty Snapshot` option enabled
+7. I am not excluding anything from my snapshots so i am leaving `Exclude` enpty
 
 ## 12.)  Install required Apps 
 <div id="Install_required_Apps"></div>
