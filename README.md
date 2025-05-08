@@ -463,10 +463,10 @@ The PID and GID created for this user, in this example “Plex” will be used t
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
+17. ngninx + PHP + Maria DB Stack (replaces web station)
+
 https://medium.com/@tech_18484/deploying-a-php-web-app-with-docker-compose-nginx-and-mariadb-d61a84239c0d
 https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
-
-17. ngninx + PHP + Maria DB Stack (replaces web station)
 
 <div id="DIUN"></div>
 
