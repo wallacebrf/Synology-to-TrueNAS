@@ -9,20 +9,47 @@ My Guide when I moved from Synology to TrueNAS
       <a href="#About_the_project_Details">About The Project</a> 
    </li>
 	<li><a href="#Current_Applications_Used_on_My_Various_Synology_Systems">Current Applications Used on My Various Synology Systems</a> </li>
-	<li><a href="#Does_My_System_Have_Enough_RAM">Does My System Have Enough RAM?</a></li>
-	<li><a href="#Change_TrueNAS_GUI_Port_settings">Change TrueNAS GUI Port settings</a></li>
-	<li><a href="#Security_Measures_To_Lock_Down_Your_NAS">Security Measures To Lock Down Your NAS</a> </li>
-	<li><a href="#Create_storage_pool_using_available_drives_as_desired">Create storage pool using available drives as desired. </a></li>
-  	<li><a href="#Create_new_data_sets_as_required">Create new data sets as required </a></li>
-	<li><a href="#Create_new_user">Create new user</a></li>
-      	<li><a href="#Create_needed_SMB">Create needed SMB</a></li>
-      	<li><a href="#Create_needed_NFS_shares">Create needed NFS shares</a></li>
-      	<li><a href="#Create_snapshots">Create snapshots</a></li>
-      	<li><a href="#Install_required_Apps">Install required Apps</a></li>
-     	<li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
-     	<li><a href="#Setup_Web_site_Details">Setup Web site Details</a></li>
-      	<li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
-     	<li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
+<li><a href="#Does_My_System_Have_Enough_RAM">Does My System Have Enough RAM?</a></li>
+<li><a href="#Change_TrueNAS_GUI_Port_settings">Change TrueNAS GUI Port settings</a></li>
+<li><a href="#Security_Measures_To_Lock_Down_Your_NAS">Security Measures To Lock Down Your NAS</a> </li>
+<li><a href="#Create_storage_pool_using_available_drives_as_desired">Create storage pool using available drives as desired. </a></li>
+<li><a href="#Create_new_data_sets_as_required">Create new data sets as required </a></li>
+<li><a href="#Create_new_user">Create new user</a></li>
+<li><a href="#Create_needed_SMB">Create needed SMB</a></li>
+<li><a href="#Create_needed_NFS_shares">Create needed NFS shares</a></li>
+<li><a href="#Create_snapshots">Create snapshots</a></li>
+<li><a href="#Install_required_Apps">Install required Apps</a></li>
+<ul>
+<li><a href="#Frigate">Frigate</a></li>
+<li><a href="#Grafana">Grafana</a></li>
+<li><a href="#influxDB">influxDB</a></li>
+<li><a href="#jackett">jackett</a></li>
+<li><a href="#plex">plex</a></li>
+<li><a href="#radar">radar</a></li>
+<li><a href="#sickchill">sickchill</a></li>
+<li><a href="#nginx_reverse_proxy">nginx Reverse Proxy</a></li>
+<li><a href="#jellyfin">jellyfin</a></li>
+<li><a href="#tautulli">tautulli</a></li>
+<li><a href="#PhP_My_Admin">PHP My Admin</a></li>
+<li><a href="#Chromium">Chromium</a></li>
+<li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
+<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a></li>
+<li><a href="#DIUN">DIUN - Docker Image Update Notifier</a></li>
+<li><a href="#TrueCommand">TrueCommand</a></li>
+<li><a href="#Veeam">Veeam</a></li>
+<li><a href="#Grey_log">Grey log</a></li>
+</ul>
+<li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
+<li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a></li>
+<li><a href="#Setup_Grafana_Dashboard_for_TrueNAS">Setup Grafana Dashboard for TrueNAS</a></li>   
+<li><a href="#Setup_Web_site_Details">Setup Web site Details</a></li>
+<li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li>
+<li><a href="#Configure_Disk_Standby">Configure Disk Standby</a></li>    
+<li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
+<li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
+<li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
+<li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
+
 
 <!-- ABOUT THE PROJECT -->
 ## 1.) About the project Details
@@ -41,7 +68,7 @@ In the long run in about 1-year's time I plan to build a custom system that can 
 ## 2.) Current Applications Used on My Various Synology Systems
 <div id="Current_Applications_Used_on_My_Various_Synology_Systems"></div>
 
-PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacemrnt I can try. However since I have no experiance with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. 
+PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacemrnt I can try. However since I have no experiance with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
 
 First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps i am using. This guide willdetail what I chose to replace the Synology Apps. 
 
@@ -264,28 +291,85 @@ The PID and GID created for this user, in this example “Plex” will be used t
   - IF the desire is to have this app (Plex) be able to traverse ALL data sets inside the current data set, click the `Apply permissions to child data sets`. In this example we will NOT be doing that as we want PLEX to only have access to its data set we created under the apps data set.
 - Click `Save Access Control List`
 - We now need to give the app (PLEX) access to the data `PLEX` set under “apps” in this case the `/volume1/apps/plex` data set. Click on the plex data set and repeat steps above for that data set. However for the permissions set it to `Full Control` so the App (PLEX) can control it’s assigned app directory `/volume1/apps/plex`. <ins>For other data sets outside of the apps area</ins>, the default can be used, or limited to just read as desired.
-- Repeat these steps for ANY and ALL other data sets you wish this particular app to access. In our example, we would also want to make sure plex had access to the `video` data set we created, and in this instance, we WOULD want to check the box `Apply permissions to child data sets` and the box `Apply permissions recursively`, to ensure plex can access all of the needed media files in the /volume1/video directory. 
+- Repeat these steps for ANY and ALL other data sets you wish this particular app to access. In our example, we would also want to make sure plex had access to the `video` data set we created, and in this instance, we WOULD want to check the box `Apply permissions to child data sets` and the box `Apply permissions recursively`, to ensure plex can access all of the needed media files in the /volume1/video directory.
+
+<div id="Frigate"></div>
+
 2. **Frigate**
 - Refer to additional details here: https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate
 - **TBD**
+
+<div id="Grafana"></div>
+
 3. Grafana
+
+<div id="influxDB"></div>
+
 4. influxDB
+
+<div id="jackett"></div>
+
 5. jackett
+
+<div id="plex"></div>
+
 6. plex
+
+<div id="radar"></div>
+
 7. radar
+
+<div id="sickchill"></div>
+
 8. sickchill
+
+<div id="nginx_reverse_proxy"></div>
+
 9. nginx reverse proxy
 - https://www.youtube.com/watch?v=jx6T6lqX-QM
+
+<div id="jellyfin"></div>
+
 10. jellyfin
+
+<div id="tautulli"></div>
+
 11. tautulli
+
+<div id="PhP_My_Admin"></div>
+
 12. PhP My Admin
-13. Firefox
+
+<div id="Chromium"></div>
+
+13. Chromium
+
+<div id="Portainer"></div>
+
 14. Portainer
+
+<div id="Torrent_downloader_VPN"></div>
+
 15. Torrent downloader + VPN
+
+<div id="ngninx_PHP_Maria_DB_Stack"></div>
+
 16. ngninx + PHP + Maria DB Stack (replaces web station)
+
+<div id="DIUN"></div>
+
 17. DIUN – Docker Image Update Notifier
+
+<div id="TrueCommand"></div>
+
 18. TrueCommand
+
+<div id="Veeam"></div>
+
 19. Veeam *[Replaces Active Backup for Business]*
+
+<div id="Grey_log"></div>
+
 20. Grey log	
 - https://www.youtube.com/watch?v=PoP9BTktlFc
 - https://www.youtube.com/watch?v=DwYwrADwCmg
