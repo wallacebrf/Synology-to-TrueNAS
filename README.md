@@ -148,29 +148,29 @@ This Youtube guide by Lawrence Syetems is very helpful and I have included some 
 I performed the following actions on my system:
 
 <ol>
-<li>`System --> Advanced Settings --> Console --> Configure` and turn off `Show Text Console without Password Prompt`</li>
+<li><strong>System --> Advanced Settings --> Console --> Configure</strong> and turn off <strong>Show Text Console without Password Prompt</strong></li>
 <ul>
 <li>This as Tom indicates in his video locks down the HMI GUI available to prevent someone from changing configuration settings. <br>Obviously if you either do not use the video out of your NAS, or it is in a locked / secure area, this is not as required. I personally have my TrueNAS on a JetKVM, and so if someone were to somehow acess my KVM, they will at least then not be able to have access to my TrueNAS.</li>
 </ul>
 <br>
 <li>Adjust auto-time out as desired. The default is 300 seconds</li>
 <ul>
-<li>`System --> Advanced Settings --> Access -> Configure`</li>
+<li><strong>System --> Advanced Settings --> Access -> Configure</strong></li>
 <li>I set mine to 1800 seconds (30 mins) which is probably longer than I should but I like extended log in times.</li>
 </ul>
 <br>
 <li>Setup two factor authentication</li>
 <ul>
-<li>Under your user(s) click on the user name in the upper right and select `Two-Factor Authentication` and generate a QR code to use in an app like Microsoft Authenticator or your prerferred app. You will need to generate this QR code for all of the users who will need Web GUI access.</li>
-<li>`System --> Advanced Settings --> Global Two Factor Authentication – Configure`</li>
+<li>Under your user(s) click on the user name in the upper right and select <strong>Two-Factor Authentication</strong> and generate a QR code to use in an app like Microsoft Authenticator or your prerferred app. You will need to generate this QR code for all of the users who will need Web GUI access.</li>
+<li><strong>System --> Advanced Settings --> Global Two Factor Authentication – Configure</strong></li>
 <li>Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH.</li>
 </ul>
 <br>
 <li>Bind SSH to only certain ethernet port</li>
 <ul>
-<li>`System --> Services -> SSH` --> Click on the pencil edit icon on the right</li>
+<li><strong>System --> Services -> SSH --> Click on the pencil edit icon on the right</strong></li>
 <li>Click advanced settings</li>
-<li>Under `Bind Interfaces` choose the correct interface so only that interface will allow SSH</li>
+<li>Under <strong>Bind Interfaces</strong> choose the correct interface so only that interface will allow SSH</li>
 <li>SSH is off by default but if it is enabled this increases security by ensuring only network users on those certain port(s) can access SSH.</li>
 </ul>
 </ol>
@@ -193,50 +193,101 @@ I also suggest these two videos on creating your disk storage: <a href="https://
 ## 7.)  Create new data sets as required 
 <div id="Create_new_data_sets_as_required"></div>
 
-1. Useful explanation: 
-- https://www.youtube.com/watch?v=0d4_nvdZdOc
-- https://www.youtube.com/watch?v=59NGNZ0kO04
-  
-2. For example I have 1 storage pool `volume1`
-- On `/mnt/volume1` I have the following data sets
-	- **Apps** *[Note, only make the data sets / folders as needed for your desired apps]*. *[Ensure the “Dataset Preset” is set to “Apps”]*
-		- <ins>Frigate</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-			- Then created the following “regular folders”
-   				- Cache
-      			- Config
-		- <ins>InfluxDB</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-			- Then created the following “regular folders”
-   				- Config
-       			- data
-		- <ins>Jackett</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-			- Then created the following “regular folders”
-   				- Blackhole
-   				- config
-		- <ins>Plex</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-			- Then created the following “regular folders”
-   				- Config
-       			- Data
-				- logs
-		- <ins>Radar</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-		- <ins>GraphiteExporter</ins> *[Ensure the “Dataset Preset” is set to “Apps”]*
-		- <ins>Surveillance</ins> *[For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]*
-			- Then created the following “regular folders”
-				- Frigate
-	- **Users** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
-		- Then created the following additional nested data set *[And more for other user as needed/desired]*
-			- John_Doe_User
-	- **Video** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
-		- Then created the following additional nested data sets
-			- 4k_Movies
-			- Home_Video
-			- Movies
-			- TV_Shows
-	- **Backups** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
-	- **Web** *[Ensure the “Dataset Preset” is set to “Apps”]*
-		- Then created the following “regular folders”
-			- Config
-			- logging
-	- **Pictures** *[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]*
+https://www.youtube.com/watch?v=0d4_nvdZdOc
+
+https://www.youtube.com/watch?v=59NGNZ0kO04
+
+<ol>
+<li>For example I have 1 storage pool <strong>volume1</strong></li>
+<li>On <b></b>/mnt/volume1</b> I have the following data sets</li>
+   <ul>
+	   <li> <strong>Apps</strong> <small>[Note, only make the data sets / folders as needed for your desired apps]. [Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+	   <ul>
+		<li><ins>Frigate</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>Cache</li>
+      				<li>Config</li>
+			   </ul>
+		   </ul>
+	   	<li><ins>InfluxDB</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>Config</li>
+       				<li>data</li>
+			   </ul>
+		   </ul>
+		<li><ins>Jackett</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>Blackhole</li>
+       				<li>config</li>
+			   </ul>
+		   </ul>
+		<li><ins>Plex</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>Config</li>
+       				<li>Data</li>
+				<li>logs</li>
+			   </ul>
+		   </ul>
+		<li><ins>Radar</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>TBD</li>
+			   </ul>
+		   </ul>
+		<li><ins>GraphiteExporter</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>TBD</li>
+			   </ul>
+		   </ul>
+		<li><ins>Surveillance</ins> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		   <ul>
+			<li>Then created the following “regular folders”</li>
+			   <ul>
+   				<li>Frigate</li>
+			   </ul>
+		   </ul>
+	   </ul>
+	  <li> <strong>Users</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+   		   <ul>
+			   <li>Then created the following additional nested data set [And more for other user as needed/desired]</li>
+			   <ul>
+			   <li>John_Doe_User</li> 
+			   </ul>
+		   </ul>
+	   <li> <strong>Video</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+   		   <ul>
+			   <li>Then created the following additional nested data sets</li>
+			   <ul>
+			   <li>4k_Movies</li> 
+			   <li>Home_Video</li> 
+			   <li>Movies</li> 
+		           <li>TV_Shows</li> 
+			   </ul>
+		   </ul>
+	   <li> <strong>Backups</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+   	   <li> <strong>Web</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+   		   <ul>
+			   <li>Then created the following additional nested data sets</li>
+			   <ul>
+			   <li>Config</li> 
+			   <li>logging</li> 
+			   </ul>
+		   </ul>
+	   <li> <strong>Pictures</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+   </ul>
+</ol>
+<br>
 
 ## 8.)  Create new user
 <div id="Create_new_user"></div>
