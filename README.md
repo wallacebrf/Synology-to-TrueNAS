@@ -49,6 +49,7 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
 <li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
 <li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
+<li><a href="#Configiure_email_sending_from_CLI">Configiure Email Sending From CLI</a></li>
 
 
 <!-- ABOUT THE PROJECT -->
@@ -473,4 +474,7 @@ The PID and GID created for this user, in this example “Plex” will be used t
 <div id="Schedule_SMART_tests"></div>
 
 There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler here: https://github.com/wallacebrf/Synology-SMART-test-scheduler. I will describe how to setup both. 
+
+## 22.)  Configiure Email Sending From CLI
+<div id="Configiure_email_sending_from_CLI"></div>
 
