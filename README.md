@@ -296,82 +296,82 @@ The PID and GID created for this user, in this example “Plex” will be used t
 
 <div id="Frigate"></div>
 
-2. **Frigate**
+3. **Frigate**
 - Refer to additional details here: https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate
 - **TBD**
 
 <div id="Grafana"></div>
 
-3. Grafana
+4. Grafana
 
 <div id="influxDB"></div>
 
-4. influxDB
+5. influxDB
 
 <div id="jackett"></div>
 
-5. jackett
+6. jackett
 
 <div id="plex"></div>
 
-6. plex
+7. plex
 
 <div id="radar"></div>
 
-7. radar
+8. radar
 
 <div id="sickchill"></div>
 
-8. sickchill
+9. sickchill
 
 <div id="nginx_reverse_proxy"></div>
 
-9. nginx reverse proxy
+10. nginx reverse proxy
 - https://www.youtube.com/watch?v=jx6T6lqX-QM
 
 <div id="jellyfin"></div>
 
-10. jellyfin
+11. jellyfin
 
 <div id="tautulli"></div>
 
-11. tautulli
+12. tautulli
 
 <div id="PhP_My_Admin"></div>
 
-12. PhP My Admin
+13. PhP My Admin
 
 <div id="Chromium"></div>
 
-13. Chromium
+14. Chromium
 
 <div id="Portainer"></div>
 
-14. Portainer
+15. Portainer
 
 <div id="Torrent_downloader_VPN"></div>
 
-15. Torrent downloader + VPN
+16. Torrent downloader + VPN
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
-16. ngninx + PHP + Maria DB Stack (replaces web station)
+17. ngninx + PHP + Maria DB Stack (replaces web station)
 
 <div id="DIUN"></div>
 
-17. DIUN – Docker Image Update Notifier
+18. DIUN – Docker Image Update Notifier
 
 <div id="TrueCommand"></div>
 
-18. TrueCommand
+19. TrueCommand
 
 <div id="Veeam"></div>
 
-19. Veeam *[Replaces Active Backup for Business]*
+20. Veeam *[Replaces Active Backup for Business]*
 
 <div id="Grey_log"></div>
 
-20. Grey log	
+21. Grey log	
 - https://www.youtube.com/watch?v=PoP9BTktlFc
 - https://www.youtube.com/watch?v=DwYwrADwCmg
 
