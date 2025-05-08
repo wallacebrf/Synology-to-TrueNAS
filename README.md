@@ -50,7 +50,7 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
 <li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
 <li><a href="#Configiure_email_sending_from_CLI">Configiure Email Sending From CLI</a></li>
-
+  </ol>
 
 <!-- ABOUT THE PROJECT -->
 ## 1.) About the project Details
@@ -70,6 +70,8 @@ In the long run in about 1-year's time I plan to build a custom system that can 
 <div id="Current_Applications_Used_on_My_Various_Synology_Systems"></div>
 
 PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacemrnt I can try. However since I have no experiance with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
+
+Please also note I have never used Apple products so I am not in a postion to suggest services that are compatible with Apple. If someone with Apple products has done things to ove from Synology to TrueNAS and i am not detailing that, please submit an issue request and I can work with you to add those details to this guide. 
 
 First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps i am using. This guide willdetail what I chose to replace the Synology Apps. 
 
@@ -113,10 +115,24 @@ https://www.youtube.com/watch?v=xp6g-8VS06M
 
 I plan to have 128GB of RAM in the system I will eventually build as it will have 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. As most of my space is comprised on large media files that basically never change, I do not anticipate any issues. 
 
+The big thing to understand about TrueNAS and the ZFS file system that accompanies it, is that it will use un-used RAM space as a cache drive. This caching is doing the same thing a read only NVMA chache does on Synology. It will save commonly accessed files in the RAM cache so it does not need to read the data of the hard disks. ZFS calls this ARC or `Adaptive Replacement Cache`. This cache again is for reading data off the system, it does not help writting data to the drives. 
+
+If your system is primarilly used for PLEX (I.E. large continuous file reads) then the ARC will not really help. ARC will help with things like loading PLEX and it's dashboard, art etc as those are small files and when browsing your PLEX libary frequrently are also read frequnetly and will be saved to ARC. 
+
+You can use NVME drives in TrueNAS for caching in a direct similar method as Synology and that is referred to as L2ARC or 'Level 2 Adaptive Replacement Cache' and can assist with read performance if you perhaps do not have lots of RAM. 
+
+Like Synology READ/WRITE cache TrueNAS can use write caching which uses `SLOG` space on separate NVME drives. 
+
+The real question is what is the actual performance difference with using ARC, L2ARC, SLOG etc, and unfortunately that is not always easy to answer as it depends on your usage patterns. 
+
+Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM. The system will run fine, but may not possibly be atthe maximum performance it could otherwise acheive. 
+
+More useful information can be found here <a href="https://www.45drives.com/community/articles/zfs-caching/">45 Drive ZFS Caching Discusion</a>
+
 ## 4.) Change TrueNAS GUI Port settings
 <div id="Change_TrueNAS_GUI_Port_settings"></div>
 
-I am planning to use the TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI. 
+This section is not required if you are not planning to host any web services on your TrueNAS lie one would do with Synology's "Web STation" package. I am planning to use the TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI by default. Since i am moving from Synology I am already very used to using ports 5000 and 5001, so i decided to use those same ports with TrueNAS. 
 
 - `System --> General Settings --> GUI --> Settings`
 - Change Web Interface HTTP Port from 80 to 5000
@@ -125,33 +141,54 @@ I am planning to use the TrueNAS system to host my internal web pages and so I n
 ## 5.) Security Measures To Lock Down Your NAS
 <div id="Security_Measures_To_Lock_Down_Your_NAS"></div>
 
-This guide is very helpful: https://www.youtube.com/watch?v=u0btB6IkkEk
+There have been plently of discussions and articles on how to secure a Synology NAS and a lot of them are applicable to TrueNAS like not using a root/admin account unless you need to, using Muilti-Factor-Authentication, not exposing the NAS directly to the internet, use proper passwords etc. 
 
-I performed the following actions:
-1. `System --> Advanced Settings --> Console --> Configure` and turn off `Show Text Console without Password Prompt`
-2. Adjust auto-time out as desired. The default is 300 seconds
-  - `System --> Advanced Settings --> Access -> Configure`
-  - I set mine to 1800 seconds (30 mins) which is probably longer than I should but I like extended log in times.
-3. Setup two factor authentication 
-  - Under your user(s) click on the user name in the upper right and select `Two-Factor Authentication` and generate a QR code to use in an app like Microsoft Authenticator.
-  - `System --> Advanced Settings --> Global Two Factor Authentication – Configure`
-  - Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH. 
-4. Bind SSH to only certain ethernet port
-  - `System --> Services -> SSH` --> Click on the pencil edit icon on the right
-  - Click advanced settings
-  - Under `Bind Interfaces` choose the correct interface so only that interface will allow SSH
-  - SSH is off by default but if it is enabled this increases security
+This Youtube guide by Lawrence Syetems is very helpful and I have included some of the information below: <a href="https://www.youtube.com/watch?v=u0btB6IkkEk">Lawrence Systems - Hardening TrueNAS Scale: Security Measures To Lock Down Your NAS</a>
 
+I performed the following actions on my system:
+
+<ol>
+<li>`System --> Advanced Settings --> Console --> Configure` and turn off `Show Text Console without Password Prompt`</li>
+<ul>
+<li>This as Tom indicates in his video locks down the HMI GUI available to prevent someone from changing configuration settings. <br>Obviously if you either do not use the video out of your NAS, or it is in a locked / secure area, this is not as required. I personally have my TrueNAS on a JetKVM, and so if someone were to somehow acess my KVM, they will at least then not be able to have access to my TrueNAS.</li>
+</ul>
+<br>
+<li>Adjust auto-time out as desired. The default is 300 seconds</li>
+<ul>
+<li>`System --> Advanced Settings --> Access -> Configure`</li>
+<li>I set mine to 1800 seconds (30 mins) which is probably longer than I should but I like extended log in times.</li>
+</ul>
+<br>
+<li>Setup two factor authentication</li>
+<ul>
+<li>Under your user(s) click on the user name in the upper right and select `Two-Factor Authentication` and generate a QR code to use in an app like Microsoft Authenticator or your prerferred app. You will need to generate this QR code for all of the users who will need Web GUI access.</li>
+<li>`System --> Advanced Settings --> Global Two Factor Authentication – Configure`</li>
+<li>Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH.</li>
+</ul>
+<br>
+<li>Bind SSH to only certain ethernet port</li>
+<ul>
+<li>`System --> Services -> SSH` --> Click on the pencil edit icon on the right</li>
+<li>Click advanced settings</li>
+<li>Under `Bind Interfaces` choose the correct interface so only that interface will allow SSH</li>
+<li>SSH is off by default but if it is enabled this increases security by ensuring only network users on those certain port(s) can access SSH.</li>
+</ul>
+</ol>
 
 ## 6.)  Create storage pool using available drives as desired.  
 <div id="Create_storage_pool_using_available_drives_as_desired"></div>
 
-- https://www.youtube.com/watch?v=0d4_nvdZdOc
-- https://www.youtube.com/watch?v=ykhaXo6m-04
-- How to expand if needed:
-  - https://www.youtube.com/watch?v=11bWnvCwTOU
-  - https://www.youtube.com/watch?v=uPCrDmjWV_I
+This is something I am not going to go into significant detail on as the choices of what type of disk configurtion you choose is different from user to user
 
+I will however touch on a few key details. 
+
+1. If you are using Synology SHR or SHR2 where your disks are of various different sizes, that functionality as of 5/8/2025 is NOT available on ZFS. On ZFS all disks need to be the same size or larger, and if you do use larger drives with smaller drives, you will loose any of the extra space, ZFS cannot use it.
+2. Synology does have the ability to go from one raid type to the next when using SHR/SHR2. For example you could start with two drives, which Synology will put into a mirror, then add another drive to the pool and have the option to change to raid 5 and so on. On ZFS once you make your VDEV, you are stuck with the type you make (mirror, Z1, Z2 ect) and the only way to change the type is to destroy the Vdev which will destory what ever pool is attached to it.
+3. You can (as of late 2024) now expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods.
+
+For more details on expanding ZFS, these two videos are very helful: <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">Lawrence Systems - TrueNAS: How To Expand A ZFS Pool</a> and <a href="https://www.youtube.com/watch?v=uPCrDmjWV_I">Lawrence Systems - TrueNAS Tutorial: Expanding Your ZFS RAIDz VDEV with a Single Drive</a>
+
+I also suggest these two videos on creating your disk storage: <a href="https://www.youtube.com/watch?v=0d4_nvdZdOc">Lawrence Systems - ZFS 101: Leveraging Datasets and Zvols for Better Data Management</a> and <a href="https://www.youtube.com/watch?v=ykhaXo6m-04">Hardware Haven - Choosing The BEST Drive Layout For Your NAS</a>
 
 ## 7.)  Create new data sets as required 
 <div id="Create_new_data_sets_as_required"></div>
