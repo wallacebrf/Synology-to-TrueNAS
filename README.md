@@ -237,27 +237,28 @@ https://www.youtube.com/watch?v=59NGNZ0kO04
 			   </ul>
 		   </ul>
 		<li><ins>Radar</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>TBD</li>
-			   </ul>
-		   </ul>
 		<li><ins>GraphiteExporter</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>chromium</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>flaresolverr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>ytdlp</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		   <ul>
 			<li>Then created the following “regular folders”</li>
 			   <ul>
-   				<li>TBD</li>
+   				<li>config</li>
+				<li>downloads</li>
+				<li>ffmpeg</li>
 			   </ul>
 		   </ul>
-		<li><ins>Surveillance</ins> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
+		<li><ins>nginx_reverse_proxy</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+   		   <ul>
+			   <li>Then created the following additional “regular folders”</li>
 			   <ul>
-   				<li>Frigate</li>
+			   <li>certs</li> 
+			   <li>config</li> 
 			   </ul>
 		   </ul>
 	   </ul>
+	  <li><strong>Surveillance</strong> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
 	  <li> <strong>Users</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
    		   <ul>
 			   <li>Then created the following additional nested data set [And more for other user as needed/desired]</li>
@@ -282,6 +283,23 @@ https://www.youtube.com/watch?v=59NGNZ0kO04
 			   <ul>
 			   <li>Config</li> 
 			   <li>logging</li> 
+			   </ul>
+		   </ul>
+	   <li> <strong>torrent</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+   		   <ul>
+			   <li>Then created the following additional “regular folders”</li>
+			   <ul>
+				   <li>bt</li>
+				   	<ul>
+					   <li>Then created the following additional “regular folders”</li>
+				   		<ul>
+						   <li>incomplete</li>
+						   <li>torrents</li> 
+      						</ul>
+					</ul>
+				   <li>gluetun_config</li>
+				   <li>gluetun_tmp</li> 
+				   <li>transmission_config</li> 
 			   </ul>
 		   </ul>
 	   <li> <strong>Pictures</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
@@ -464,6 +482,14 @@ The PID and GID created for this user, in this example “Plex” will be used t
 21. Grey log	
 - https://www.youtube.com/watch?v=PoP9BTktlFc
 - https://www.youtube.com/watch?v=DwYwrADwCmg
+
+<div id="flaresolverr"></div>
+
+22. flaresolverr
+
+<div id="ytdlp"></div>
+
+23. ytdlp
 
 
 ## 13.)  Data Logging Exporting to Influx DB v2  
