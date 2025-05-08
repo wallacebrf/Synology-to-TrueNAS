@@ -147,6 +147,7 @@ I performed the following actions:
 <div id="Create_storage_pool_using_available_drives_as_desired"></div>
 
 - https://www.youtube.com/watch?v=0d4_nvdZdOc
+- https://www.youtube.com/watch?v=ykhaXo6m-04
 - How to expand if needed:
   - https://www.youtube.com/watch?v=11bWnvCwTOU
   - https://www.youtube.com/watch?v=uPCrDmjWV_I
@@ -352,6 +353,7 @@ The PID and GID created for this user, in this example “Plex” will be used t
 <div id="Torrent_downloader_VPN"></div>
 
 16. Torrent downloader + VPN
+- very useful step by step guide on using GlueTUN for docker app VPN tunnels: https://www.youtube.com/watch?v=TJ28PETdlGE
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
