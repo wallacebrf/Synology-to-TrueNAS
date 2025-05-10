@@ -51,6 +51,8 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
 <li><a href="#Configiure_email_sending_from_CLI">Configiure Email Sending From CLI</a></li>
 <li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Tail Scale</a></li>
+<li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
+<li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -648,3 +650,9 @@ There will be two ways of scheduling SMART tests. The first is TrueNAS native SM
 <div id="Configure_Remote_Access_using_Tail_Scale"></div>
 
 https://www.youtube.com/watch?v=o0Py62k63_c
+
+## 24.)  Mount External NFS Shares into TrueNAS Dataset
+<div id="Mount_External_NFS_Shares_into_TrueNAS_Dataset"></div>
+
+## 25.)  General Little Settings Here and There
+<div id="General_Little_Settings_Here_and_There"></div>
