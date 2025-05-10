@@ -408,8 +408,7 @@ The PID and GID created for this user, in this example “Plex” will be used t
 <div id="Frigate"></div>
 
 3. **Frigate**
-- Refer to additional details here: https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate
-- **TBD**
+- Refer here for detailed information on <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate Configuration on TrueNAS</a>
 
 <div id="Grafana"></div>
 
