@@ -410,6 +410,20 @@ The PID and GID created for this user, in this example “Plex” will be used t
 3. **Frigate**
 - Refer here for detailed information on <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate Configuration on TrueNAS</a>
 
+I have been using Synology Surrveilance Station (Referred here on out as SSS) since 2019. Prior to that i had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and i have been very happy since.
+
+If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what i was seeing with Frigate.
+
+With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "dep video analsysis" features to perform person, vehicle and object detetion, which has been working well. What has really made me appreciate Frigate is that i can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
+
+To acheive this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU passthrough from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analsys on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to arond 50%, loads the GPU to around 90%.
+
+I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power diffrential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analsysis!!.
+
+something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leaveraged by Frigate. Persoanlly after using Frigate, i think Frigate does a better job anyways but your milage may vary.
+
+another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras to gether.
+
 <div id="Grafana"></div>
 
 4. Grafana
