@@ -8,7 +8,8 @@ How I have (Currently) Installed Frigate
     <li>
       <a href="#About_the_project_Details">About The Project</a> 
    </li>
-	<li><a href="#Frigate_Configuration">Frigate Configuration</a> </li>
+	<li><a href="#Frigate_Configuration">Frigate Configuration YAML file</a> </li>
+	<li><a href="#rueNAS_Frigate_App_Setings">TrueNAS Frigate App Setings</a> </li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -113,3 +114,24 @@ I have supplied my configuration file for my Frigate Installation <a href="https
 
 4.) camera_groups
   - This allows you to create groups of cameras where each group will be a separate button on the Frigate web GUI so you can see ONLY the cameras assigned to that group rather than all cameras at the same time. 
+
+## 2.) TrueNAS Frigate App Setings
+<div id="rueNAS_Frigate_App_Setings"></div>
+
+Frigate installed through the TrueNAS "app store" does not support changing the user or group details, and instead the Frigate app will simply be instaled under the "apps" user and group. 
+
+Create new data set for Frigate Confuration files `/mnt/volume1/apps/frigate`
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/frigate/images/frigate_create_dataset.png" alt="Create new data set">
+
+Create new data set for Frigate recorded files `/mnt/volume1/surveillance`
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/frigate/images/frigate_making_surveillance.png" alt="Create surveillance">
+
+Set ACL for Frigate recorded files `/mnt/volume1/surveillance`
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/frigate/images/surveillance_acl_setting.png" alt="surveillance ACL">
+
+Frigate App Config During Install in TrueNAS "Apps" page
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/frigate/images/frigate_config.png" alt="frigate config settings">
