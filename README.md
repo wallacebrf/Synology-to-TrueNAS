@@ -426,90 +426,90 @@ another thing to note: when looking at the Frigate web GUI live stream page show
 
 <div id="Grafana"></div>
 
-4. Grafana
+4. ***Grafana***
 
 <div id="influxDB"></div>
 
-5. influxDB
+5. ***influxDB***
 
 <div id="jackett"></div>
 
-6. jackett
+6. ***jackett***
 
 <div id="plex"></div>
 
-7. plex
+7. ***plex***
 
 <div id="radar"></div>
 
-8. radar
+8. ***radarr***
 
 <div id="sickchill"></div>
 
-9. sickchill
+9. ***sickchill***
 
 <div id="nginx_reverse_proxy"></div>
 
-10. nginx reverse proxy
+10. ***nginx reverse proxy***
 - https://www.youtube.com/watch?v=jx6T6lqX-QM
 
 <div id="jellyfin"></div>
 
-11. jellyfin
+11. ***jellyfin***
 
 <div id="tautulli"></div>
 
-12. tautulli
+12. ***tautulli***
 
 <div id="PhP_My_Admin"></div>
 
-13. PhP My Admin
+13. ***PhP My Admin***
 
 <div id="Chromium"></div>
 
-14. Chromium
+14. ***Chromium***
 
 <div id="Portainer"></div>
 
-15. Portainer
+15. ***Portainer***
 
 <div id="Torrent_downloader_VPN"></div>
 
-16. Torrent downloader + VPN
+16. ***Torrent downloader + VPN***
 - very useful step by step guide on using GlueTUN for docker app VPN tunnels: https://www.youtube.com/watch?v=TJ28PETdlGE
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
-17. ngninx + PHP + Maria DB Stack (replaces web station)
+17. ***ngninx + PHP + Maria DB Stack*** (replaces web station)
 
 https://medium.com/@tech_18484/deploying-a-php-web-app-with-docker-compose-nginx-and-mariadb-d61a84239c0d
 https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
 
 <div id="DIUN"></div>
 
-18. DIUN – Docker Image Update Notifier
+18. ***DIUN – Docker Image Update Notifier***
 
 <div id="TrueCommand"></div>
 
-19. TrueCommand
+19. ***TrueCommand***
 
 <div id="Veeam"></div>
 
-20. Veeam *[Replaces Active Backup for Business]*
+20. ***Veeam*** *[Replaces Active Backup for Business]*
 
 <div id="Grey_log"></div>
 
-21. Grey log	
+21. ***Grey log***
 - https://www.youtube.com/watch?v=PoP9BTktlFc
 - https://www.youtube.com/watch?v=DwYwrADwCmg
 
 <div id="flaresolverr"></div>
 
-22. flaresolverr
+22. ***flaresolverr***
 
 <div id="ytdlp"></div>
 
-23. ytdlp
+23. ***ytdlp***
 
 
 ## 13.)  Data Logging Exporting to Influx DB v2  
