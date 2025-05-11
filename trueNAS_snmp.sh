@@ -545,8 +545,14 @@ if [ -r "$config_file_location" ]; then
 				while IFS= read -r line; do	
 					hdd_temp_value+=($(filter_data "Gauge32: " "$line"))
 
-					if [[ $(( ${hdd_temp_value[$xx]} / 1000 )) > $max_hdd_temp ]]; then
-						send_mail "$log_file_location/${0##*/}_hdd_temp_last_message_sent.txt" "TrueNAS HDD drive \"/dev/${hdd_temp_device[$xx]}\" is reporting over $max_hdd_temp degrees C. It is currently reporting Temperature: $(( ${hdd_temp_value[$xx]} / 1000 )) degrees C" "TrueNAS HDD Disk Temperature Alert" $email_interval
+					if [[ "${hdd_temp_device[$xx]}" == *"nvme"* ]]; then
+						if [[ $(( ${hdd_temp_value[$xx]} / 1000 )) > $max_nvme_temp ]]; then
+							send_mail "$log_file_location/${0##*/}_nvme_temp_last_message_sent.txt" "TrueNAS NVME drive \"/dev/${hdd_temp_device[$xx]}\" is reporting over $max_nvme_temp degrees C. It is currently reporting Temperature: $nvme_temp, Temperature Sensor 1: $nvme_temp1, and Temperature Sensor 2: $nvme_temp2 degrees C" "TrueNAS NMVE Disk Temperature Alert" $email_interval
+						fi
+					else
+						if [[ $(( ${hdd_temp_value[$xx]} / 1000 )) > $max_hdd_temp ]]; then
+							send_mail "$log_file_location/${0##*/}_hdd_temp_last_message_sent.txt" "TrueNAS HDD drive \"/dev/${hdd_temp_device[$xx]}\" is reporting over $max_hdd_temp degrees C. It is currently reporting Temperature: $(( ${hdd_temp_value[$xx]} / 1000 )) degrees C" "TrueNAS HDD Disk Temperature Alert" $email_interval
+						fi
 					fi
 					
 					let xx=xx+1
