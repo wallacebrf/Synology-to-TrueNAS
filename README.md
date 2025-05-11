@@ -590,31 +590,83 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 ## 14.)  Install script to pull TrueNAS SNMP data
 <div id="Install_script_to_pull_TrueNAS_SNMP_data"></div>
 
-We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP. You are going to want to enable SNMP and use an snmp walking client to gather the data. I have instead created a custom bash shell script that i have execute every 60 seconds to save the SNMP data to influxDB for me. 
+1.) **Intro**
+We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which i will document below so the script I will detail can collect the needed informaiton. 
 
-You will need the SNMP OIDs or you can use the TrueNAS MIB file: https://www.truenas.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/
+The SNMP data is collected based on the details of the <a href="https://www.truenas.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/">TrueNAS MIB file</a>
 
-I used paessler MIB importer to imoport the MIB and view the OIDs of the different SNMP metrics. The following metrics are vaialble over SNMP and will be gatehred by my script. 
+on a system not running NVidia drivers, here is an exmaple of the data it can collect:
 
-- Zpool name
-- Zpool health
-- Zpool read/write ops
-- Zpool read/write bytes
-- Zpool read/write ops 1sec
-- Zvol description
-- Zvol used bytes
-- Zvol available bytes
-- Zvol referenced bytes
-- Zfs arc size
-- Zfs arc meta
-- Zfs arc data
-- Zfs arc hits
-- Zfs arc misses
-- Zfs arc arcc
-- Zfs arc miss percent
-- Zfs arc cache hit ratio
-- Zfs arc cache miss ratio
-- and more.....
+```
+zpool,nas_name=TrueNAS,zpool_index=1 zpool_name="boot-pool",zpool_health="ONLINE",zpool_read_ops=51163,zpool_write_ops=1214320,zpool_read_bytes=1740320768,zpool_write_bytes=16606257152
+
+zpool,nas_name=TrueNAS,zpool_index=2 zpool_name="volume1",zpool_health="ONLINE",zpool_read_ops=1614890,zpool_write_ops=9019562,zpool_read_bytes=202085289984,zpool_write_bytes=468552794112
+
+zvol,nas_name=TrueNAS,zvol_index=1 zvol_descr="boot-pool",zvol_used_bytes=3044765696,zvol_available_bytes=242506588160,zvol_referenced_bytes=98304
+
+zvol,nas_name=TrueNAS,zvol_index=2 zvol_descr="volume1",zvol_used_bytes=271744225280,zvol_available_bytes=219358752768,zvol_referenced_bytes=131072
+
+arc,nas_name=TrueNAS zfs_arc_size=7985746,zfs_arc_meta=634447,zfs_arc_data=7340832,zfs_arc_hits=174587035,zfs_arc_misses=1669275,zfs_arcc=8081757,zfs_arc_miss_percent=0.9470724764406953,zfs_arc_cache_hit_ratio=99.05,zfs_arc_cache_miss_ratio=0.95
+
+l2arc,nas_name=TrueNAS zfsl2arc_hits=0,zfsl2arc_misses=0,zfsl2arc_read=0,zfsl2arc_write=0,zfsl2arc_size=0
+
+zil,nas_name=TrueNAS zfs_zilstat_ops1sec=0,zfs_zilstat_ops5sec=0,zfs_zilstat_ops10sec=0
+
+hdd_temp_nvme,nas_name=TrueNAS,device="nvme0n1" nvme_temp=41,nvme_temp1=41,nvme_temp2=47
+
+hdd_temp_snmp,nas_name=TrueNAS,device="sda" hdd_temp_value="32000"
+
+hdd_temp_snmp,nas_name=TrueNAS,device="nvme0n1" hdd_temp_value="41000" 
+```
+
+for systems running NVidia drivers, the script will collect the following
+
+gpuTemperature, gpuName, gpuFanSpeed, gpu_bus_id, vbios_version, driver_version, pcie_link_gen_max, utilization_gpu, utilization_memory, memory_total, memory_free, memory_used, gpu_serial, pstate encoder_stats_sessionCount, encoder_stats_averageFps, encoder_stats_averageLatency, temperature_memory, power_draw, power_limit, clocks_current_graphics, clocks_current_sm, clocks_current_memory, clocks_current_video 
+
+I have the script configured to run every 60 seconds, and each execution, it will collect data 4x times so i am collecting data every 15 seconds. 
+
+This script does need to have a working PHP web site to allow for the configuration of the script. As of 5/11/2025, I have not yet written the PHP web page code for this script. 
+
+2. **Install Script and Support Files**
+
+- This assumes you already have the <a href="#ngninx_PHP_Maria_DB_Stack">nginx + PHP + MariaDB docker stack</a> installed which means it assumes you already have some data sets and folder structures already created.
+- Download the following files `multireport_sendemail.py` and `trueNAS_snmp.sh` and place them in the `/mnt/volume1/web/logging` directory if you used the same folder structure I did, or place it where you have your web site files stored.
+- create a `/mnt/volume1/web/logging/notifications` directory as the script will use this for temp files
+- create a `/mnt/volume1/web/config` directory as this is where the script will save its config file.
+- download the example `trueNAS_snmp_config.txt` file and place it in your `/mnt/volume1/web/config` directory
+- download the TBD .PHP file to the `/mnt/volume1/web/config` directory so we can configure the script
+
+3. **Configure the .SH script file**
+
+- inside the script there is a section asking for emails. This is so the script can still send you emails if the config file is missing or corrupted. Adjust to match your needs. 
+```
+#########################################################
+#EMAIL SETTINGS USED IF CONFIGURATION FILE IS UNAVAILABLE
+#These variables will be overwritten with new corrected data if the configuration file loads properly. 
+email_address="email@email.com"
+from_email_address="email@email.com"
+#########################################################
+```
+- the script has the following settings that need to be set if you are using a folder structure different from my example
+```
+log_file_location="/mnt/volume1/web/logging/notifications"
+lock_file_location="$log_file_location/trueNAS_snmp.lock"
+config_file_location="/mnt/volume1/web/config/trueNAS_snmp_config.txt"
+
+nas_name="TrueNAS" #this is only needed if the script cannot access the server name over SNMP, or if the config file is unavailable and will be used in any error messages
+capture_interval_adjustment=3
+```
+- `log_file_location` is where logs and other intermediate files are saved while the script is working
+- `lock_file_location` is where the script will create en empty directory that will then be deleted when the script's execution is complete. this is to prevent more than one copy of the script from running at the same time
+- `config_file_location` is where the config file is located
+- `nas_name` is what you have named your TrueNAS system so the emails and notifications can refer to the correct system
+- `capture_interval_adjustment` is used if the script takes too long to execute and does not complete in less than 60 seconds. The default is 3. This should not need to be adjusted.
+
+4. **Configure the .PHP Config File**
+- open the .PHP file and ensure the line `$config_file_location="/mnt/volume1/web/config/trueNAS_snmp_config.txt";` matches the same directory as the .SH script file.
+
+5. **Launch PHP web page and configure the script**
+
 ## 15.)  Setup Grafana Dashboard for TrueNAS
 <div id="Setup_Grafana_Dashboard_for_TrueNAS"></div>
 
@@ -653,6 +705,42 @@ https://www.youtube.com/watch?v=o0Py62k63_c
 
 ## 24.)  Mount External NFS Shares into TrueNAS Dataset
 <div id="Mount_External_NFS_Shares_into_TrueNAS_Dataset"></div>
+
+Since I will be slowly migrating from Synology to TrueNAS i still want my Synology units to store some of my data, but this is data is need by PLEX etc that will be running on TrueNAS. As such i need to link my systems together. 
+
+I created NFS permissions for some of my folders in Synology as seen below
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/synology_nfs_settings.png" alt="synology_nfs_settings.png" width="518" height="348">
+
+Then to mount the NFS share on TrueNAS, i created a dedicated dataset `/mnt/volume1/server2` since server2 is the name of one of my NAS and it makes it easier to know whcih NAS this is linked to. When creating this share, i left the `Dataset Preset` to `Generic` and left all other settings at default. I did not need to adjust permissions. 
+
+Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` and click Add
+
+- Description: set a description, i named mine `NFS Server2 Video Mount`
+- Type: set to `command`
+- Command: `mount -o rw -t nfs 192.168.1.13:/volume1/video /mnt/volume1/server2`
+  -Breakdown:
+   -  `rw` for read/write. If you want read only, set to just `r`
+   -  `192.168.1.13` IP of my remote Synology NAS
+   -  `/volume1/video` the share on the remote Synology NAS i am trying to access
+   -  `/mnt/volume1/server2` where on the TrueNAS system i want these files mounted
+- When: set to `post init` so the share is mounted on startup
+- ensure the task is enabled
+- set time out to 3
+
+The share will now mount at startup, but unless we restart the system, the share is not yet mounted so:
+
+- go to `System --> Shell`
+- enter `sudo -i` and log in under sudo
+- enter the same command we configured to happen during startup `mount -o rw -t nfs 192.168.1.13:/volume1/video /mnt/volume1/server2` and the share should be mounted.
+
+within my PLEX docker container i mapped the `/mnt/server2` volder under the app's settings
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/plex_acess_NFS.png" alt="plex_acess_NFS.png" width="227" height="326">
+
+Then within PLEX i was free to add the needed folders to my libraries
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/plex_acess_NFS2.png" alt="plex_acess_NFS.png" width="321" height="310">
 
 ## 25.)  General Little Settings Here and There
 <div id="General_Little_Settings_Here_and_There"></div>
