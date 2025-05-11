@@ -118,6 +118,7 @@ function send_mail(){
 		for bb in "${!address_explode[@]}"; do
 			python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "${3}" --to_address "${address_explode[$bb]}" --mail_body_html "$now - ${2}" --override_fromemail "$from_email_address"
 		done
+  		echo -n "$current_time" > "${1}"
 	else
 		echo -e "Only $time_diff minuets have passed since the last notification, email will be sent every ${4} minutes. $(( ${4} - $time_diff )) Minutes Remaining Until Next Email\n"
 	fi
