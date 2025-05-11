@@ -1,0 +1,1 @@
+45,email@email.com,60,192.168.1.8,192.168.1.8,30115,193aefgh74f28ecf,dD_KJxdY7Ni1DQM3LjbxSj45W25ZHTdsOH_mgPcigGuv6OWYoi12sznDS_VkxFTI5GURD0Ig1MRTMS43eVwHeg==,1,password,password,truenas,MD5,AES,email@email.com,http,home,15,1,1,1,1,1,1,75,1,75,1000
