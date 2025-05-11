@@ -10,6 +10,7 @@ How I have (Currently) Installed Frigate
    </li>
 	<li><a href="#Frigate_Configuration">Frigate Configuration YAML file</a> </li>
 	<li><a href="#rueNAS_Frigate_App_Setings">TrueNAS Frigate App Setings</a> </li>
+	 <li><a href="#frigate_metrics_export">Frigate Metrics Export</a> </li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -135,3 +136,12 @@ Set ACL for Frigate recorded files `/mnt/volume1/surveillance`
 Frigate App Config During Install in TrueNAS "Apps" page
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/frigate/images/frigate_config.png" alt="frigate config settings">
+
+## 1.) Frigate Metrics Export
+<div id="frigate_metrics_export"></div>
+
+As of 5/10/25 Frigate 0.15.1 does show available stats at https://<server-ip>:<port>/api/stats however it is not in a format things like prometheus can scrape. 
+
+There is a docker container that is supposed to export data into a format compatable with Prometheus however it does not seem to be working for me. https://github.com/bairhys/prometheus-frigate-exporter
+
+with that said, it appears based on discussion here https://github.com/blakeblackshear/frigate/issues/2266 that Frigate version 0.16 will natevely support Prometheus formatted data exporting. In addtion it appears there is already some documentation showing how it will be formatted here https://github.com/blakeblackshear/frigate/blob/dev/docs/docs/configuration/metrics.md
