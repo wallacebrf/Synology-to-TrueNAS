@@ -766,3 +766,5 @@ Then within PLEX i was free to add the needed folders to my libraries
 
 ## 25.)  General Little Settings Here and There
 <div id="General_Little_Settings_Here_and_There"></div>
+
+https://github.com/kneutron/ansitest/blob/master/ZFS/scrubwatch.sh
