@@ -509,6 +509,18 @@ https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
 
 poissibly use DSM within a docker container? https://github.com/vdsm/virtual-dsm
 
+veeam details
+https://releases.ubuntu.com/ --> download ubuntu ISO
+https://www.truenas.com/docs/scale/scaletutorials/instances/  --> create VMs on truenas
+https://www.veeam.com/products/free/backup-recovery.html   -> download Veeam
+https://www.truenas.com/docs/scale/scaletutorials/datasets/addmanagezvols/  --> create zvol
+https://hostman.com/tutorials/how-to-install-vnc-on-ubuntu/ --> install VNC on ubuntu
+https://www.veeam.com/products/free/microsoft-windows.html --> Veeam windows client free
+https://helpcenter.veeam.com/docs/agentforwindows/userguide/active_full_backup.html?ver=60 --> Veeam user gudies
+https://www.veeam.com/veeam_backup_12_user_guide_vsphere_pg.pdf --> User Manual
+https://www.veeam.com/solutions/small-business/pricing-calculator.html --> pricing
+
+
 <div id="Grey_log"></div>
 
 21. ***Grey log***
