@@ -768,3 +768,4 @@ Then within PLEX i was free to add the needed folders to my libraries
 <div id="General_Little_Settings_Here_and_There"></div>
 
 https://github.com/kneutron/ansitest/blob/master/ZFS/scrubwatch.sh
+https://github.com/markusressel/zfs-inplace-rebalancing
