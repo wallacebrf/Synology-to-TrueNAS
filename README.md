@@ -430,17 +430,25 @@ another thing to note: when looking at the Frigate web GUI live stream page show
 
 4. ***Grafana***
 
+Nothing too special is needed for Grafana as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/grafana/grafana_app_settings.png">Here are my settings</a>
+
 <div id="influxDB"></div>
 
 5. ***influxDB***
+
+Nothing too special is needed for InfluxDB as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/influxDB/influxdb_app_settings.png">Here are my settings</a>
 
 <div id="jackett"></div>
 
 6. ***jackett***
 
+Nothing too special is needed for Jackett as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/Jackett/jackett_app_settings.png">Here are my settings</a>
+
 <div id="plex"></div>
 
 7. ***plex***
+
+Nothing too special is needed for PLEX as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/PLEX/plext_app_settings.png">Here are my settings</a>
 
 <div id="radar"></div>
 
