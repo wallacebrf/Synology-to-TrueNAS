@@ -499,6 +499,8 @@ https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
 
 20. ***Veeam*** *[Replaces Active Backup for Business]*
 
+poissibly use DSM within a docker container? https://github.com/vdsm/virtual-dsm
+
 <div id="Grey_log"></div>
 
 21. ***Grey log***
