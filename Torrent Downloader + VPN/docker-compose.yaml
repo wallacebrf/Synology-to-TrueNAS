@@ -29,6 +29,7 @@ services:
       - '16881:16881' #torrent download port
       - 6881:6881/udp  #torrent download port
       - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
+      - - 8081:8081/tcp #sickchill
     pull_policy: always
     restart: unless-stopped
     volumes:
