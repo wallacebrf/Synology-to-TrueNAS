@@ -841,3 +841,6 @@ https://docs.oracle.com/cd/E19860-01/E21549/z400000c1016683.html
 
 
 also, using the scripts on 45 drive's github page, try to adopt it so users who are using TrueNAS on 45 drives HL15 etc can determine which disks are in which drive slots etc. 
+https://github.com/45Drives/cockpit-hardware/tree/master/45drives-motherboard/public/helper_scripts
+
+these scripts appear to be what they use to gather all of the details needed for their hardware overview pages. 
