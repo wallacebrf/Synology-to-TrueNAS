@@ -458,6 +458,12 @@ Nothing too special is needed for PLEX as it is available directly through the D
 
 9. ***sickchill***
 
+Sickchill is not available through the `Discover App` page on TrueNAS but i was able to use the compose file method to install it. My <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/SickChill/docker-compose.yaml">docker-compose.yaml</a> file is available.  
+
+This app requires gluetun to be operational as we are tunneling all of sick chill's web traffic through the gluetun app to ensure it uses our VPN tunnel. 
+
+To acheive this, the key line is `network_mode: "container:gluetun"` making all of this containers traffic flow through the GlueTun container. In addtion, the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- 8081:8081/tcp`. 
+
 <div id="nginx_reverse_proxy"></div>
 
 10. ***nginx reverse proxy***
@@ -479,6 +485,24 @@ Nothing too special is needed for PLEX as it is available directly through the D
 
 14. ***Chromium***
 
+I have TWO copies of the chromium browser installed on my system. One is linked to the gluetun network so i can easilly go to Nord VPN's DNS checker and tunnel status check pages to prove that the VPN tunnel is working as expected. The second one is "normal" and runs through my normal public IP adress. The main reason why i need this second tunnel is it allows me to access the web GUI interfaces for my 12x security cameras running in Frigate. Unfortunately because the first chromium container is linked to the gluetun container/VPN tunnel, it is not able to access my security camera network. 
+
+The copy running through the GlueTun VPN tunnel <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/chromium/docker-compose-VPN.yaml">docker-compose.yaml</a> file is available. This app requires gluetun to be operational as we are tunneling all of the chromium web traffic through the gluetun app to ensure it uses our VPN tunnel. 
+
+To acheive this, the key line is `network_mode: "container:gluetun"` and the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- '3410:3001'`. 
+
+The second version not running through the VPN tunnel <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/chromium/docker-compose-Normal.yaml">docker-compose.yaml</a> is available. 
+
+Running the two chromium containers side-by-side it can be easilly seem that the VPN tunnel is working as expected
+
+RUNNING THROUGH VPN
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/chromium/chromium_ip_address_VPN.png" alt="chromium_ip_address_VPN.png" width="540" height="269">
+
+NOT RUNNING THROUGH VPN
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/chromium/chromium_ip_address_normal.png" alt="chromium_ip_address_normal.png" width="393" height="234">
+
+My actual public IPv4 address starts with 98.... which is what the normal chromium is reporting. In addtion, the normal chromium also is properly reporting my IPv6 address. The VPN version of chromium is properly reporting `94.140.9.159` which is an IP address assigned to NORD VPN. In addition, this is the same IP address reported at the bottom of qBittorrent. Based on this i know that my VPN traffic is properly being routed through the VPN. 
+
 <div id="Portainer"></div>
 
 15. ***Portainer***
@@ -486,7 +510,66 @@ Nothing too special is needed for PLEX as it is available directly through the D
 <div id="Torrent_downloader_VPN"></div>
 
 16. ***Torrent down loader + VPN***
-- very useful step by step guide on using GlueTUN for docker app VPN tunnels: https://www.youtube.com/watch?v=TJ28PETdlGE
+
+<a href="https://www.youtube.com/watch?v=TJ28PETdlGE">very useful step by step guide on using GlueTUN for docker app VPN tunnels</a>
+
+To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, i have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Torrent%20Downloader%20%2B%20VPN/docker-compose.yaml">docker-compose.yaml</a> available. 
+
+breakdown of the importaint parts for the `GlueTUN` container:
+
+```
+cap_add:
+      - NET_ADMIN
+```
+
+this allows the GlueTUN app to create and manage networks
+
+```
+ devices:
+      - /dev/net/tun:/dev/net/tun
+```
+
+this is the tunnel that will be used to allow the VPN to function
+
+```
+ports:
+      - 8888:8888/tcp #proxy port
+      - 8388:8388/tcp #shadowsocket
+      - 8388:8388/udp #shadowsocket
+      - '10095:10095' #qbittorrent web interface
+      - '16881:16881' #torrent download port
+      - 6881:6881/udp  #torrent download port
+      - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
+      - 8081:8081/tcp #sickchill
+```
+
+ALL containers that you wish to have tunneled through the GlueTUN app must have their ports defined here. Due to this, every time a new app is added needing to run through the tunnel, the compose file will need to be revised and the container relaunched. 
+
+```
+- VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=openvpn
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
+      - OPENVPN_USER=nord_VPN_user
+      - OPENVPN_PASSWORD=nord_VPN_password
+      - HEALTH_TARGET_ADDRESS=google.com
+      - HEALTH_VPN_DURATION_INITIAL=30s
+      - HEALTH_VPN_DURATION_ADDITION=10s
+      - HEALTH_SUCCESS_WAIT_DURATION=60s
+      - DOT=off
+      - DNS_ADDRESS=103.86.96.100 #NORD VPN DNS server
+```
+
+This is my configuration for NordVPN, but will be different if you use one of the MANY VPN providers supported by GlueTun. If your VPN provider also has its own DNS, ensure you configure the `DNS_ADDRESS` paramter to ensure no DNS leaks occur. Now,i purposfuly have encrypted DNS off `DOT=off` for because NordVPN DNS does not seem to support it, but if your VPN provider does, ensure it is set to ON for more security. I also have a `healthcheck` task running that will ping google and if it fails, it will restart the cotainer to hopefully re-connect to Nord VPN again. 
+
+breakdown of the importaint parts for the `qBittorrent` container:
+
+```
+depends_on:
+      - gluetun
+```
+if the gluetun app is not running, the qBittorrent app will not run
+
+`network_mode: service:gluetun` ensures the qBittorrent app runs through the network created by the GlueTUN app ensuring it flows through the VPN tunnel
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
