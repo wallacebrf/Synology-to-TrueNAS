@@ -1,0 +1,19 @@
+services:
+  chromium-normal:
+    image: ghcr.io/linuxserver/chromium:latest
+    shm_size: 1g
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined 
+    volumes:
+      - /mnt/volume1/apps/chromium_normal:/config:rw
+    ports:
+      - '3411:3001'
+    environment:
+      TZ: Chicago
+      CUSTOM_USER: user
+      PASSWORD: password
+      PUID: 3005
+      PGID: 3004
+      TITLE: Chromium-Normal
+    restart: on-failure:5

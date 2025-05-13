@@ -1,0 +1,18 @@
+services:
+  chromium:
+    image: ghcr.io/linuxserver/chromium:latest
+    shm_size: 1g
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined 
+    volumes:
+      - /mnt/volume1/apps/chromium:/config:rw
+    environment:
+      TZ: Chicago
+      CUSTOM_USER: user
+      PASSWORD: password
+      PUID: 3004
+      PGID: 3003
+      TITLE: Chromium
+    network_mode: "container:gluetun"
+    restart: on-failure:5
