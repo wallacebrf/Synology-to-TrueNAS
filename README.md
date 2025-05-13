@@ -49,7 +49,7 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
 <li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
 <li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
-<li><a href="#Configiure_email_sending_from_CLI">Configiure Email Sending From CLI</a></li>
+<li><a href="#Configiure_email_sending_from_CLI">Configure Email Sending From CLI</a></li>
 <li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Tail Scale</a></li>
 <li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
 <li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
@@ -59,27 +59,27 @@ My Guide when I moved from Synology to TrueNAS
 ## 1.) About the project Details
 <div id="About_the_project_Details"></div>
 
-I currently have as of May 2025 a Synology DVA3219 with an attached DX517 expansion unit. This unit is running 4x WD Purple drives for Surrveilance Station and has 5x drives for PLEX media. I have another DS920 with 3x 1.92TB SSD for running PLEX itself. Finally I have a DS920+ with an attached DX517 expansion unit. This has 9x drives for PLEX media, backups, docker containers, my home web interfaces and automation and all of my docker container. 
+I currently have as of May 2025 a Synology DVA3219 with an attached DX517 expansion unit. This unit is running 4x WD Purple drives for Surveillance Station and has 5x drives for PLEX media. I have another DS920 with 3x 1.92TB SSD for running PLEX itself. Finally I have a DS920+ with an attached DX517 expansion unit. This has 9x drives for PLEX media, backups, docker containers, my home web interfaces and automation and all of my docker container. 
 
-It is obvious from the details above that I am a big Synology user however with the details of the new 2025 models and their restrictive HDD policies are causing me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the creat script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
+It is obvious from the details above that I am a big Synology user however with the details of the new 2025 models and their restrictive HDD policies are causing me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
 
-With this news I have decided to move away from Synology and I am eyeing TrueNAS Community (SCALE). I am currently testing TrueNAS on an old Dell Micro PC I had available. I first tried to use a M.2 to 4x SATA adaptor to try adding more drives to the box as the processor and IGPU would actually be enough for me to comfortably move to if I could get drive expansion options to work. Unfortunately with the adaptor in the M.2 slot, the system refused to POST.
+With this news I have decided to move away from Synology and I am eyeing TrueNAS Community (SCALE). I am currently testing TrueNAS on an old Dell Micro PC I had available. I first tried to use a M.2 to 4x SATA adapter to try adding more drives to the box as the processor and IGPU would actually be enough for me to comfortably move to if I could get drive expansion options to work. Unfortunately with the adapter in the M.2 slot, the system refused to POST.
 
 For my testing I am using a 256GB SSD from an old laptop and the 512GB NVME drive in the Dell's M.2 slot. 
 
-In the long run in about 1-year's time I plan to build a custom system that can fit all of my drives. I am eyeing products from 45 Homelab, but that can fit 15x 3.5" HDD plus 6x 2.5" SSDs, but I have 18x 3.5" HDD so that will obviously not work unless I do something else. 
+In the long run in about 1-year's time I plan to build a custom system that can fit all of my drives. I am eying products from 45 Home lab, but that can fit 15x 3.5" HDD plus 6x 2.5" SSDs, but I have 18x 3.5" HDD so that will obviously not work unless I do something else. 
 
 ## 2.) Current Applications Used on My Various Synology Systems
 <div id="Current_Applications_Used_on_My_Various_Synology_Systems"></div>
 
-PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacemrnt I can try. However since I have no experiance with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
+PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacement I can try. However since I have no experience with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
 
 Please also note I have never used Apple products so I am not in a postion to suggest services that are compatible with Apple. If someone with Apple products has done things to ove from Synology to TrueNAS and I am not detailing that, please submit an issue request and I can work with you to add those details to this guide. 
 
-First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps I am using. This guide willdetail what I chose to replace the Synology Apps. 
+First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps I am using. This guide will detail what I chose to replace the Synology Apps. 
 
 1.) My Main DS920 with attached DX517
-  - Synology Calandar
+  - Synology Calendar
   - Antivirus Essential
   - Synology Mail Plus Server
   - Web Station
@@ -87,7 +87,7 @@ First and foremost if I wish to leave Synology I need to find replacements for a
   - Hyper Backup Vault
   - Central Management System
   - Maria DB
-  - PHP Myadmin
+  - PHP My Admin
   - LOg Center
   - Active Backup For Business
   - Container Manager
@@ -112,13 +112,13 @@ First and foremost if I wish to leave Synology I need to find replacements for a
 ## 3.) Does My System Have Enough RAM?
 <div id="Does_My_System_Have_Enough_RAM"></div>
 
-A lot detail online will indicate that one should have approximately 1GB of RAM for every TB of disk space used for NFS to work best. I feel good information can be found here: <a href="https://www.youtube.com/watch?v=xp6g-8VS06M">Lawrence Systems - How Much Memory Does ZFS Need and Does It Have To Be ECC?</a>
+A lot detail on line will indicate that one should have approximately 1GB of RAM for every TB of disk space used for NFS to work best. I feel good information can be found here: <a href="https://www.youtube.com/watch?v=xp6g-8VS06M">Lawrence Systems - How Much Memory Does ZFS Need and Does It Have To Be ECC?</a>
 
 I plan to have 128GB of RAM in the system I will eventually build as it will have 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. As most of my space is comprised on large media files that basically never change, I do not anticipate any issues. 
 
-The big thing to understand about TrueNAS and the ZFS file system that accompanies it, is that it will use un-used RAM space as a cache drive. This caching is doing the same thing a read only NVMA chache does on Synology. It will save commonly accessed files in the RAM cache so it does not need to read the data of the hard disks. ZFS calls this ARC or `Adaptive Replacement Cache`. This cache again is for reading data off the system, it does not help writting data to the drives. 
+The big thing to understand about TrueNAS and the ZFS file system that accompanies it, is that it will use un-used RAM space as a cache drive. This caching is doing the same thing a read only NVMA cache does on Synology. It will save commonly accessed files in the RAM cache so it does not need to read the data of the hard disks. ZFS calls this ARC or `Adaptive Replacement Cache`. This cache again is for reading data off the system, it does not help writing data to the drives. 
 
-If your system is primarilly used for PLEX (I.E. large continuous file reads) then the ARC will not really help. ARC will help with things like loading PLEX and it's dashboard, art etc as those are small files and when browsing your PLEX libary frequrently are also read frequnetly and will be saved to ARC. 
+If your system is primarily used for PLEX (I.E. large continuous file reads) then the ARC will not really help. ARC will help with things like loading PLEX and it's dashboard, art etc as those are small files and when browsing your PLEX library frequently are also read frequently and will be saved to ARC. 
 
 You can use NVME drives in TrueNAS for caching in a direct similar method as Synology and that is referred to as L2ARC or 'Level 2 Adaptive Replacement Cache' and can assist with read performance if you perhaps do not have lots of RAM. 
 
@@ -126,9 +126,9 @@ Like Synology READ/WRITE cache TrueNAS can use write caching which uses `SLOG` s
 
 The real question is what is the actual performance difference with using ARC, L2ARC, SLOG etc, and unfortunately that is not always easy to answer as it depends on your usage patterns. 
 
-Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM. The system will run fine, but may not possibly be atthe maximum performance it could otherwise acheive. 
+Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM. The system will run fine, but may not possibly be at the maximum performance it could otherwise achieve. 
 
-More useful information can be found here <a href="https://www.45drives.com/community/articles/zfs-caching/">45 Drive ZFS Caching Discusion</a>
+More useful information can be found here <a href="https://www.45drives.com/community/articles/zfs-caching/">45 Drive ZFS Caching Discussion</a>
 
 ## 4.) Change TrueNAS GUI Port settings
 <div id="Change_TrueNAS_GUI_Port_settings"></div>
@@ -142,16 +142,16 @@ This section is not required if you are not planning to host any web services on
 ## 5.) Security Measures To Lock Down Your NAS
 <div id="Security_Measures_To_Lock_Down_Your_NAS"></div>
 
-There have been plently of discussions and articles on how to secure a Synology NAS and a lot of them are applicable to TrueNAS like not using a root/admin account unless you need to, using Muilti-Factor-Authentication, not exposing the NAS directly to the internet, use proper passwords etc. 
+There have been plenty of discussions and articles on how to secure a Synology NAS and a lot of them are applicable to TrueNAS like not using a root/admin account unless you need to, using Multi-Factor-Authentication, not exposing the NAS directly to the Internet, use proper passwords etc. 
 
-This Youtube guide by Lawrence Syetems is very helpful and I have included some of the information below: <a href="https://www.youtube.com/watch?v=u0btB6IkkEk">Lawrence Systems - Hardening TrueNAS Scale: Security Measures To Lock Down Your NAS</a>
+This Youtube guide by Lawrence Systems is very helpful and I have included some of the information below: <a href="https://www.youtube.com/watch?v=u0btB6IkkEk">Lawrence Systems - Hardening TrueNAS Scale: Security Measures To Lock Down Your NAS</a>
 
 I performed the following actions on my system:
 
 <ol>
 <li><strong>System --> Advanced Settings --> Console --> Configure</strong> and turn off <strong>Show Text Console without Password Prompt</strong></li>
 <ul>
-<li>This as Tom indicates in his video locks down the HMI GUI available to prevent someone from changing configuration settings. <br>Obviously if you either do not use the video out of your NAS, or it is in a locked / secure area, this is not as required. I personally have my TrueNAS on a JetKVM, and so if someone were to somehow acess my KVM, they will at least then not be able to have access to my TrueNAS.</li>
+<li>This as Tom indicates in his video locks down the HMI GUI available to prevent someone from changing configuration settings. <br>Obviously if you either do not use the video out of your NAS, or it is in a locked / secure area, this is not as required. I personally have my TrueNAS on a JetKVM, and so if someone were to somehow access my KVM, they will at least then not be able to have access to my TrueNAS.</li>
 </ul>
 <br>
 <li>Adjust auto-time out as desired. The default is 300 seconds</li>
@@ -167,7 +167,7 @@ I performed the following actions on my system:
 <li>Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH.</li>
 </ul>
 <br>
-<li>Bind SSH to only certain ethernet port</li>
+<li>Bind SSH to only certain Ethernet port</li>
 <ul>
 <li><strong>System --> Services -> SSH --> Click on the pencil edit icon on the right</strong></li>
 <li>Click advanced settings</li>
@@ -179,15 +179,15 @@ I performed the following actions on my system:
 ## 6.)  Create storage pool using available drives as desired.  
 <div id="Create_storage_pool_using_available_drives_as_desired"></div>
 
-This is something I am not going to go into significant detail on as the choices of what type of disk configurtion you choose is different from user to user
+This is something I am not going to go into significant detail on as the choices of what type of disk configuration you choose is different from user to user
 
 I will however touch on a few key details. 
 
 1. If you are using Synology SHR or SHR2 where your disks are of various different sizes, that functionality as of 5/8/2025 is NOT available on ZFS. On ZFS all disks need to be the same size or larger, and if you do use larger drives with smaller drives, you will loose any of the extra space, ZFS cannot use it.
-2. Synology does have the ability to go from one raid type to the next when using SHR/SHR2. For example you could start with two drives, which Synology will put into a mirror, then add another drive to the pool and have the option to change to raid 5 and so on. On ZFS once you make your VDEV, you are stuck with the type you make (mirror, Z1, Z2 ect) and the only way to change the type is to destroy the Vdev which will destory what ever pool is attached to it.
+2. Synology does have the ability to go from one raid type to the next when using SHR/SHR2. For example you could start with two drives, which Synology will put into a mirror, then add another drive to the pool and have the option to change to raid 5 and so on. On ZFS once you make your VDEV, you are stuck with the type you make (mirror, Z1, Z2 ect) and the only way to change the type is to destroy the Vdev which will destroy what ever pool is attached to it.
 3. You can (as of late 2024) now expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods.
 
-For more details on expanding ZFS, these two videos are very helful: <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">Lawrence Systems - TrueNAS: How To Expand A ZFS Pool</a> and <a href="https://www.youtube.com/watch?v=uPCrDmjWV_I">Lawrence Systems - TrueNAS Tutorial: Expanding Your ZFS RAIDz VDEV with a Single Drive</a>
+For more details on expanding ZFS, these two videos are very helpful: <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">Lawrence Systems - TrueNAS: How To Expand A ZFS Pool</a> and <a href="https://www.youtube.com/watch?v=uPCrDmjWV_I">Lawrence Systems - TrueNAS Tutorial: Expanding Your ZFS RAIDz VDEV with a Single Drive</a>
 
 I also suggest this video on creating your disk storage: <a href="https://www.youtube.com/watch?v=ykhaXo6m-04">Hardware Haven - Choosing The BEST Drive Layout For Your NAS</a>
 
@@ -333,11 +333,11 @@ Two useful guides on how to use data sets and their permissions can be found her
 ## 10.)  Create needed NFS shares  
 <div id="Create_needed_NFS_shares"></div>
 
-NFS shares are not required unless you are sharing this TrueNAS system's data with other linux systems. I am doing so in the beginning to use the shares currently on my Synology units so I can expose PLEX to my movies and TV shows. If you do not need NFS shares, skip this section. 
+NFS shares are not required unless you are sharing this TrueNAS system's data with other Linux systems. I am doing so in the beginning to use the shares currently on my Synology units so I can expose PLEX to my movies and TV shows. If you do not need NFS shares, skip this section. 
 
 Useful information:  <a href="https://www.youtube.com/watch?v=mdHmcwWTNWA">Lawrence Systems - Configuring TrueNAS NFS Share for XCP-ng</a> 
 
-For each share created for NFS, it is suggested to define the IP address of the host(s) that will connect to limit who can connect for added security. For example, during this testing I plan to allow my current Synology systems to access my NFS shares and my three systems have IPs 192.168.1.178, 192.168.1.200, and finally 192.168.1.13. Since I plan to have no other systems access my TrueNAS NFS shares, limiting connections to only thsoe three host IPs increases my security a little. 
+For each share created for NFS, it is suggested to define the IP address of the host(s) that will connect to limit who can connect for added security. For example, during this testing I plan to allow my current Synology systems to access my NFS shares and my three systems have IPs 192.168.1.178, 192.168.1.200, and finally 192.168.1.13. Since I plan to have no other systems access my TrueNAS NFS shares, limiting connections to only those three host IPs increases my security a little. 
 
 As a note, for my current Synology systems I have PLEX running on one DS920 with all of my media on the other DS920 pared with a DX517 and my DVA3219 paired with a DX517. I am using NFS shares to allow the PLEX Synology box to access the media files on the other two systems. I have not bothered to research why this was the case, BUT on the two systems sharing their files over NFS I had to configure the NFS permissions to "Squash all users to Admin", otherwise it refused to work. I have noticed a similar issue with TrueNAS where I needed to use the `Mapall User` and `Mapall Group` advanced options and set those both to `root`. 
 
@@ -351,9 +351,9 @@ As a note, for my current Synology systems I have PLEX running on one DS920 with
 - click on `Advanced Options` and scroll down to set `Mapall User` and `Mapall Group` to `root` and set `security` to `SYS`
 - if desired there is an option under the `Advanced Options` to set the NFS share as Read Only. Set as your setup requires. 
 - click save
-3. repeat step above as needed for addtional shares as desired.
+3. repeat step above as needed for additional shares as desired.
 
-Note: I had difficulty in sharing a data set with child data sets over NFS, specifcally the `/mnt/volume1/video` data set. For some reason i could see and access the data on that `/mnt/volume1/video` main data set i was directly sharing over NFS, but i was NOT able to acces the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` i was directly sharing with NFS, i was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such i just made individual NFS shares for the data sets i made under `/mnt/volume1/video` and everything seemed to work fine. 
+Note: I had difficulty in sharing a data set with child data sets over NFS, specifically the `/mnt/volume1/video` data set. For some reason i could see and access the data on that `/mnt/volume1/video` main data set i was directly sharing over NFS, but i was NOT able to acces the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` i was directly sharing with NFS, i was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such i just made individual NFS shares for the data sets i made under `/mnt/volume1/video` and everything seemed to work fine. 
 
 ## 11.)  Create snapshots
 <div id="Create_snapshots"></div>
@@ -362,19 +362,19 @@ Snapshots work the same with TrueNAS as they do with Synology as they can be res
 
 To schedule snapshots:
 1. go to `Data Protection -> Periodic Snapshot Tasks -> Add`
-2. choose the desired data set. I would recommend to make scheduled snapshots for each separate data set to allow for flexibility in possible future data recovery. To assist with this, an option check box `recursive` is available when schedulign snapshots. This will create separate snapshots for all of the child data sets. As such i made one scheudled snap shot task for my `/mnt/volume1` data set and chose the recursive option to also make separate snap shots of everything under it to. 
-- also be aware that on our SMB shares, by defualt the option `Enable Shaow Copies` is enabled. This allows windows users to use the `Previous Versions` feature to recover older copies of individual files and folders. This allows for granualr per-file recovery in an easy to use manner. As i will be accessing my TrueNAS files near constantly over SMB (I am a windows user YAY!) this is a very handy feature if i need to recover a file as i do not need to directly interact with the TrueNAS GUI etc. 
+2. choose the desired data set. I would recommend to make scheduled snapshots for each separate data set to allow for flexibility in possible future data recovery. To assist with this, an option check box `recursive` is available when scheduling snapshots. This will create separate snapshots for all of the child data sets. As such i made one scheduled snap shot task for my `/mnt/volume1` data set and chose the recursive option to also make separate snap shots of everything under it to. 
+- also be aware that on our SMB shares, by default the option `Enable Shadow Copies` is enabled. This allows windows users to use the `Previous Versions` feature to recover older copies of individual files and folders. This allows for granular per-file recovery in an easy to use manner. As i will be accessing my TrueNAS files near constantly over SMB (I am a windows user YAY!) this is a very handy feature if i need to recover a file as i do not need to directly interact with the TrueNAS GUI etc. 
 3. Choose the amount of time the snap shot is retained
 - this is accomplished using the `Snapshot Lifetime` and `Unit` options. I am choosing 1 week of retention. 
 4. I am leaving the naming process `Naming Schema` as the default of `auto-%Y-%m-%d_%H-%M`
 5. Choose how often the snap shots are taken, the main options are Hourly, Daily, Weekly, Monthly. However custom options are also available. I am going with Daily.
 6. I am leaving the `Allow Taking Empty Snapshot` option enabled
-7. I am not excluding anything from my snapshots so I am leaving `Exclude` enpty
+7. I am not excluding anything from my snapshots so I am leaving `Exclude` empty
 
 ## 12.)  Install required Apps 
 <div id="Install_required_Apps"></div>
 
-On my Synology systems I purposfully made separate users for every docker container so i could restrict each container to only the data it needs. On my Synology systems i had a "docker" folder where i had sub folders for each container. If i were to use one user for every container, it would allow the different containers to read eachother's data. This is especially importaint when ruinning things like PLEX or JellyFin in docker where those two apps will also need access to your media libraies. You probably do not want all of your containers to have access to thise. Making separate users per container helps solve this problem as each user can be restricted individually on what they can and cannot acccess. 
+On my Synology systems I purposefully made separate users for every docker container so i could restrict each container to only the data it needs. On my Synology systems i had a "docker" folder where i had sub folders for each container. If i were to use one user for every container, it would allow the different containers to read each other's data. This is especially important when running things like PLEX or JellyFin in docker where those two apps will also need access to your media libraries. You probably do not want all of your containers to have access to those. Making separate users per container helps solve this problem as each user can be restricted individually on what they can and cannot access. 
 
 1. Create required users/groups
 - On a **per-app basis**, create a user and user group
@@ -391,7 +391,7 @@ On my Synology systems I purposfully made separate users for every docker contai
     - **SSH password login enabled**: leave unchecked
     - **Allow all sudo commands**: leave unchecked
     - **Allow all sudo commands with no password**: leave unchecked
-    - **SMB User**: uncheck the box
+    - **SMB User**: un-check the box
     - Record the **GID** of the newly created group `Credentials --> Groups`
     - Find the group with the name of the user just created and in the `GID` column, record the number assigned.
 The PID and GID created for this user, in this example “Plex” will be used to assign that app rights to ONLY the data sets required and desired for the app. Otherwise by default the app will be placed inside the system default “apps” user and we will otherwise not be able to have as much fine grain detail and control over what this particular app can and cannot access.
@@ -401,7 +401,7 @@ The PID and GID created for this user, in this example “Plex” will be used t
 - Click `add item`
 - In the `Access Control Entry` area, under `who` select `group` and under `group` select the user needed in this example “Plex”
 - Under the `Permissions` area, `Permission Type` should be set to `Basic` and the `Permissions` should be set to `Traverse` so this app can enter the `apps` data set to get access to the `PLEX` data set within it. 
-- Click button `Apply permissions recursively`, agree to the confirmation popup. Note: the `Traverse` option is needed for nested data sets only. This allows the PLEX app to "move through" the `apps` data set, but cannot actually access any data within it. We need to configure the child data set(s) we want PLEX to be able to access individually. 
+- Click button `Apply permissions recursively`, agree to the confirmation pop-up. Note: the `Traverse` option is needed for nested data sets only. This allows the PLEX app to "move through" the `apps` data set, but cannot actually access any data within it. We need to configure the child data set(s) we want PLEX to be able to access individually. 
   - IF the desire is to have this app (Plex) be able to traverse ALL data sets inside the current data set, click the `Apply permissions to child data sets`. In this example we will NOT be doing that as we want PLEX to only have access to its data set we created under the apps data set.
 - Click `Save Access Control List`
 - We now need to give the app (PLEX) access to the data set `PLEX` under “apps” in this case the `/volume1/apps/plex`. Click on the plex data set and repeat steps above for that data set. However for the permissions set it to `Full Control` so the App (PLEX) can control it’s assigned app directory `/volume1/apps/plex`. <ins>For other data sets outside of the apps area</ins>, the default can be used, or limited to just read as desired.
@@ -412,19 +412,19 @@ The PID and GID created for this user, in this example “Plex” will be used t
 3. **Frigate**
 - Refer here for detailed information on <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate Configuration on TrueNAS</a>
 
-I have been using Synology Surrveilance Station (Referred here on out as SSS) since 2019. Prior to that i had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and i have been very happy since.
+I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that i had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and i have been very happy since.
 
 If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what i was seeing with Frigate.
 
-With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "dep video analsysis" features to perform person, vehicle and object detetion, which has been working well. What has really made me appreciate Frigate is that i can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
+With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that i can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
 
-To acheive this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU passthrough from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analsys on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to arond 50%, loads the GPU to around 90%.
+To achieve this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU pass-through from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analysis on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
 
-I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power diffrential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analsysis!!.
+I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power differential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analysis!!.
 
-something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leaveraged by Frigate. Persoanlly after using Frigate, i think Frigate does a better job anyways but your milage may vary.
+something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, i think Frigate does a better job anyways but your mileage may vary.
 
-another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras to gether.
+another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together.
 
 <div id="Grafana"></div>
 
@@ -485,7 +485,7 @@ Nothing too special is needed for PLEX as it is available directly through the D
 
 <div id="Torrent_downloader_VPN"></div>
 
-16. ***Torrent downloader + VPN***
+16. ***Torrent down loader + VPN***
 - very useful step by step guide on using GlueTUN for docker app VPN tunnels: https://www.youtube.com/watch?v=TJ28PETdlGE
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
@@ -507,16 +507,16 @@ https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
 
 20. ***Veeam*** *[Replaces Active Backup for Business]*
 
-poissibly use DSM within a docker container? https://github.com/vdsm/virtual-dsm
+possibly use DSM within a docker container? https://github.com/vdsm/virtual-dsm
 
-veeam details
+Veeam details
 https://releases.ubuntu.com/ --> download ubuntu ISO
 https://www.truenas.com/docs/scale/scaletutorials/instances/  --> create VMs on truenas
 https://www.veeam.com/products/free/backup-recovery.html   -> download Veeam
 https://www.truenas.com/docs/scale/scaletutorials/datasets/addmanagezvols/  --> create zvol
 https://hostman.com/tutorials/how-to-install-vnc-on-ubuntu/ --> install VNC on ubuntu
 https://www.veeam.com/products/free/microsoft-windows.html --> Veeam windows client free
-https://helpcenter.veeam.com/docs/agentforwindows/userguide/active_full_backup.html?ver=60 --> Veeam user gudies
+https://helpcenter.veeam.com/docs/agentforwindows/userguide/active_full_backup.html?ver=60 --> Veeam user guides
 https://www.veeam.com/veeam_backup_12_user_guide_vsphere_pg.pdf --> User Manual
 https://www.veeam.com/solutions/small-business/pricing-calculator.html --> pricing
 
@@ -539,7 +539,7 @@ https://www.veeam.com/solutions/small-business/pricing-calculator.html --> prici
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
-TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but oen might want to export this data to be able to better display it in Grafana for exmaple. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this i needed an intermediary step to convert the graphite data into somethign InfluxDB could ingest. To do this i used a `truenas-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
+TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but one might want to export this data to be able to better display it in Grafana for example. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this i needed an intermediary step to convert the graphite data into something InfluxDB could ingest. To do this i used a `truenas-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
 
 1. Setup TrueNAS exporter under `Reporting --> Exporters` so we can get the data out of TrueNAS. 
 - **Name**: netdata
@@ -596,7 +596,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 3. InfluxDB Scrapper Configuration
 - Open a new browser window and browse to `http://<server-IP>:9108`
 - On the page titled `Graphite Exporter` click on the “metrics” link
-- There should be a ton of text displayed showing the last set of data received from TrueNAS. I have configrued TrueNAS to export data every 10 seconds so data should already be available. However if you chose a slower rate like every few minutes, you will need to wait until TrueNAS sends data to it's exporter before you will see data on the metrics page. 
+- There should be a ton of text displayed showing the last set of data received from TrueNAS. I have configured TrueNAS to export data every 10 seconds so data should already be available. However if you chose a slower rate like every few minutes, you will need to wait until TrueNAS sends data to it's exporter before you will see data on the metrics page. 
 - Copy the URL, in my case that is `http://192.168.1.8:9108/metrics`
 - Launch influxDB web portal in the apps page
 - On the left click the Up arrow and select “buckets”
@@ -613,11 +613,11 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 <div id="Install_script_to_pull_TrueNAS_SNMP_data"></div>
 
 1.) **Intro**
-We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which i will document below so the script I will detail can collect the needed informaiton. 
+We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which i will document below so the script I will detail can collect the needed information. 
 
 The SNMP data is collected based on the details of the <a href="https://www.truenas.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/">TrueNAS MIB file</a>
 
-on a system not running NVidia drivers, here is an exmaple of the data it can collect:
+on a system not running NVidia drivers, here is an example of the data it can collect:
 
 ```
 zpool,nas_name=TrueNAS,zpool_index=1 zpool_name="boot-pool",zpool_health="ONLINE",zpool_read_ops=51163,zpool_write_ops=1214320,zpool_read_bytes=1740320768,zpool_write_bytes=16606257152
@@ -695,7 +695,7 @@ capture_interval_adjustment=3
 ## 16.)  Setup Web site Details
 <div id="Setup_Web_site_Details"></div>
 
-Synology has a easy to use package `Web Station` to rather easilly create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a> to give us the ability to host a web site. This section will go over what i had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
+Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a> to give us the ability to host a web site. This section will go over what i had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
 
 ## 17.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
@@ -717,8 +717,66 @@ Synology has a easy to use package `Web Station` to rather easilly create and co
 
 There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler here: https://github.com/wallacebrf/SMART-to-InfluxDB-Logger. I will describe how to setup both. 
 
-## 22.)  Configiure Email Sending From CLI
+## 22.)  Configure Email Sending From CLI
 <div id="Configiure_email_sending_from_CLI"></div>
+
+For some reason TrueNAS does not have `sendmail` or other readily available methods to send emails using the CLI and or within scripts. <a href="https://github.com/oxyde1989/standalone-tn-send-email/tree/main">Luckily I stumbled upon </a> that allows for easy sending of emails. 
+
+The command to send emails is as follows: `python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "${subject}" --to_address "${to_email_address}" --mail_body_html "${mail_body_contents}" --override_fromemail "${from_email_address}"`
+
+I put this into the function i previously used to send emails that also tracks when the last email was sent to prevent scripts from spamming every time they execute and will instead only send new messages after a defined set point of time
+
+```
+function send_mail(){
+#email_last_sent_log_file=${1}		this file contains the UNIX time stamp of when the email is sent so we can track how long ago an email was last sent
+#message_text=${2}			this string of text contains the body of the email message
+#email_subject=${3}			this string of text contains the email subject line
+#email_interval=${4}			this numerical value will control how many minutes must pass before the next email is allowed to be sent
+	local message_tracker=""
+	local time_diff=0
+	echo "${2}"
+	echo ""
+	local current_time=$( date +%s )
+	if [ -r "${1}" ]; then #file is available and readable 
+		read message_tracker < "${1}"
+		time_diff=$((( $current_time - $message_tracker ) / 60 ))
+	else
+		echo -n "$current_time" > "${1}"
+		time_diff=$(( ${4} + 1 ))
+	fi
+			
+	if [ $time_diff -ge ${4} ]; then
+		local now=$(date +"%T")
+		echo "the email has not been sent in over ${4} minutes, re-sending email"
+	
+		#https://github.com/oxyde1989/standalone-tn-send-email/tree/main
+				
+		#the command can only take one email address destination at a time. so if there are more than one email addresses in the list, we need to send them one at a time
+		address_explode=(`echo "$email_address" | sed 's/;/\n/g'`)
+		local bb=0
+		for bb in "${!address_explode[@]}"; do
+			python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "${3}" --to_address "${address_explode[$bb]}" --mail_body_html "$now - ${2}" --override_fromemail "$from_email_address"
+		done
+  		echo -n "$current_time" > "${1}"
+	else
+		echo -e "Only $time_diff minuets have passed since the last notification, email will be sent every ${4} minutes. $(( ${4} - $time_diff )) Minutes Remaining Until Next Email\n"
+	fi
+}
+```
+
+Now I can send emails through scripts. I am also using this to send emails when my TrueNAS restarts and when it boots. 
+
+I added two `Init/Shutdown Scripts` entries: Here is an example of one.
+
+Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` and click Add
+
+- Description: set a description, i named mine `Startup Email`
+- Type: set to `command`
+- Command: `python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "TrueNAS Has Started" --to_address "${address_explode[$bb]}" --mail_body_html "TrueNAS has started" --override_fromemail "$from_email_address"` where you will need to enter your email details. 
+- When: set to `post init` for startup
+- ensure the task is enabled
+- set time out to 3
+
 
 ## 23.)  Configure Remote Access using Tail Scale
 <div id="Configure_Remote_Access_using_Tail_Scale"></div>
@@ -756,7 +814,7 @@ The share will now mount at startup, but unless we restart the system, the share
 - enter `sudo -i` and log in under sudo
 - enter the same command we configured to happen during startup `mount -o rw -t nfs 192.168.1.13:/volume1/video /mnt/volume1/server2` and the share should be mounted.
 
-within my PLEX docker container i mapped the `/mnt/server2` volder under the app's settings
+within my PLEX docker container i mapped the `/mnt/volume1/server2` folder under the app's settings
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/plex_acess_NFS.png" alt="plex_acess_NFS.png" width="227" height="326">
 
@@ -773,7 +831,7 @@ https://github.com/markusressel/zfs-inplace-rebalancing
 ## 26.)  On Systems with IPMI supported motherboards
 <div id="On_Systems_with_IPMI_supported_motherboards"></div>
 
-Plan to add suport for IPMI measurements to <a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a> to allow it to poll sensors and other details status from the motherboard directly
+Plan to add support for IPMI measurements to <a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a> to allow it to poll sensors and other details status from the motherboard directly
 
 https://www.tzulo.com/crm/knowledgebase/47/IPMI-and-IPMITOOL-Cheat-sheet.html
 
