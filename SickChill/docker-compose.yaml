@@ -1,0 +1,16 @@
+services:
+  sickchill:
+    container_name: sickchill
+    environment:
+      - PUID=3001
+      - PGID=3000
+    image: sickchill/sickchill:latest
+    network_mode: "container:gluetun"
+    #ports:         not needed as we will be passing through the gluetun app
+    #  - 8081:8081/tcp  #needs to be added to the ports used by the gluetun app
+    pull_policy: always
+    restart: unless-stopped
+    volumes:
+      - /mnt/volume1/apps/sickchill/downloads:/downloads
+      - /mnt/volume1/apps/sickchill/config:/config
+  
