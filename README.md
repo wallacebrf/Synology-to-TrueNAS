@@ -769,3 +769,17 @@ Then within PLEX i was free to add the needed folders to my libraries
 
 https://github.com/kneutron/ansitest/blob/master/ZFS/scrubwatch.sh
 https://github.com/markusressel/zfs-inplace-rebalancing
+
+## 26.)  On Systems with IPMI supported motherboards
+<div id="On_Systems_with_IPMI_supported_motherboards"></div>
+
+Plan to add suport for IPMI measurements to <a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a> to allow it to poll sensors and other details status from the motherboard directly
+
+https://www.tzulo.com/crm/knowledgebase/47/IPMI-and-IPMITOOL-Cheat-sheet.html
+
+https://www.ibm.com/docs/en/power9/9183-22X?topic=ipmi-common-commands
+
+https://docs.oracle.com/cd/E19860-01/E21549/z400000c1016683.html
+
+
+also, using the scripts on 45 drive's github page, try to adopt it so users who are using TrueNAS on 45 drives HL15 etc can determine which disks are in which drive slots etc. 
