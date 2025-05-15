@@ -597,6 +597,8 @@ https://github.com/stevenliebregt/docker-compose-lemp-stack
 
 https://github.com/sprintcube/docker-compose-lamp
 
+example with Nginx with port 80 to 443 forwarding and ssl certs: https://www.hostmycode.in/tutorials/lemp-stack-on-docker
+
 <div id="DIUN"></div>
 
 18. ***DIUN – Docker Image Update Notifier***
