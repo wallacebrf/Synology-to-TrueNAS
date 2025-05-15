@@ -3,7 +3,7 @@ services:
         build:
             dockerfile: '/mnt/volume1/hosting/php-dockerfile'
         volumes:
-            - '/mnt/volume1/hosting/web:/var/www/html'
+            - '/mnt/volume1/hosting/web:/var/www/html:rw'
         depends_on:
             - mysql
         environment:
@@ -18,8 +18,8 @@ services:
         links:
             - 'php'
         volumes:
-            - '/mnt/volume1/hosting/web:/var/www/html'
-            - '/mnt/volume1/hosting/nginx:/etc/nginx/conf.d'
+            - '/mnt/volume1/hosting/web:/var/www/html:rw'
+            - '/mnt/volume1/hosting/nginx:/etc/nginx/conf.d:rw'
         depends_on:
             - php
         environment:
@@ -37,7 +37,7 @@ services:
             - PUID=3003
             - PGID=3002
         volumes:
-            - '/mnt/volume1/hosting/mysql:/var/lib/mysql'
+            - '/mnt/volume1/hosting/mysql:/var/lib/mysql:rw'
         pull_policy: always
         restart: unless-stopped
         ports:
