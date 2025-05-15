@@ -1,0 +1,57 @@
+services:
+    php:
+        build:
+            dockerfile: '/mnt/volume1/hosting/php-dockerfile'
+        volumes:
+            - '/mnt/volume1/hosting/web:/var/www/html'
+        depends_on:
+            - mysql
+        environment:
+            - PUID=3003
+            - PGID=3002
+        pull_policy: always
+        restart: unless-stopped
+    nginx:
+        image: nginx:latest
+        ports:
+            - '81:80'
+        links:
+            - 'php'
+        volumes:
+            - '/mnt/volume1/hosting/web:/var/www/html'
+            - '/mnt/volume1/hosting/nginx:/etc/nginx/conf.d'
+        depends_on:
+            - php
+        environment:
+            - PUID=3003
+            - PGID=3002
+        pull_policy: always
+        restart: unless-stopped
+    mysql:
+        image: mysql:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD='password1'
+            - MYSQL_USER='brian'
+            - MYSQL_PASSWORD='password'
+            - MYSQL_DATABASE='home'
+            - PUID=3003
+            - PGID=3002
+        volumes:
+            - '/mnt/volume1/hosting/mysql:/var/lib/mysql'
+        pull_policy: always
+        restart: unless-stopped
+        ports:
+            - '3306:3306'
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - '82:80'
+        environment:
+            - PMA_HOST='mysql'
+            - PUID=3003
+            - PGID=3002
+            - MYSQL_ROOT_PASSWORD='password1'
+        depends_on:
+            - mysql
+        pull_policy: always
+        restart: unless-stopped
