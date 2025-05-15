@@ -576,7 +576,26 @@ if the gluetun app is not running, the qBittorrent app will not run
 17. ***ngninx + PHP + Maria DB Stack*** (replaces web station)
 
 https://medium.com/@tech_18484/deploying-a-php-web-app-with-docker-compose-nginx-and-mariadb-d61a84239c0d
+<br>
 https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
+<br>
+<br>
+from:
+https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
+
+Let's inspect the PHP container:
+
+`docker compose exec php bash`
+
+By running this command, we ask Docker Compose to execute Bash on the PHP container. You should get a new prompt indicating that you are currently under `/var/www/php:` this is what the working_directory configuration we ran into earlier is for. Run a simple `ls` to list the content of the directory: you should see `index.php`, which is expected as we mounted our local src folder onto the container's `/var/www/php` folder.
+
+Run `exit` to leave the container.
+
+https://github.com/adhocore/docker-phpfpm
+
+https://github.com/stevenliebregt/docker-compose-lemp-stack
+
+https://github.com/sprintcube/docker-compose-lamp
 
 <div id="DIUN"></div>
 
