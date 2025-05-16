@@ -620,7 +620,7 @@ RUN apt-get update && \
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 ```
 
-as of this writting, this file is using PHP 8.1 which will stop being supported in a <a href="https://www.php.net/supported-versions">few months</a>. PHP version 8.4 is available (as of 5/16/2025) and the line `FROM php:8.1-fpm` would have to change to `FROM php:8.4-fpm` and the stack would have to be re-launched.
+as of this writting, this file is using PHP 8.1 which will stop being supported in a <a href="https://www.php.net/supported-versions">few months</a>. PHP version 8.4 is available (as of 5/16/2025) and the line `FROM php:8.1-fpm` would have to change to `FROM php:8.4-fpm`. After making the changes to the file, the stack will have to be removed, and the option to remove images checked. Then recreate the stack and the new version of PHP and or the updated extensions wil be instaled. 
 
 <div id="DIUN"></div>
 
