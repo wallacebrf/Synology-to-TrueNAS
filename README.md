@@ -513,7 +513,7 @@ My actual public IPv4 address starts with 98.... which is what the normal chromi
 
 <a href="https://www.youtube.com/watch?v=TJ28PETdlGE">very useful step by step guide on using GlueTUN for docker app VPN tunnels</a>
 
-To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Torrent%20Downloader%20%2B%20VPN/docker-compose.yaml">docker-compose.yaml</a> available. 
+To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/torrent/dockercompose.yaml">docker-compose.yaml</a> available. 
 
 breakdown of the importaint parts for the `GlueTUN` container:
 
