@@ -442,7 +442,7 @@ Nothing too special is needed for InfluxDB as it is available directly through t
 
 6. ***jackett***
 
-Nothing too special is needed for Jackett as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/Jackett/jackett_app_settings.png">Here are my settings</a>
+We do NOT want to install the version of Jackett directly available through Discover Apps because we want to ensure Jackett runs through our GlueTUN VPN tunnel. <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Jackett/docker-compsoe.yaml">Here are my settings</a>. 
 
 <div id="plex"></div>
 
