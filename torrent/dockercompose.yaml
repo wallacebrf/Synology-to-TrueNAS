@@ -1,0 +1,56 @@
+#all gluetun docker compose options: https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md
+services:
+  gluetun:
+    cap_add:
+      - NET_ADMIN
+    container_name: gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - PUID=3003
+      - PGID=3002
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=openvpn
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
+      - OPENVPN_USER=user
+      - OPENVPN_PASSWORD=password
+      - HEALTH_TARGET_ADDRESS=google.com
+      - HEALTH_VPN_DURATION_INITIAL=30s
+      - HEALTH_VPN_DURATION_ADDITION=10s
+      - HEALTH_SUCCESS_WAIT_DURATION=60s
+      - DOT=off
+      - DNS_ADDRESS=103.86.96.100 #nord VPN DNS
+    image: qmcgaw/gluetun:latest
+    ports:
+      - 8888:8888/tcp #proxy port
+      - 8388:8388/tcp #shadowsocket
+      - 8388:8388/udp #shadowsocket
+      - '10095:10095' #qbittorrent web interface
+      - '16881:16881' #torrent download port
+      - 6881:6881/udp #torrent download port
+      - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
+      - 8081:8081/tcp #SickChill
+      - '9117:30118' #jackett
+    pull_policy: always
+    restart: unless-stopped
+    volumes:
+      - /mnt/volume1/apps/torrent/gluetun_config:/gluetun
+      - >-
+        /mnt/volume1/apps/torrent/us6722.nordvpn.com.tcp443.ovpn:/gluetun/custom.conf
+  qbittorrent:
+    container_name: qbittorrent
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=3003
+      - PGID=3002
+      - TZ=America/Chicago
+      - WEBUI_PORT=10095
+      - TORRENTING_PORT=16881
+      - UMASK=022
+    image: lscr.io/linuxserver/qbittorrent:latest
+    network_mode: service:gluetun
+    restart: unless-stopped
+    volumes:
+      - /mnt/volume1/apps/torrent/transmission_config:/config
+      - /mnt/volume1/apps/torrent/bt:/downloads
