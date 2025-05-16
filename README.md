@@ -595,7 +595,7 @@ Now we need to transfer files from Synology. To tansfer any SQL databases from s
 - copy files to SMB `\\<trueNAS_IP>\hosting`
 - get directory for SQL database from app "mount points". go to `System --> shell` and log in using `sudo -i`
 - change to the hosting directory. `cd /mnt/volmume1/hosting`
-- Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/.ix-apps/docker/volumes/ix-web_sql_datavolume/_data/` is where my `mysql` container is saving data per TrueNAS apps page mount points. 
+- Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
 - go to apps, click on "web" app and select MySQL's shell
 - `cd /var/lib/mysql`
 - log into sql. `mysql -u username -p` and enter password when asked
