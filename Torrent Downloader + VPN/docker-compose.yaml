@@ -12,14 +12,14 @@ services:
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=openvpn
       - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
-      - OPENVPN_USER=nord_VPN_user
-      - OPENVPN_PASSWORD=nord_VPN_password
+      - OPENVPN_USER=yjVZKUA6i7waefQYkPV51gf3
+      - OPENVPN_PASSWORD=ptsWYPRLtKU7iFLraabVVxFz
       - HEALTH_TARGET_ADDRESS=google.com
       - HEALTH_VPN_DURATION_INITIAL=30s
       - HEALTH_VPN_DURATION_ADDITION=10s
       - HEALTH_SUCCESS_WAIT_DURATION=60s
       - DOT=off
-      - DNS_ADDRESS=103.86.96.100 #NORD VPN DNS server
+      - DNS_ADDRESS=103.86.96.100
     image: qmcgaw/gluetun:latest
     ports:
       - 8888:8888/tcp #proxy port
@@ -27,14 +27,16 @@ services:
       - 8388:8388/udp #shadowsocket
       - '10095:10095' #qbittorrent web interface
       - '16881:16881' #torrent download port
-      - 6881:6881/udp  #torrent download port
+      - 6881:6881/udp #torrent download port
       - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
-      - 8081:8081/tcp #sickchill
+      - 8081:8081/tcp #SickChill
+      - '9117:30118' #jackett
     pull_policy: always
     restart: unless-stopped
     volumes:
       - /mnt/volume1/apps/torrent/gluetun_config:/gluetun
-      - /mnt/volume1/apps/torrent/us6722.nordvpn.com.tcp443.ovpn:/gluetun/custom.conf  #us6722.nordvpn.com.tcp443.ovpn file downlaoded from NordVPN's site
+      - >-
+        /mnt/volume1/apps/torrent/us6722.nordvpn.com.tcp443.ovpn:/gluetun/custom.conf
   qbittorrent:
     container_name: qbittorrent
     depends_on:
