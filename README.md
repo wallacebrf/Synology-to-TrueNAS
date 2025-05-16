@@ -26,6 +26,10 @@ To-Do List:
 - Replace “DS File” app – Android Only
 - Configure Data Scrubs
 - Schedule SMART tests
+- flaresolverr
+- ytdlp
+- address issue #1 "DSM in docker to mitigate DS apps"
+- address issue #2 "Recycle bin in Truenas"
 
 
 
