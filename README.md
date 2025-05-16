@@ -30,7 +30,6 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#nginx_reverse_proxy">nginx Reverse Proxy</a></li>
 <li><a href="#jellyfin">jellyfin</a></li>
 <li><a href="#tautulli">tautulli</a></li>
-<li><a href="#PhP_My_Admin">PHP My Admin</a></li>
 <li><a href="#Chromium">Chromium</a></li>
 <li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
 <li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack + PHPMyAdmin</a></li>
@@ -476,10 +475,6 @@ To acheive this, the key line is `network_mode: "container:gluetun"` making all 
 <div id="tautulli"></div>
 
 12. ***tautulli***
-
-<div id="PhP_My_Admin"></div>
-
-13. ***PhP My Admin***
 
 <div id="Chromium"></div>
 
