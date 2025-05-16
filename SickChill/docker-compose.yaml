@@ -13,4 +13,6 @@ services:
     volumes:
       - /mnt/volume1/apps/sickchill/downloads:/downloads
       - /mnt/volume1/apps/sickchill/config:/config
+      - /mnt/volume1/apps/sickchill/data:/data
+      - /mnt/volume1/apps/sickchill/tv:/tv
   
