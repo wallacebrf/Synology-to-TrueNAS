@@ -1,6 +1,26 @@
 # Synology-to-TrueNAS
 My Guide when I moved from Synology to TrueNAS
 
+To-Do List:
+- DIUN (Docker Image Update Notifier)
+  - have not tried package yet
+- Grey Log
+  - have not tried package yet
+- jellyfin
+  - have not tried package yet
+- radar
+  - have package working, need to update github
+- Tautulli
+  - have not tried package yet
+- TrueCommand
+  - have not tried package yet
+- Veeam
+  - have not tried package yet
+- nginx Reverse Proxy
+  - have package working, need to update github
+
+
+
 <div id="top"></div>
 <!-- TABLE OF CONTENTS -->
   <summary>Table of Contents</summary>
