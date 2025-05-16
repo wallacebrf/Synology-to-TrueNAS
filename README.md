@@ -33,7 +33,7 @@ My Guide when I moved from Synology to TrueNAS
 <li><a href="#PhP_My_Admin">PHP My Admin</a></li>
 <li><a href="#Chromium">Chromium</a></li>
 <li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
-<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a></li>
+<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack + PHPMyAdmin</a></li>
 <li><a href="#DIUN">DIUN - Docker Image Update Notifier</a></li>
 <li><a href="#TrueCommand">TrueCommand</a></li>
 <li><a href="#Veeam">Veeam</a></li>
@@ -353,7 +353,7 @@ As a note, for my current Synology systems I have PLEX running on one DS920 with
 - click save
 3. repeat step above as needed for additional shares as desired.
 
-Note: I had difficulty in sharing a data set with child data sets over NFS, specifically the `/mnt/volume1/video` data set. For some reason i could see and access the data on that `/mnt/volume1/video` main data set i was directly sharing over NFS, but i was NOT able to acces the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` i was directly sharing with NFS, i was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such i just made individual NFS shares for the data sets i made under `/mnt/volume1/video` and everything seemed to work fine. 
+Note: I had difficulty in sharing a data set with child data sets over NFS, specifically the `/mnt/volume1/video` data set. For some reason I could see and access the data on that `/mnt/volume1/video` main data set I was directly sharing over NFS, but I was NOT able to acces the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` I was directly sharing with NFS, I was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such I just made individual NFS shares for the data sets I made under `/mnt/volume1/video` and everything seemed to work fine. 
 
 ## 11.)  Create snapshots
 <div id="Create_snapshots"></div>
@@ -362,8 +362,8 @@ Snapshots work the same with TrueNAS as they do with Synology as they can be res
 
 To schedule snapshots:
 1. go to `Data Protection -> Periodic Snapshot Tasks -> Add`
-2. choose the desired data set. I would recommend to make scheduled snapshots for each separate data set to allow for flexibility in possible future data recovery. To assist with this, an option check box `recursive` is available when scheduling snapshots. This will create separate snapshots for all of the child data sets. As such i made one scheduled snap shot task for my `/mnt/volume1` data set and chose the recursive option to also make separate snap shots of everything under it to. 
-- also be aware that on our SMB shares, by default the option `Enable Shadow Copies` is enabled. This allows windows users to use the `Previous Versions` feature to recover older copies of individual files and folders. This allows for granular per-file recovery in an easy to use manner. As i will be accessing my TrueNAS files near constantly over SMB (I am a windows user YAY!) this is a very handy feature if i need to recover a file as i do not need to directly interact with the TrueNAS GUI etc. 
+2. choose the desired data set. I would recommend to make scheduled snapshots for each separate data set to allow for flexibility in possible future data recovery. To assist with this, an option check box `recursive` is available when scheduling snapshots. This will create separate snapshots for all of the child data sets. As such I made one scheduled snap shot task for my `/mnt/volume1` data set and chose the recursive option to also make separate snap shots of everything under it to. 
+- also be aware that on our SMB shares, by default the option `Enable Shadow Copies` is enabled. This allows windows users to use the `Previous Versions` feature to recover older copies of individual files and folders. This allows for granular per-file recovery in an easy to use manner. As I will be accessing my TrueNAS files near constantly over SMB (I am a windows user YAY!) this is a very handy feature if I need to recover a file as I do not need to directly interact with the TrueNAS GUI etc. 
 3. Choose the amount of time the snap shot is retained
 - this is accomplished using the `Snapshot Lifetime` and `Unit` options. I am choosing 1 week of retention. 
 4. I am leaving the naming process `Naming Schema` as the default of `auto-%Y-%m-%d_%H-%M`
@@ -374,7 +374,7 @@ To schedule snapshots:
 ## 12.)  Install required Apps 
 <div id="Install_required_Apps"></div>
 
-On my Synology systems I purposefully made separate users for every docker container so i could restrict each container to only the data it needs. On my Synology systems i had a "docker" folder where i had sub folders for each container. If i were to use one user for every container, it would allow the different containers to read each other's data. This is especially important when running things like PLEX or JellyFin in docker where those two apps will also need access to your media libraries. You probably do not want all of your containers to have access to those. Making separate users per container helps solve this problem as each user can be restricted individually on what they can and cannot access. 
+On my Synology systems I purposefully made separate users for every docker container so I could restrict each container to only the data it needs. On my Synology systems I had a "docker" folder where I had sub folders for each container. If I were to use one user for every container, it would allow the different containers to read each other's data. This is especially important when running things like PLEX or JellyFin in docker where those two apps will also need access to your media libraries. You probably do not want all of your containers to have access to those. Making separate users per container helps solve this problem as each user can be restricted individually on what they can and cannot access. 
 
 1. Create required users/groups
 - On a **per-app basis**, create a user and user group
@@ -412,17 +412,17 @@ The PID and GID created for this user, in this example “Plex” will be used t
 3. **Frigate**
 - Refer here for detailed information on <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate Configuration on TrueNAS</a>
 
-I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that i had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and i have been very happy since.
+I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that I had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and I have been very happy since.
 
-If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what i was seeing with Frigate.
+If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what I was seeing with Frigate.
 
-With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that i can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
+With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that I can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
 
 To achieve this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU pass-through from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analysis on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
 
 I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power differential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analysis!!.
 
-something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, i think Frigate does a better job anyways but your mileage may vary.
+something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, I think Frigate does a better job anyways but your mileage may vary.
 
 another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together.
 
@@ -458,7 +458,7 @@ Nothing too special is needed for PLEX as it is available directly through the D
 
 9. ***sickchill***
 
-Sickchill is not available through the `Discover App` page on TrueNAS but i was able to use the compose file method to install it. My <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/SickChill/docker-compose.yaml">docker-compose.yaml</a> file is available.  
+Sickchill is not available through the `Discover App` page on TrueNAS but I was able to use the compose file method to install it. My <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/SickChill/docker-compose.yaml">docker-compose.yaml</a> file is available.  
 
 This app requires gluetun to be operational as we are tunneling all of sick chill's web traffic through the gluetun app to ensure it uses our VPN tunnel. 
 
@@ -485,7 +485,7 @@ To acheive this, the key line is `network_mode: "container:gluetun"` making all 
 
 14. ***Chromium***
 
-I have TWO copies of the chromium browser installed on my system. One is linked to the gluetun network so i can easilly go to Nord VPN's DNS checker and tunnel status check pages to prove that the VPN tunnel is working as expected. The second one is "normal" and runs through my normal public IP adress. The main reason why i need this second tunnel is it allows me to access the web GUI interfaces for my 12x security cameras running in Frigate. Unfortunately because the first chromium container is linked to the gluetun container/VPN tunnel, it is not able to access my security camera network. 
+I have TWO copies of the chromium browser installed on my system. One is linked to the gluetun network so I can easilly go to Nord VPN's DNS checker and tunnel status check pages to prove that the VPN tunnel is working as expected. The second one is "normal" and runs through my normal public IP adress. The main reason why I need this second tunnel is it allows me to access the web GUI interfaces for my 12x security cameras running in Frigate. Unfortunately because the first chromium container is linked to the gluetun container/VPN tunnel, it is not able to access my security camera network. 
 
 The copy running through the GlueTun VPN tunnel <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/chromium/docker-compose-VPN.yaml">docker-compose.yaml</a> file is available. This app requires gluetun to be operational as we are tunneling all of the chromium web traffic through the gluetun app to ensure it uses our VPN tunnel. 
 
@@ -501,7 +501,7 @@ RUNNING THROUGH VPN
 NOT RUNNING THROUGH VPN
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/chromium/chromium_ip_address_normal.png" alt="chromium_ip_address_normal.png" width="393" height="234">
 
-My actual public IPv4 address starts with 98.... which is what the normal chromium is reporting. In addtion, the normal chromium also is properly reporting my IPv6 address. The VPN version of chromium is properly reporting `94.140.9.159` which is an IP address assigned to NORD VPN. In addition, this is the same IP address reported at the bottom of qBittorrent. Based on this i know that my VPN traffic is properly being routed through the VPN. 
+My actual public IPv4 address starts with 98.... which is what the normal chromium is reporting. In addtion, the normal chromium also is properly reporting my IPv6 address. The VPN version of chromium is properly reporting `94.140.9.159` which is an IP address assigned to NORD VPN. In addition, this is the same IP address reported at the bottom of qBittorrent. Based on this I know that my VPN traffic is properly being routed through the VPN. 
 
 <div id="Portainer"></div>
 
@@ -513,7 +513,7 @@ My actual public IPv4 address starts with 98.... which is what the normal chromi
 
 <a href="https://www.youtube.com/watch?v=TJ28PETdlGE">very useful step by step guide on using GlueTUN for docker app VPN tunnels</a>
 
-To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, i have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Torrent%20Downloader%20%2B%20VPN/docker-compose.yaml">docker-compose.yaml</a> available. 
+To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Torrent%20Downloader%20%2B%20VPN/docker-compose.yaml">docker-compose.yaml</a> available. 
 
 breakdown of the importaint parts for the `GlueTUN` container:
 
@@ -559,7 +559,7 @@ ALL containers that you wish to have tunneled through the GlueTUN app must have 
       - DNS_ADDRESS=103.86.96.100 #NORD VPN DNS server
 ```
 
-This is my configuration for NordVPN, but will be different if you use one of the MANY VPN providers supported by GlueTun. If your VPN provider also has its own DNS, ensure you configure the `DNS_ADDRESS` paramter to ensure no DNS leaks occur. Now,i purposfuly have encrypted DNS off `DOT=off` for because NordVPN DNS does not seem to support it, but if your VPN provider does, ensure it is set to ON for more security. I also have a `healthcheck` task running that will ping google and if it fails, it will restart the cotainer to hopefully re-connect to Nord VPN again. 
+This is my configuration for NordVPN, but will be different if you use one of the MANY VPN providers supported by GlueTun. If your VPN provider also has its own DNS, ensure you configure the `DNS_ADDRESS` paramter to ensure no DNS leaks occur. Now,I purposfuly have encrypted DNS off `DOT=off` for because NordVPN DNS does not seem to support it, but if your VPN provider does, ensure it is set to ON for more security. I also have a `healthcheck` task running that will ping google and if it fails, it will restart the cotainer to hopefully re-connect to Nord VPN again. 
 
 breakdown of the importaint parts for the `qBittorrent` container:
 
@@ -577,31 +577,31 @@ if the gluetun app is not running, the qBittorrent app will not run
 
 I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a>
 
-Example with: <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. NOte that i am not going to use the ngnix in this stack for my SSL certs. I am also running Nginx Reverse Proxy Manager which will be hanlding my SSL. The communications between proxy manager and this stack does not leave the TrueNAS server so I am not worried about traffic sniffing between proxy manager and this stack. 
+Example with: <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. Note that I am not going to use the ngnix in this stack for my SSL certs. I am also running Nginx Reverse Proxy Manager which will be hanlding my SSL. The communications between proxy manager and this stack does not leave the TrueNAS server so I am not worried about traffic sniffing between proxy manager and this stack. 
 
-I am aware this is not considered the best security practice however i was not able to get the LEMP stack to work unless i set the permissions to `/mnt/volume1/hosting` to `777`. To acheive this i went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
+I am aware this is not considered the best security practice however I was not able to get the LEMP stack to work unless I set the permissions to `/mnt/volume1/hosting` to `777`. To acheive this I went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
 
 My final configuration and needed files are <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20%2B%20PHP%20%2B%20MariaDB%20Stack">found here</a>. 
 
 Download all of the files and folders and place them in the data set `/mnt/volume1/hosting` 
 
-within TrueNAS go to `apps --> discover apps --> custom yaml`. Give the stack a name, i named it `web` and paste the contents of the docker-compose.yaml file. 
+within TrueNAS go to `apps --> discover apps --> custom yaml`. Give the stack a name, I named it `web` and paste the contents of the docker-compose.yaml file. 
 
 once the stack is up, go to `http://<server-ip>:81/index.php` and you should see details of your PHP installation on the browser. 
 
-Now we need to transfer files from Synology. To tansfer any SQL databases from synology:
+Now we need to transfer files from Synology. To tansfer any SQL databases from synology. Some of my databases are GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. 
 
 - export current databases on synology
 - copy files to SMB `\\<trueNAS_IP>\hosting`
-- get directory for SQL database from app "mount points". go to `System --> shell` and log in using `sudo -i`
 - change to the hosting directory. `cd /mnt/volmume1/hosting`
 - Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
 - go to apps, click on "web" app and select MySQL's shell
 - `cd /var/lib/mysql`
-- log into sql. `mysql -u username -p` and enter password when asked
+- log into sql. `mysql -u root -p` and enter password when asked
 - create database with same name as one exported from synology. `CREATE DATABASE home_temp;` 
 - `use home_temp;`
 - import sql file. `source home_temp.sql`
+- you can now delete the .SQL files in the `/mnt/volmume1/hosting` and `/mnt/volume1/hosting/sql` we copied over from Synology. 
 
 we need to copy any web hosted files from the synology and place those files in the `/mnt/volmume1/hosting/web`
 
@@ -610,7 +610,7 @@ Your web services should now be working
 If you wish to upgrade your version of PHP or if you wish to add or remove PHP modules, you wil need to edit the `/mnt/volmume1/hosting/php-dockerfile`
 
 ```
-FROM php:8.1-fpm
+FROM php:8.4-fpm
 
 # Installing dependencies for the PHP modules
 RUN apt-get update && \
@@ -620,7 +620,7 @@ RUN apt-get update && \
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 ```
 
-as of this writting, this file is using PHP 8.1 which will stop being supported in a <a href="https://www.php.net/supported-versions">few months</a>. PHP version 8.4 is available (as of 5/16/2025) and the line `FROM php:8.1-fpm` would have to change to `FROM php:8.4-fpm`. After making the changes to the file, the stack will have to be removed, and the option to remove images checked. Then recreate the stack and the new version of PHP and or the updated extensions wil be instaled. 
+as of this writting, this file is using PHP 8.4 <a href="https://www.php.net/supported-versions">few months</a>. If a new PHP version is available the line `FROM php:8.4-fpm` would have to change to `FROM php:8.5-fpm` for example. After making the changes to the file, the stack will have to be removed within TrueNAS, and the option to remove images checked. Then recreate the stack and the new version of PHP and or the updated extensions wil be installed. 
 
 <div id="DIUN"></div>
 
@@ -666,7 +666,7 @@ https://www.veeam.com/solutions/small-business/pricing-calculator.html --> prici
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
-TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but one might want to export this data to be able to better display it in Grafana for example. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this i needed an intermediary step to convert the graphite data into something InfluxDB could ingest. To do this i used a `truenas-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
+TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but one might want to export this data to be able to better display it in Grafana for example. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this I needed an intermediary step to convert the graphite data into something InfluxDB could ingest. To do this I used a `truenas-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
 
 1. Setup TrueNAS exporter under `Reporting --> Exporters` so we can get the data out of TrueNAS. 
 - **Name**: netdata
@@ -697,7 +697,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
   - **Security Context Configuration Privileged**: unchecked
   - **Capabilities add**: No items have been added yet.
   - **Custom User**: checked
-  - **User ID**: 568 [This is one app i have not made a separate user for since it does so little]
+  - **User ID**: 568 [This is one app I have not made a separate user for since it does so little]
   - **Group ID**: 568
   - **Network Configuration Host Network**: unchecked
   - **Ports**:
@@ -740,7 +740,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 <div id="Install_script_to_pull_TrueNAS_SNMP_data"></div>
 
 1.) **Intro**
-We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which i will document below so the script I will detail can collect the needed information. 
+We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which I will document below so the script I will detail can collect the needed information. 
 
 The SNMP data is collected based on the details of the <a href="https://www.truenas.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/">TrueNAS MIB file</a>
 
@@ -772,7 +772,7 @@ for systems running NVidia drivers, the script will collect the following
 
 gpuTemperature, gpuName, gpuFanSpeed, gpu_bus_id, vbios_version, driver_version, pcie_link_gen_max, utilization_gpu, utilization_memory, memory_total, memory_free, memory_used, gpu_serial, pstate encoder_stats_sessionCount, encoder_stats_averageFps, encoder_stats_averageLatency, temperature_memory, power_draw, power_limit, clocks_current_graphics, clocks_current_sm, clocks_current_memory, clocks_current_video 
 
-I have the script configured to run every 60 seconds, and each execution, it will collect data 4x times so i am collecting data every 15 seconds. 
+I have the script configured to run every 60 seconds, and each execution, it will collect data 4x times so I am collecting data every 15 seconds. 
 
 This script does need to have a working PHP web site to allow for the configuration of the script. As of 5/11/2025, I have not yet written the PHP web page code for this script. 
 
@@ -822,7 +822,7 @@ capture_interval_adjustment=3
 ## 16.)  Setup Web site Details
 <div id="Setup_Web_site_Details"></div>
 
-Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a> to give us the ability to host a web site. This section will go over what i had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
+Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a> to give us the ability to host a web site. This section will go over what I had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
 
 ## 17.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
@@ -851,7 +851,7 @@ For some reason TrueNAS does not have `sendmail` or other readily available meth
 
 The command to send emails is as follows: `python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "${subject}" --to_address "${to_email_address}" --mail_body_html "${mail_body_contents}" --override_fromemail "${from_email_address}"`
 
-I put this into the function i previously used to send emails that also tracks when the last email was sent to prevent scripts from spamming every time they execute and will instead only send new messages after a defined set point of time
+I put this into the function I previously used to send emails that also tracks when the last email was sent to prevent scripts from spamming every time they execute and will instead only send new messages after a defined set point of time
 
 ```
 function send_mail(){
@@ -897,7 +897,7 @@ I added two `Init/Shutdown Scripts` entries: Here is an example of one.
 
 Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` and click Add
 
-- Description: set a description, i named mine `Startup Email`
+- Description: set a description, I named mine `Startup Email`
 - Type: set to `command`
 - Command: `python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "TrueNAS Has Started" --to_address "${address_explode[$bb]}" --mail_body_html "TrueNAS has started" --override_fromemail "$from_email_address"` where you will need to enter your email details. 
 - When: set to `post init` for startup
@@ -913,24 +913,24 @@ https://www.youtube.com/watch?v=o0Py62k63_c
 ## 24.)  Mount External NFS Shares into TrueNAS Dataset
 <div id="Mount_External_NFS_Shares_into_TrueNAS_Dataset"></div>
 
-Since I will be slowly migrating from Synology to TrueNAS i still want my Synology units to store some of my data, but this is data is need by PLEX etc that will be running on TrueNAS. As such i need to link my systems together. 
+Since I will be slowly migrating from Synology to TrueNAS I still want my Synology units to store some of my data, but this is data is need by PLEX etc that will be running on TrueNAS. As such I need to link my systems together. 
 
 I created NFS permissions for some of my folders in Synology as seen below
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/synology_nfs_settings.png" alt="synology_nfs_settings.png" width="518" height="348">
 
-Then to mount the NFS share on TrueNAS, i created a dedicated dataset `/mnt/volume1/server2` since server2 is the name of one of my NAS and it makes it easier to know whcih NAS this is linked to. When creating this share, i left the `Dataset Preset` to `Generic` and left all other settings at default. I did not need to adjust permissions. 
+Then to mount the NFS share on TrueNAS, I created a dedicated dataset `/mnt/volume1/server2` since server2 is the name of one of my NAS and it makes it easier to know whcih NAS this is linked to. When creating this share, I left the `Dataset Preset` to `Generic` and left all other settings at default. I did not need to adjust permissions. 
 
 Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` and click Add
 
-- Description: set a description, i named mine `NFS Server2 Video Mount`
+- Description: set a description, I named mine `NFS Server2 Video Mount`
 - Type: set to `command`
 - Command: `mount -o rw -t nfs 192.168.1.13:/volume1/video /mnt/volume1/server2`
   -Breakdown:
    -  `rw` for read/write. If you want read only, set to just `r`
    -  `192.168.1.13` IP of my remote Synology NAS
-   -  `/volume1/video` the share on the remote Synology NAS i am trying to access
-   -  `/mnt/volume1/server2` where on the TrueNAS system i want these files mounted
+   -  `/volume1/video` the share on the remote Synology NAS I am trying to access
+   -  `/mnt/volume1/server2` where on the TrueNAS system I want these files mounted
 - When: set to `post init` so the share is mounted on startup
 - ensure the task is enabled
 - set time out to 3
@@ -941,11 +941,11 @@ The share will now mount at startup, but unless we restart the system, the share
 - enter `sudo -i` and log in under sudo
 - enter the same command we configured to happen during startup `mount -o rw -t nfs 192.168.1.13:/volume1/video /mnt/volume1/server2` and the share should be mounted.
 
-within my PLEX docker container i mapped the `/mnt/volume1/server2` folder under the app's settings
+within my PLEX docker container I mapped the `/mnt/volume1/server2` folder under the app's settings
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/plex_acess_NFS.png" alt="plex_acess_NFS.png" width="227" height="326">
 
-Then within PLEX i was free to add the needed folders to my libraries
+Then within PLEX I was free to add the needed folders to my libraries
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/plex_acess_NFS2.png" alt="plex_acess_NFS.png" width="321" height="310">
 
