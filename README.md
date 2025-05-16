@@ -573,26 +573,23 @@ if the gluetun app is not running, the qBittorrent app will not run
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
-17. ***ngninx + PHP + Maria DB Stack*** (replaces web station)
+17. ***ngninx + PHP + Maria DB Stack + PHPMyAdmin*** also known as LEMP stack (replaces web station)
 
-https://medium.com/@tech_18484/deploying-a-php-web-app-with-docker-compose-nginx-and-mariadb-d61a84239c0d
-<br>
-https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/
-<br>
-<br>
-from:
-https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
+I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a>
 
-Let's inspect the PHP container:
+Example with: <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. NOte that i am not going to use the ngnix in this stack for my SSL certs. I am also running Nginx Reverse Proxy Manager which will be hanlding my SSL. The communications between proxy manager and this stack does not leave the TrueNAS server so I am not worried about traffic sniffing between proxy manager and this stack. 
 
-`docker compose exec php bash`
+I am aware this is not considered the best security practice however i was not able to get the LEMP stack to work unless i set the permissions to `/mnt/volume1/hosting` to `777`. To acheive this i went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
 
-By running this command, we ask Docker Compose to execute Bash on the PHP container. You should get a new prompt indicating that you are currently under `/var/www/php:` this is what the working_directory configuration we ran into earlier is for. Run a simple `ls` to list the content of the directory: you should see `index.php`, which is expected as we mounted our local src folder onto the container's `/var/www/php` folder.
+My final configuration and needed files are <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20%2B%20PHP%20%2B%20MariaDB%20Stack">found here</a>. 
 
-Run `exit` to leave the container.
+Download all of the files and folders and place them in the data set `/mnt/volume1/hosting` 
 
-example with Nginx with port 80 to 443 forwarding and ssl certs: https://www.hostmycode.in/tutorials/lemp-stack-on-docker
+within TrueNAS go to `apps --> discover apps --> custom yaml`. Give the stack a name, i named it `web` and paste the contents of the docker-compose.yaml file. 
 
+once the stack is up, go to `http://<server-ip>:81/index.php` and you should see details of your PHP installation on the browser. 
+
+Now we need to transfer files from Synology. To tansfer any SQL databases from synology:
 
 - export current databases on synology
 - copy files to SMB `\\<trueNAS_IP>\hosting`
@@ -606,7 +603,24 @@ example with Nginx with port 80 to 443 forwarding and ssl certs: https://www.hos
 - `use home_temp;`
 - import sql file. `source home_temp.sql`
 
+we need to copy any web hosted files from the synology and place those files in the `/mnt/volmume1/hosting/web`
 
+Your web services should now be working
+
+If you wish to upgrade your version of PHP or if you wish to add or remove PHP modules, you wil need to edit the `/mnt/volmume1/hosting/php-dockerfile`
+
+```
+FROM php:8.1-fpm
+
+# Installing dependencies for the PHP modules
+RUN apt-get update && \
+    apt-get install -y zip libzip-dev libpng-dev
+
+# Installing additional PHP modules
+RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
+```
+
+as of this writting, this file is using PHP 8.1 which will stop being supported in a <a href="https://www.php.net/supported-versions">few months</a>. PHP version 8.4 is available (as of 5/16/2025) and the line `FROM php:8.1-fpm` would have to change to `FROM php:8.4-fpm` and the stack would have to be re-launched.
 
 <div id="DIUN"></div>
 
