@@ -591,13 +591,22 @@ By running this command, we ask Docker Compose to execute Bash on the PHP contai
 
 Run `exit` to leave the container.
 
-https://github.com/adhocore/docker-phpfpm
-
-https://github.com/stevenliebregt/docker-compose-lemp-stack
-
-https://github.com/sprintcube/docker-compose-lamp
-
 example with Nginx with port 80 to 443 forwarding and ssl certs: https://www.hostmycode.in/tutorials/lemp-stack-on-docker
+
+
+- export current databases on synology
+- copy files to SMB `\\<trueNAS_IP>\hosting`
+- get directory for SQL database from app "mount points". go to `System --> shell` and log in using `sudo -i`
+- change to the hosting directory. `cd /mnt/volmume1/hosting`
+- Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/.ix-apps/docker/volumes/ix-web_sql_datavolume/_data/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/.ix-apps/docker/volumes/ix-web_sql_datavolume/_data/` is where my `mysql` container is saving data per TrueNAS apps page mount points. 
+- go to apps, click on "web" app and select MySQL's shell
+- `cd /var/lib/mysql`
+- log into sql. `mysql -u username -p` and enter password when asked
+- create database with same name as one exported from synology. `CREATE DATABASE home_temp;` 
+- `use home_temp;`
+- import sql file. `source home_temp.sql`
+
+
 
 <div id="DIUN"></div>
 
