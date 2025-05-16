@@ -18,6 +18,14 @@ To-Do List:
   - have not tried package yet
 - nginx Reverse Proxy
   - have package working, need to update github
+- Setup Grafana Dashboard for TrueNAS
+- Setup Web site Details
+- Setup Custom Logging Scripts and Configure CRON
+- Configure Disk Standby
+- Cloud backups to BackBlaze B2 Bucket
+- Replace “DS File” app – Android Only
+- Configure Data Scrubs
+- Schedule SMART tests
 
 
 
