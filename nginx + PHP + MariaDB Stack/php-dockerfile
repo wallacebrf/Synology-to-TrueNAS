@@ -2,7 +2,14 @@ FROM php:8.4-fpm
 
 # Installing dependencies for the PHP modules
 RUN apt-get update && \
-    apt-get install -y zip libzip-dev libpng-dev
+    apt-get install -y zip libzip-dev libpng-dev && \
+	cd /bin && \
+	apt-get install pip -y && \
+	echo "Python and PIP now installed" && \
+	curl -L "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o yt-dlp && \
+	echo "YT-DLP Binary downloaded to /bin" && \
+	chmod a+rx yt-dlp && \
+	echo "YT-DLP binary now executable\nInstallation Complete"
 
 # Installing additional PHP modules
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
