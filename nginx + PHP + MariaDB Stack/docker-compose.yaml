@@ -13,7 +13,7 @@ services:
     pull_policy: always
     restart: unless-stopped
     volumes:
-      - /mnt/volume1/hosting/sql:/var/lib/mysql   #Docker will create the volume for you in the /var/lib/docker/volumes folder.
+      - /mnt/volume1/hosting/sql:/var/lib/mysql
   nginx:
     depends_on:
       - php
