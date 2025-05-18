@@ -22,9 +22,6 @@ To-Do List:
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
 - <ins>Replace “DS File” app – Android Only</ins>
   - have working, need to update github
-- <ins>Configure Data Scrubs</ins>
-  - have working, need to update github
-- <ins>Schedule SMART tests</ins>
 - <ins>flaresolverr</ins>
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
 - <ins>address issue #2</ins> "Recycle bin in Truenas"
@@ -997,10 +994,44 @@ line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMAR
 ## 20.)  Configure Data Scrubs
 <div id="Configure_Data_Scrubs"></div>
 
+Like Synology's Storage Manager data scrub scheduling, TrueNAS can schedule data scrubs. This setting can be found at `Data Protection--> Scrub Tasks --> Add`
+
+here are my settings:
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/scrub_task.png" alt="scrub_task.png">
+
+I have the `Schedule` set to daily, however the key is i have `Threshold Days` set to 90. Per the tool tip next to Threshold Days `Days before a completed scrub is allowed to run again. This controls the task schedule. For example, scheduling a scrub to run daily and setting Threshold days to 7 means the scrub attempts to run daily. When the scrub is successful, it continues to check daily but does not run again until seven days have elapsed. Using a multiple of seven ensures the scrub always occurs on the same weekday.` A such, while the task is scheduled to run every day, it will only actually run every 90 days. 
+
 ## 21.)  Schedule SMART tests
 <div id="Schedule_SMART_tests"></div>
 
 There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler here: https://github.com/wallacebrf/SMART-to-InfluxDB-Logger. I will describe how to setup both. 
+
+**Native TrueNAS SMART scheduling**
+
+`Data Protection--> Periodic S.M.A.R.T. Tests --> Add`
+
+We will add two tasks, one short, one long
+
+Long SMART settings:
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/long_smart.png" alt="long_smart.png">
+Notice the custom settings, this will run the long SMART test every 3 months on the 1st day of the month on only January, April, July, and October at 4:00 AM in the morning. 
+
+Short SMART settings:
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/short_smart.png" alt="short_smart.png">
+
+**Custom SMART Scheduler**
+
+this script requires a working PHP web server per <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a>.
+
+I have written a custom SMART test scheduling script detailed <a href="https://github.com/wallacebrf/Synology-SMART-test-scheduler">here</a>.
+
+The installation is the same as the details in that page <ins>EXCEPT</ins> that the `script_location="/mnt/volume1/hosting/web/synology_smart"` within the `synology_SMART_control.sh` file is where the file is located on the <ins>TrueNAS system</ins> **BUT** the value of `$script_location="/var/www/html/synology_smart";` within file `smart_scheduler_config.php` is the location of the script within the <ins>PHP docker continer</ins>. 
+
+The reason why i prefer this over the functionality built into TrueNAS is that it allows for:
+- the option to more easilly see the live status of a SMART test
+- to scheudle SMART tests on disks seqentuially or all at once
+- receive email notiifcations of when tests finish and start
+- better log history details
 
 ## 22.)  Configure Email Sending From CLI
 <div id="Configiure_email_sending_from_CLI"></div>
