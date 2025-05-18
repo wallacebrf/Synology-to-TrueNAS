@@ -2,34 +2,37 @@
 My Guide when I moved from Synology to TrueNAS
 
 To-Do List:
-- DIUN (Docker Image Update Notifier)
-  - have not tried package yet
-- Grey Log
-  - have not tried package yet
-- jellyfin
-  - have not tried package yet
-- radar
+- <ins>DIUN</ins> (Docker Image Update Notifier)
+  - **have not tried package yet**
+- <ins>Grey Log</ins>
+  - **have not tried package yet**
+- <ins>jellyfin</ins>
+  - **have not tried package yet**
+- <ins>radar</ins>
   - have package working, need to update github
-- Tautulli
-  - have not tried package yet
-- TrueCommand
-  - have not tried package yet
-- Veeam
+- <ins>Tautulli</ins>
+  - **have not tried package yet**
+- <ins>TrueCommand</ins>
+  - **have not tried package yet**
+- <ins>Veeam</ins>
   - have package working, need to update github
-- nginx Reverse Proxy
+- <ins>nginx Reverse Proxy</ins>
   - have package working, need to update github
-- Setup Grafana Dashboard for TrueNAS
-- Setup Custom Logging Scripts and Configure CRON
-- Configure Disk Standby
-- Cloud backups to BackBlaze B2 Bucket
-- Replace “DS File” app – Android Only
-- Configure Data Scrubs
-- Schedule SMART tests
-- flaresolverr
-- ytdlp
+- <ins>Setup Grafana Dashboard for TrueNAS</ins>
+- <ins>Setup Custom Logging Scripts and Configure CRON</ins>
   - have working, need to update github
-- address issue #1 "DSM in docker to mitigate DS apps"
-- address issue #2 "Recycle bin in Truenas"
+- <ins>Configure Disk Standby</ins>
+- <ins>Cloud backups to BackBlaze B2 Bucket</ins>
+- <ins>Replace “DS File” app – Android Only</ins>
+  - have working, need to update github
+- <ins>Configure Data Scrubs</ins>
+  - have working, need to update github
+- <ins>Schedule SMART tests</ins>
+- <ins>flaresolverr</ins>
+- <ins>ytdlp</ins>
+  - have working, need to update github
+- <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
+- <ins>address issue #2</ins> "Recycle bin in Truenas"
 
 
 
@@ -64,7 +67,7 @@ To-Do List:
 <li><a href="#tautulli">tautulli</a></li>
 <li><a href="#Chromium">Chromium</a></li>
 <li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
-<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack + PHPMyAdmin</a></li>
+<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a></li>
 <li><a href="#DIUN">DIUN - Docker Image Update Notifier</a></li>
 <li><a href="#TrueCommand">TrueCommand</a></li>
 <li><a href="#Veeam">Veeam</a></li>
@@ -114,12 +117,12 @@ First and foremost if I wish to leave Synology I need to find replacements for a
   - Synology Calendar
   - Antivirus Essential
   - Synology Mail Plus Server  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Configiure_email_sending_from_CLI">Replaced by scripts to send emails through CLI</a> 
-  - Web Station <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - Web Station <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - Hyper Backup <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Cloud_backups_to_BackBlaze_B2_Bucket">Replaced by Cloud backups to BackBlaze B2 Bucket</a> 
   - Hyper Backup Vault
   - Central Management System
-  - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
-  - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - LOg Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
   - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam">Replaced by Veeam</a> 
   - Container Manager - replaced by TrueNAS native apps page
@@ -618,7 +621,7 @@ if the gluetun app is not running, the qBittorrent app will not run
 
 <div id="ngninx_PHP_Maria_DB_Stack"></div>
 
-17. ***ngninx + PHP + Maria DB Stack + PHPMyAdmin*** also known as LEMP stack (replaces web station)
+17. ***ngninx + PHP + MySQL Stack + PHPMyAdmin*** also known as LEMP stack (replaces web station)
 
 I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a> combined with the example here detailing <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. 
 
@@ -845,7 +848,7 @@ This script does need to have a working PHP web site to allow for the configurat
 
 2. **Install Script and Support Files**
 
-- This assumes you already have the <a href="#ngninx_PHP_Maria_DB_Stack">nginx + PHP + MariaDB docker stack</a> installed which means it assumes you already have some data sets and folder structures already created.
+- This assumes you already have the <a href="#ngninx_PHP_Maria_DB_Stack">nginx + PHP + MySQL docker stack</a> installed which means it assumes you already have some data sets and folder structures already created.
 - Download the following files `multireport_sendemail.py` and `trueNAS_snmp.sh` and place them in the `/mnt/volume1/web/logging` directory if you used the same folder structure I did, or place it where you have your web site files stored.
 - create a `/mnt/volume1/web/logging/notifications` directory as the script will use this for temp files
 - create a `/mnt/volume1/web/config` directory as this is where the script will save its config file.
@@ -889,7 +892,7 @@ capture_interval_adjustment=3
 ## 16.)  Setup Web site Details
 <div id="Setup_Web_site_Details"></div>
 
-Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + Maria DB Stack</a> to give us the ability to host a web site. This section will go over what I had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
+Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack</a> to give us the ability to host a web site. This section will go over what I had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
 
 ## 17.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
