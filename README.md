@@ -29,8 +29,6 @@ To-Do List:
   - have working, need to update github
 - <ins>Schedule SMART tests</ins>
 - <ins>flaresolverr</ins>
-- <ins>ytdlp</ins>
-  - have working, need to update github
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
 - <ins>address issue #2</ins> "Recycle bin in Truenas"
 
@@ -731,6 +729,52 @@ https://www.veeam.com/solutions/small-business/pricing-calculator.html --> prici
 <div id="ytdlp"></div>
 
 23. ***ytdlp***
+
+I have been using a  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/yt-dlp/youtube-dl.php">custom made PHP based web page</a> that generates the commands needed to control YT-DLP. 
+
+ <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/ytdlp_downloader.png" alt="ytdlp_downloader.png" width="469" height="922"> 
+
+The actual YT-DLP binary and Python3 dependancies, plus the needed PHP web server must first be installed per  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a>. 
+
+Once YT-DLP is installed within the PHP docker image, download the contents of <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/yt-dlp">this page</a> and place the contents in the `/mnt/volume1/hosting/web` directory used by the PHP server and extract the contents. 
+
+The zip file is broken into several pieces as Github was preventing me from uploading files over 25MB in size. The zip file contains the following:
+
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/youtube_zip_file_contents.png" alt="youtube_zip_file_contents.png" width="705" height="205">
+
+`ffmpeg` is where the ffmpeg program is stored to allow YT-DLP to edit the length of files, for example if savings just the .mp3 version of a video, but needing to cut out unwanted material in the beginning or end
+
+`youtube-nsig`, `youtube-sigfuncs`, and `youtube-sts` are cache directories used by YT-DLP. 
+
+`log` is where YT-DLP will save logs of files downloaded
+
+`phantomjs` allows YT-DLP to download videos from sites other than youtube by simulating a normal web browser and isolating the video stream to download. 
+
+Please note that the `youtube-dl.php` file in my configuration is called within a different PHP file that has proper headers and formatting. If using the `youtube-dl.php` file stand alone, usea and edit the internal variables detailed below
+
+```
+//********************************
+//USER VARIABLES
+//********************************
+$form_submit_location="index.php?page=13";			#the form submit location. NOTE: i have this .PHP file included within another PHP file "index.php" which is why the form submit location shows "index.php?page=13". If running this PHP file standalone, change this value to the name of the PHP file.
+#include_once 'header_yt_dlp.php';					#note, as previously indicated i am running this PHP file through another file which is handling the header details for me. If running this PHP stand alone, uncomment this line to allow proper formatting
+$youtube_folder_location="/var/www/html/youtube";   #this is the directory within the PHP docker container NOT the TrueNAS operating system
+$page_title="Youtube-dlp --> Video/Audio Downloader";
+$web_url_to_youtube_directory="http://192.168.1.8/youtube"; #replace with your TrueNAS IP or replace with your TrueNAS domain name
+$use_sessions=false; #use log in sessions?
+```
+
+`form_submit_location` the form submit location. NOTE: i have this .PHP file included within another PHP file "index.php" which is why the form submit location shows "index.php?page=13". If running this PHP file standalone, change this value to the name of the PHP file.
+
+`#include_once 'header_yt_dlp.php';` uncomment if using file stand alone
+
+`youtube_folder_location` this is the directory within the PHP docker container NOT the TrueNAS operating system
+
+`page_title` is the title of the page displayed on the web page
+
+`web_url_to_youtube_directory` #replace with your TrueNAS IP or replace with your TrueNAS domain name
+
+`use_sessions` use sessions or do not use sessions. If using stand alone, do not enable sessions. 
 
 
 ## 13.)  Data Logging Exporting to Influx DB v2  
