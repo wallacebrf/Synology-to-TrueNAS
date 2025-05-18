@@ -73,7 +73,7 @@ To-Do List:
 <li><a href="#ytdlp">YT-DLP</a></li>
 </ul>
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
-<li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a></li>
+<li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a></li>
 <li><a href="#Setup_Grafana_Dashboard_for_TrueNAS">Setup Grafana Dashboard for TrueNAS</a></li>   
 <li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li>
 <li><a href="#Configure_Disk_Standby">Configure Disk Standby</a></li>    
@@ -803,7 +803,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 - Click “create”
 - Data will now be saved into InfluxDB
 
-## 14.)  Install script to pull TrueNAS SNMP data
+## 14.)  Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details
 <div id="Install_script_to_pull_TrueNAS_SNMP_data"></div>
 
 1.) **Intro**
@@ -1025,7 +1025,7 @@ https://github.com/markusressel/zfs-inplace-rebalancing
 ## 26.)  On Systems with IPMI supported motherboards
 <div id="On_Systems_with_IPMI_supported_motherboards"></div>
 
-Plan to add support for IPMI measurements to <a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a> to allow it to poll sensors and other details status from the motherboard directly
+Plan to add support for IPMI measurements to <a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a> to allow it to poll sensors and other details status from the motherboard directly
 
 https://www.tzulo.com/crm/knowledgebase/47/IPMI-and-IPMITOOL-Cheat-sheet.html
 
