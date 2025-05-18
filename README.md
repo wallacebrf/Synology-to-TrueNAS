@@ -15,11 +15,10 @@ To-Do List:
 - TrueCommand
   - have not tried package yet
 - Veeam
-  - have not tried package yet
+  - have package working, need to update github
 - nginx Reverse Proxy
   - have package working, need to update github
 - Setup Grafana Dashboard for TrueNAS
-- Setup Web site Details
 - Setup Custom Logging Scripts and Configure CRON
 - Configure Disk Standby
 - Cloud backups to BackBlaze B2 Bucket
@@ -75,7 +74,6 @@ To-Do List:
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
 <li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a></li>
 <li><a href="#Setup_Grafana_Dashboard_for_TrueNAS">Setup Grafana Dashboard for TrueNAS</a></li>   
-<li><a href="#Setup_Web_site_Details">Setup Web site Details</a></li>
 <li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li>
 <li><a href="#Configure_Disk_Standby">Configure Disk Standby</a></li>    
 <li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
@@ -114,17 +112,17 @@ First and foremost if I wish to leave Synology I need to find replacements for a
 1.) My Main DS920 with attached DX517
   - Synology Calendar
   - Antivirus Essential
-  - Synology Mail Plus Server
-  - Web Station
-  - Hyper Backup
+  - Synology Mail Plus Server  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Configiure_email_sending_from_CLI">Replaced by scripts to send emails through CLI</a> 
+  - Web Station <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - Hyper Backup <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Cloud_backups_to_BackBlaze_B2_Bucket">Replaced by Cloud backups to BackBlaze B2 Bucket</a> 
   - Hyper Backup Vault
   - Central Management System
-  - Maria DB
-  - PHP My Admin
-  - LOg Center
-  - Active Backup For Business
-  - Container Manager
-  - Snapshot Replication
+  - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + Maria DB Stack + PHPMyAdmin also known as LEMP stack</a> 
+  - LOg Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
+  - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam">Replaced by Veeam</a> 
+  - Container Manager - replaced by TrueNAS native apps page
+  - Snapshot Replication - <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Create_snapshots">replaced by TrueNAS native ZFS snapshots</a>
 
 2.) On my DVA3219
   - Antivirus Essential
