@@ -16,10 +16,7 @@ To-Do List:
   - **have not tried package yet**
 - <ins>Veeam</ins>
   - have package working, need to update github
-- <ins>nginx Reverse Proxy</ins>
-  - have package working, need to update github
 - <ins>Setup Grafana Dashboard for TrueNAS</ins>
-- <ins>Setup Custom Logging Scripts and Configure CRON</ins>
   - have working, need to update github
 - <ins>Configure Disk Standby</ins>
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
@@ -516,8 +513,11 @@ To acheive this, the key line is `network_mode: "container:gluetun"` making all 
 
 <div id="nginx_reverse_proxy"></div>
 
-10. ***nginx reverse proxy***
-- https://www.youtube.com/watch?v=jx6T6lqX-QM
+10. ***nginx reverse proxy manager***
+
+Nothing too special is needed for Nginx Reverse Proxy Manager as it is available directly through the Discover Apps page. <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/nginx%20Reverse%20Proxy/nrpm.png">My Configuration</a>
+
+A useful video on the app: <a href="https://www.youtube.com/watch?v=jx6T6lqX-QM">Lawrence Systems - Self-Hosted SSL Simplified: Nginx Proxy Manager</a>
 
 <div id="jellyfin"></div>
 
@@ -940,6 +940,50 @@ Synology has a easy to use package `Web Station` to rather easily create and con
 
 ## 17.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
+
+I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS mnitoring, nework switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/trueNAS_snmp.sh">here</a>.
+
+I first started out using the `System --> Advanced Settings --> Cron Jobs` option and that worked. what i realized though is that this was clogging up my `Running Jobs` page and making lots of un-needed log files. As such i am instead directly editing the crontab file by `vi /etc/crontab`
+
+here are the contents of my crontab file
+
+```
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
+47 6    * * 7   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.weekly; }
+52 6    1 * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.monthly; }
+#
+* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh
+0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh
+```
+
+please note the last two lines, these are the lines i added. 
+
+```
+* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh
+0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh
+```
+
+line `* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh` runs my truenas logging script every 60 seconds
+
+line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMART logging script every hour
 
 ## 18.)  Configure Disk Standby
 <div id="Configure_Disk_Standby"></div>
