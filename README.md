@@ -69,6 +69,8 @@ To-Do List:
 <li><a href="#TrueCommand">TrueCommand</a></li>
 <li><a href="#Veeam">Veeam</a></li>
 <li><a href="#Grey_log">Grey log</a></li>
+<li><a href="#flaresolverr">flaresolverr</a></li>
+<li><a href="#ytdlp">YT-DLP</a></li>
 </ul>
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
 <li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data</a></li>
@@ -266,19 +268,18 @@ Two useful guides on how to use data sets and their permissions can be found her
 				<li>logs</li>
 			   </ul>
 		   </ul>
-		<li><ins>Radar</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>Radarr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>GraphiteExporter</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>chromium</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>chromium_normal</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>flaresolverr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>ytdlp</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>config</li>
-				<li>downloads</li>
-				<li>ffmpeg</li>
-			   </ul>
-		   </ul>
+		<li><ins>filebrowser</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>jellyfin</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>sickchill</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>flaresolverr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>grey_log</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>truecommand</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+		<li><ins>diun</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>nginx_reverse_proxy</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
    		   <ul>
 			   <li>Then created the following additional “regular folders”</li>
@@ -289,6 +290,21 @@ Two useful guides on how to use data sets and their permissions can be found her
 		   </ul>
 	   </ul>
 	  <li><strong>Surveillance</strong> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+	  <li><strong>hosting</strong> <small>[for our web hosting] use unix permissions, set all nine checkboxes </small></li>
+	   <ul>
+			   <li>Then created the following additional "normal directories"</li>
+			   <ul>
+			   <li>nginx</li> 
+			   <li>sql</li>
+		           <li>web</li>
+				   <ul>
+					<li>config</li>
+					   <ul>
+						<li>config_files</li>
+					   </ul>
+				   </ul>
+			   </ul>
+		   </ul>
 	  <li> <strong>Users</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
    		   <ul>
 			   <li>Then created the following additional nested data set [And more for other user as needed/desired]</li>
@@ -310,9 +326,11 @@ Two useful guides on how to use data sets and their permissions can be found her
    	   <li> <strong>Web</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
    		   <ul>
 			   <li>Then created the following additional nested data sets</li>
-			   <ul>
-			   <li>Config</li> 
+			   <ul> 
 			   <li>logging</li> 
+				   <ul>
+				   <li>notifications</li> 
+				   </ul>
 			   </ul>
 		   </ul>
 	   <li> <strong>torrent</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
@@ -333,6 +351,7 @@ Two useful guides on how to use data sets and their permissions can be found her
 			   </ul>
 		   </ul>
 	   <li> <strong>Pictures</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+	   <li> <strong>Veeam</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
    </ul>
 </ol>
 <br>
@@ -602,31 +621,31 @@ if the gluetun app is not running, the qBittorrent app will not run
 
 17. ***ngninx + PHP + Maria DB Stack + PHPMyAdmin*** also known as LEMP stack (replaces web station)
 
-I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a>
-
-Example with: <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. Note that I am not going to use the ngnix in this stack for my SSL certs. I am also running Nginx Reverse Proxy Manager which will be hanlding my SSL. The communications between proxy manager and this stack does not leave the TrueNAS server so I am not worried about traffic sniffing between proxy manager and this stack. 
+I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a> combined with the example here detailing <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. 
 
 I am aware this is not considered the best security practice however I was not able to get the LEMP stack to work unless I set the permissions to `/mnt/volume1/hosting` to `777`. To acheive this I went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
 
 My final configuration and needed files are <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20%2B%20PHP%20%2B%20MariaDB%20Stack">found here</a>. 
 
-Download all of the files and folders and place them in the data set `/mnt/volume1/hosting` 
+Download all of the files and folders and place them in the data set `/mnt/volume1/hosting`. If using anyb other directory, update the `docker-compose.yaml` file accordingly. 
 
-within TrueNAS go to `apps --> discover apps --> custom yaml`. Give the stack a name, I named it `web` and paste the contents of the docker-compose.yaml file. 
+to get the HTTPS working, your SSL cert "full chain" cert file and the private key file need to be placed in the `/mnt/volume1/hosting/nginx` dirctory. The "full chain" cert will be one file that contains your personal domain cert and your intermetiate cert all in one file. 
 
-once the stack is up, go to `http://<server-ip>:81/index.php` and you should see details of your PHP installation on the browser. 
+within TrueNAS go to `apps --> discover apps --> next to the "custom app" click on the three dots --> install via yaml`. Give the stack a name, I named it `web` and paste the contents of the docker-compose.yaml file. 
 
-Now we need to transfer files from Synology. To tansfer any SQL databases from synology. Some of my databases are GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. 
+once the stack is up, go to `http://<server-ip>:444/index.php` and you should see details of your PHP installation on the browser after you go through the cert warning page. The cert warning page is because we are accessing the site through the IP adress and not our domain name. I am configuring the port to be port `444` because port `443` is being used by Nginx Reverse Proxy Manager. We will be using NRPM to acess the site through our domain name, but we know that the communications between NRPM and our LEMP stack will also be encrypted. 
 
-- export current databases on synology
+Now we need to transfer some files from Synology. Let's start with SQL databases from synology. Some of my databases are hundreds of GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. If your files are small, importing through PHPMyAdmin should be fine. 
+
+- export current databases on synology. I am not deatiling how to do this as there is no guarantee you have been using PHPMyAdmin on Synology. 
 - copy files to SMB `\\<trueNAS_IP>\hosting`
-- change to the hosting directory. `cd /mnt/volmume1/hosting`
+- Log into TrueNAS SSH and change to the hosting directory. `cd /mnt/volmume1/hosting`
 - Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
-- go to apps, click on "web" app and select MySQL's shell
-- `cd /var/lib/mysql`
+- go to apps, click on "web" app we created and select MySQL's shell
+- within MySQL's shell: `cd /var/lib/mysql`
 - log into sql. `mysql -u root -p` and enter password when asked
 - create database with same name as one exported from synology. `CREATE DATABASE home_temp;` 
-- `use home_temp;`
+- we now need to tell MySQL to use the new database to ensure our import goes into it correctly: `use home_temp;`
 - import sql file. `source home_temp.sql`
 - you can now delete the .SQL files in the `/mnt/volmume1/hosting` and `/mnt/volume1/hosting/sql` we copied over from Synology. 
 
@@ -641,13 +660,35 @@ FROM php:8.4-fpm
 
 # Installing dependencies for the PHP modules
 RUN apt-get update && \
+    apt-get install -y zip libzip-dev libpng-dev && \
+	cd /bin && \
+	apt-get install pip -y && \
+	echo "Python and PIP now installed" && \
+	curl -L "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o yt-dlp && \
+	echo "YT-DLP Binary downloaded to /bin" && \
+	chmod a+rx yt-dlp && \
+	echo "YT-DLP binary now executable\nInstallation Complete"
+
+# Installing additional PHP modules
+RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
+
+```
+
+as of this writting, this file is using PHP 8.4 <a href="https://www.php.net/supported-versions">few months</a>. If a new PHP version is available the line `FROM php:8.4-fpm` would have to change to `FROM php:8.5-fpm` for example. After making the changes to the file, the stack will have to be **removed within TrueNAS**, and the option to `remove images` must be checked or we will have an un-used older image of PHP taking up disk space. Then recreate the stack using our docker-compose file and the new version of PHP and or the updated extensions wil be installed. 
+
+Please note: This `/mnt/volmume1/hosting/php-dockerfile` file is also commanding docker-compose to install PIP (which also installs Python3) and YT-DLP within the PHP container itself. This is done so i can use my PHP based yt-dlp control page to command ty-dlp without using the command line. if you do not wish to have yt-dlp or PIP installed as part of your PHP image file, change the file to the following:
+
+```
+FROM php:8.4-fpm
+
+# Installing dependencies for the PHP modules
+RUN apt-get update && \
     apt-get install -y zip libzip-dev libpng-dev
 
 # Installing additional PHP modules
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
-```
 
-as of this writting, this file is using PHP 8.4 <a href="https://www.php.net/supported-versions">few months</a>. If a new PHP version is available the line `FROM php:8.4-fpm` would have to change to `FROM php:8.5-fpm` for example. After making the changes to the file, the stack will have to be removed within TrueNAS, and the option to remove images checked. Then recreate the stack and the new version of PHP and or the updated extensions wil be installed. 
+```
 
 <div id="DIUN"></div>
 
