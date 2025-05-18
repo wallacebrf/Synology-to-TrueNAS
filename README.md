@@ -25,6 +25,11 @@ To-Do List:
 - <ins>flaresolverr</ins>
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
 - <ins>address issue #2</ins> "Recycle bin in Truenas"
+- <ins>Configure Remote Access using Tail Scale</ins>
+  - **have not tried package yet**
+- <ins>portainer</ins>
+  - have package working, need to update github
+- <ins>complete PHP config page for TrueNAS SNMP</ins>
 
 
 
@@ -930,12 +935,7 @@ capture_interval_adjustment=3
 ## 15.)  Setup Grafana Dashboard for TrueNAS
 <div id="Setup_Grafana_Dashboard_for_TrueNAS"></div>
 
-## 16.)  Setup Web site Details
-<div id="Setup_Web_site_Details"></div>
-
-Synology has a easy to use package `Web Station` to rather easily create and configure either nginx or appache based PHP powered web services. Unfortunately TrueNAS does not have this package but we have already installed our <a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack</a> to give us the ability to host a web site. This section will go over what I had to do to copy over all of my set site files already hosted on my Synology unit onto TrueNAS. 
-
-## 17.)  Setup Custom Logging Scripts and Configure CRON
+## 16.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
 
 I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS mnitoring, nework switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/trueNAS_snmp.sh">here</a>.
@@ -982,7 +982,7 @@ line `* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh` runs my true
 
 line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMART logging script every hour
 
-## 18.)  Configure Disk Standby
+## 17.)  Configure Disk Standby
 <div id="Configure_Disk_Standby"></div>
 
 ## 18.)  Cloud backups to BackBlaze B2 Bucket
