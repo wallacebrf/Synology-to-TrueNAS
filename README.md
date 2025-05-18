@@ -1004,7 +1004,7 @@ I have the `Schedule` set to daily, however the key is i have `Threshold Days` s
 ## 21.)  Schedule SMART tests
 <div id="Schedule_SMART_tests"></div>
 
-There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler here: https://github.com/wallacebrf/SMART-to-InfluxDB-Logger. I will describe how to setup both. 
+There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler. I will describe how to setup both. 
 
 **Native TrueNAS SMART scheduling**
 
