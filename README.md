@@ -1033,6 +1033,8 @@ The reason why i prefer this over the functionality built into TrueNAS is that i
 - receive email notiifcations of when tests finish and start
 - better log history details
 
+to enable the script to run every 10 to 15 minutes, we need to edit crontab `nano /etc/crontab` and we need to add the fillowing line: `0,15,30,45 * * * * root bash /mnt/volume1/hosting/web/synology_smart/synology_SMART_control.sh` which will run the script at minute 0, 15, 30, andn 45 of every hour of every day
+
 ## 22.)  Configure Email Sending From CLI
 <div id="Configiure_email_sending_from_CLI"></div>
 
