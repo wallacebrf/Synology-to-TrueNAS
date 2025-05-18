@@ -27,6 +27,7 @@ To-Do List:
 - Schedule SMART tests
 - flaresolverr
 - ytdlp
+  - have working, need to update github
 - address issue #1 "DSM in docker to mitigate DS apps"
 - address issue #2 "Recycle bin in Truenas"
 
