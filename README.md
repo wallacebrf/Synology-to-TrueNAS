@@ -31,6 +31,7 @@ To-Do List:
   - have package working, need to update github
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
 - test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
+- try self hosted media comverter - https://www.xda-developers.com/free-self-hosted-tool-converts-basically-any-file-all-your-browser/
 
 
 
