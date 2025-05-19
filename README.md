@@ -87,6 +87,8 @@ To-Do List:
 <li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Tail Scale</a></li>
 <li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
 <li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
+<li><a href="#Rsync_Files_From_Synology_to_TrueNAS">Rsync Files From Synology to TrueNAS</a></li>
+<li><a href="#On_Systems_with_IPMI_supported_motherboards">On Systems with IPMI supported motherboards/a></li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -1164,3 +1166,47 @@ also, using the scripts on 45 drive's github page, try to adopt it so users who 
 https://github.com/45Drives/cockpit-hardware/tree/master/45drives-motherboard/public/helper_scripts
 
 these scripts appear to be what they use to gather all of the details needed for their hardware overview pages. 
+
+## 27.)  Rsync Files From Synology to TrueNAS
+<div id="Rsync_Files_From_Synology_to_TrueNAS"></div>
+
+this amazing guide is what i used small modfications
+https://www.reddit.com/r/truenas/comments/xk5nxm/solved_rsync_task_to_synology_nas/
+
+- Create a new user account on **both** your TrueNAS and Synology NAS. <ins>It needs to be the same user name (for example `rsync`)</ins>. The password does not matter; does not need to be the same.
+- enable the Rsync service on your Synology: `Control Panel --> File services --> "rsync" tab.
+  - Tick `Enable rsync service` as well as `Enable rsync account`.
+  - Click `edit rsync account`, add the user you just created (e.g. rsync) and set a secure password. <ins>Make sure to note down this password!</ins>
+- Set the permissions for the user on your Synology
+  - Allow access to all shared folder(s) you want to sync from the Synology system to the TrueNAS system. 
+    - Make sure to give the user "full control" permissions to the folders by giving the user "custom" permissions and ticking all boxes including "change permissions" and "take ownership"   
+  - Allow access to the rsync application. 
+- On the TrueNAS system, we need to edit the ACL for the `/mnt/volume1/web/` data set to allow the "group" `rsync` we created so it can access the `/mnt/volume1/web/logging/syno.pw` file
+- we need to edit the ACL(s) for any of the other datasets that we will be allowing rsync to write data to when it is copying from the Synology system. 
+- On the TrueNAS system, create a file with the rsync password you noted down earlier. It needs to be owned and exclusively accessible by the rsync user
+
+```
+cd /mnt/volume1/web/logging
+echo "your_password" > syno.pw
+chown rsync:rsync syno.pw
+chmod 600 syno.pw  
+```
+
+- go to `Data Protection --> Rsync Tasks --> Add` to set up the rsync task on TrueNAS. 
+  - Select the `rsync` user created earlier. Choose `module` under the `rsync mode` drop down
+  - For the `module name` enter the root share of the synology. For example, if a share is `\\<Syno_nas_IP>\photos` then enter just `photos` for the module. This is case senstive!
+  - `Direcion` set to `PULL`
+  - for `Path` set to the dataset / direcotry inside a dataset where the data copied from Synolgy will be placed
+  - Under `auxiliary parameters` enter: `-hv --dry-run --password-file=<path-to-your-file> --log-file=<path-to-your-log-file>` which for our example would be `-hv --dry-run --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
+  - Ensure `Recursive` is checked
+  - Ensure `enabled` is checked
+  - Set `More Options` as desired, but default settings are OK
+  - click `Save`
+- To run the task right away, click the "play" icon
+
+
+- This will sync the particualr shared folder from the Synology System, HOWEVER we have configured rsync to perform a dry run using the `--dry-run` `auxiliary parameters`. We have also told it to log everythign to `/mnt/volume1/web/logging/syno_sync.log`. 
+- After the task completes, open the log file and ensure no errors occured and that the data would have been copied properly. 
+- If everything looks good, edit the rsync task and remove the `--dry-run` entry by changing the `auxiliary parameters` to `-hv --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
+- Since we are just copying the data, once the copy process is done, delete the task, and create a new task with the same settings but for another shared folder on the Synology until all shared folders that need to be copied over are sucessfully copied. 
+
