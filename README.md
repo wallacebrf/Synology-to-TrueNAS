@@ -30,6 +30,7 @@ To-Do List:
 - <ins>portainer</ins>
   - have package working, need to update github
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
+- test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
 
 
 
