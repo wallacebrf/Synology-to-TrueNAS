@@ -1210,3 +1210,8 @@ chmod 600 syno.pw
 - If everything looks good, edit the rsync task and remove the `--dry-run` entry by changing the `auxiliary parameters` to `-hv --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
 - Since we are just copying the data, once the copy process is done, delete the task, and create a new task with the same settings but for another shared folder on the Synology until all shared folders that need to be copied over are sucessfully copied. 
 
+## 27.)  File Managers
+<div id="File_Managers"></div>
+
+document filebrowser
+document https://mariushosting.com/synology-install-double-commander-with-portainer/
