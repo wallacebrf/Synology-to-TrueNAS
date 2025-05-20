@@ -721,6 +721,7 @@ https://helpcenter.veeam.com/docs/agentforwindows/userguide/active_full_backup.h
 https://www.veeam.com/veeam_backup_12_user_guide_vsphere_pg.pdf --> User Manual
 https://www.veeam.com/solutions/small-business/pricing-calculator.html --> pricing
 
+for addtional data backups, use syncthing with versions: https://www.youtube.com/watch?v=cccPnXnh6wA
 
 <div id="Grey_log"></div>
 
