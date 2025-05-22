@@ -27,7 +27,7 @@ To-Do List:
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
 - <ins>Syncthing</ins>
 - test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
-- try self hosted media comverter - https://www.xda-developers.com/free-self-hosted-tool-converts-basically-any-file-all-your-browser/
+- try self hosted media converter - https://www.xda-developers.com/free-self-hosted-tool-converts-basically-any-file-all-your-browser/
 
 
 
@@ -96,7 +96,7 @@ I currently have as of May 2025 a Synology DVA3219 with an attached DX517 expans
 
 It is obvious from the details above that I am a big Synology user however with the details of the new 2025 models and their restrictive HDD policies are causing me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
 
-With this news I have decided to move away from Synology and I am eyeing TrueNAS Community (SCALE). I am currently testing TrueNAS on an old Dell Micro PC I had available. I first tried to use a M.2 to 4x SATA adapter to try adding more drives to the box as the processor and IGPU would actually be enough for me to comfortably move to if I could get drive expansion options to work. Unfortunately with the adapter in the M.2 slot, the system refused to POST.
+With this news I have decided to move away from Synology and I am eying TrueNAS Community (SCALE). I am currently testing TrueNAS on an old Dell Micro PC I had available. I first tried to use a M.2 to 4x SATA adapter to try adding more drives to the box as the processor and IGPU would actually be enough for me to comfortably move to if I could get drive expansion options to work. Unfortunately with the adapter in the M.2 slot, the system refused to POST.
 
 For my testing I am using a 256GB SSD from an old laptop and the 512GB NVME drive in the Dell's M.2 slot. 
 
@@ -107,7 +107,7 @@ In the long run in about 1-year's time I plan to build a custom system that can 
 
 PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacement I can try. However since I have no experience with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
 
-Please also note I have never used Apple products so I am not in a postion to suggest services that are compatible with Apple. If someone with Apple products has done things to ove from Synology to TrueNAS and I am not detailing that, please submit an issue request and I can work with you to add those details to this guide. 
+Please also note I have never used Apple products so I am not in a position to suggest services that are compatible with Apple. If someone with Apple products has done things to over from Synology to TrueNAS and I am not detailing that, please submit an issue request and I can work with you to add those details to this guide. 
 
 First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps I am using. This guide will detail what I chose to replace the Synology Apps. 
 
@@ -195,7 +195,7 @@ I performed the following actions on my system:
 <br>
 <li>Setup two factor authentication</li>
 <ul>
-<li>Under your user(s) click on the user name in the upper right and select <strong>Two-Factor Authentication</strong> and generate a QR code to use in an app like Microsoft Authenticator or your prerferred app. You will need to generate this QR code for all of the users who will need Web GUI access.</li>
+<li>Under your user(s) click on the user name in the upper right and select <strong>Two-Factor Authentication</strong> and generate a QR code to use in an app like Microsoft Authenticator or your preferred app. You will need to generate this QR code for all of the users who will need Web GUI access.</li>
 <li><strong>System --> Advanced Settings --> Global Two Factor Authentication – Configure</strong></li>
 <li>Turn on 2FA and set time window to 1. If using passwords for SSH, check the option to also use 2FA for SSH.</li>
 </ul>
@@ -290,7 +290,7 @@ Two useful guides on how to use data sets and their permissions can be found her
 		   </ul>
 	   </ul>
 	  <li><strong>Surveillance</strong> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-	  <li><strong>hosting</strong> <small>[for our web hosting] use unix permissions, set all nine checkboxes </small></li>
+	  <li><strong>hosting</strong> <small>[for our web hosting] use Unix permissions, set all nine check boxes </small></li>
 	   <ul>
 			   <li>Then created the following additional "normal directories"</li>
 			   <ul>
@@ -403,7 +403,7 @@ As a note, for my current Synology systems I have PLEX running on one DS920 with
 - click save
 3. repeat step above as needed for additional shares as desired.
 
-Note: I had difficulty in sharing a data set with child data sets over NFS, specifically the `/mnt/volume1/video` data set. For some reason I could see and access the data on that `/mnt/volume1/video` main data set I was directly sharing over NFS, but I was NOT able to acces the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` I was directly sharing with NFS, I was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such I just made individual NFS shares for the data sets I made under `/mnt/volume1/video` and everything seemed to work fine. 
+Note: I had difficulty in sharing a data set with child data sets over NFS, specifically the `/mnt/volume1/video` data set. For some reason I could see and access the data on that `/mnt/volume1/video` main data set I was directly sharing over NFS, but I was NOT able to access the files in the child data sets `4k_movies`, `TV_shows` etc... even after playing around with permissions. If there were "regular" folders created within the main data set `/mnt/volume1/video` I was directly sharing with NFS, I was able to see THOSE folders and files fine. I am sure there is a fix for this, but for my limited testing and now getting it to work well enough for my needs. As such I just made individual NFS shares for the data sets I made under `/mnt/volume1/video` and everything seemed to work fine. 
 
 ## 11.)  Create snapshots
 <div id="Create_snapshots"></div>
@@ -474,7 +474,7 @@ I used a kilo-watt meter to get a good understanding of the power draw on the De
 
 something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, I think Frigate does a better job anyways but your mileage may vary.
 
-another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together.
+another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video will NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together.
 
 <div id="Grafana"></div>
 
@@ -512,7 +512,7 @@ Sickchill is not available through the `Discover App` page on TrueNAS but I was 
 
 This app requires gluetun to be operational as we are tunneling all of sick chill's web traffic through the gluetun app to ensure it uses our VPN tunnel. 
 
-To acheive this, the key line is `network_mode: "container:gluetun"` making all of this containers traffic flow through the GlueTun container. In addtion, the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- 8081:8081/tcp`. 
+To achieve this, the key line is `network_mode: "container:gluetun"` making all of this containers traffic flow through the GlueTun container. In addition, the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- 8081:8081/tcp`. 
 
 <div id="nginx_reverse_proxy"></div>
 
@@ -534,15 +534,15 @@ A useful video on the app: <a href="https://www.youtube.com/watch?v=jx6T6lqX-QM"
 
 14. ***Chromium***
 
-I have TWO copies of the chromium browser installed on my system. One is linked to the gluetun network so I can easilly go to Nord VPN's DNS checker and tunnel status check pages to prove that the VPN tunnel is working as expected. The second one is "normal" and runs through my normal public IP adress. The main reason why I need this second tunnel is it allows me to access the web GUI interfaces for my 12x security cameras running in Frigate. Unfortunately because the first chromium container is linked to the gluetun container/VPN tunnel, it is not able to access my security camera network. 
+I have TWO copies of the chromium browser installed on my system. One is linked to the gluetun network so I can easily go to Nord VPN's DNS checker and tunnel status check pages to prove that the VPN tunnel is working as expected. The second one is "normal" and runs through my normal public IP address. The main reason why I need this second tunnel is it allows me to access the web GUI interfaces for my 12x security cameras running in Frigate. Unfortunately because the first chromium container is linked to the gluetun container/VPN tunnel, it is not able to access my security camera network. 
 
 The copy running through the GlueTun VPN tunnel <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/chromium/docker-compose-VPN.yaml">docker-compose.yaml</a> file is available. This app requires gluetun to be operational as we are tunneling all of the chromium web traffic through the gluetun app to ensure it uses our VPN tunnel. 
 
-To acheive this, the key line is `network_mode: "container:gluetun"` and the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- '3410:3001'`. 
+To achieve this, the key line is `network_mode: "container:gluetun"` and the normal `ports:` lines are NOT needed. Instead we need to edit/revise the gluetun docker compose stack file with the added line of `- '3410:3001'`. 
 
 The second version not running through the VPN tunnel <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/chromium/docker-compose-Normal.yaml">docker-compose.yaml</a> is available. 
 
-Running the two chromium containers side-by-side it can be easilly seem that the VPN tunnel is working as expected
+Running the two chromium containers side-by-side it can be easily seem that the VPN tunnel is working as expected
 
 RUNNING THROUGH VPN
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/chromium/chromium_ip_address_VPN.png" alt="chromium_ip_address_VPN.png" width="540" height="269">
@@ -550,7 +550,7 @@ RUNNING THROUGH VPN
 NOT RUNNING THROUGH VPN
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/chromium/chromium_ip_address_normal.png" alt="chromium_ip_address_normal.png" width="393" height="234">
 
-My actual public IPv4 address starts with 98.... which is what the normal chromium is reporting. In addtion, the normal chromium also is properly reporting my IPv6 address. The VPN version of chromium is properly reporting `94.140.9.159` which is an IP address assigned to NORD VPN. In addition, this is the same IP address reported at the bottom of qBittorrent. Based on this I know that my VPN traffic is properly being routed through the VPN. 
+My actual public IPv4 address starts with 98.... which is what the normal chromium is reporting. In addition, the normal chromium also is properly reporting my IPv6 address. The VPN version of chromium is properly reporting `94.140.9.159` which is an IP address assigned to NORD VPN. In addition, this is the same IP address reported at the bottom of qBittorrent. Based on this I know that my VPN traffic is properly being routed through the VPN. 
 
 <div id="Portainer"></div>
 
@@ -564,7 +564,7 @@ My actual public IPv4 address starts with 98.... which is what the normal chromi
 
 To get my Qbittorrent and GlueTUN VPN tunnel working with Nord VPN, I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/torrent/dockercompose.yaml">docker-compose.yaml</a> available. 
 
-breakdown of the importaint parts for the `GlueTUN` container:
+breakdown of the important parts for the `GlueTUN` container:
 
 ```
 cap_add:
@@ -608,9 +608,9 @@ ALL containers that you wish to have tunneled through the GlueTUN app must have 
       - DNS_ADDRESS=103.86.96.100 #NORD VPN DNS server
 ```
 
-This is my configuration for NordVPN, but will be different if you use one of the MANY VPN providers supported by GlueTun. If your VPN provider also has its own DNS, ensure you configure the `DNS_ADDRESS` paramter to ensure no DNS leaks occur. Now,I purposfuly have encrypted DNS off `DOT=off` for because NordVPN DNS does not seem to support it, but if your VPN provider does, ensure it is set to ON for more security. I also have a `healthcheck` task running that will ping google and if it fails, it will restart the cotainer to hopefully re-connect to Nord VPN again. 
+This is my configuration for NordVPN, but will be different if you use one of the MANY VPN providers supported by GlueTun. If your VPN provider also has its own DNS, ensure you configure the `DNS_ADDRESS` parameter to ensure no DNS leaks occur. Now,I purposefully have encrypted DNS off `DOT=off` for because NordVPN DNS does not seem to support it, but if your VPN provider does, ensure it is set to ON for more security. I also have a `healthcheck` task running that will ping google and if it fails, it will restart the container to hopefully re-connect to Nord VPN again. 
 
-breakdown of the importaint parts for the `qBittorrent` container:
+breakdown of the important parts for the `qBittorrent` container:
 
 ```
 depends_on:
@@ -630,17 +630,17 @@ I am aware this is not considered the best security practice however I was not a
 
 My final configuration and needed files are <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20%2B%20PHP%20%2B%20MariaDB%20Stack">found here</a>. 
 
-Download all of the files and folders and place them in the data set `/mnt/volume1/hosting`. If using anyb other directory, update the `docker-compose.yaml` file accordingly. 
+Download all of the files and folders and place them in the data set `/mnt/volume1/hosting`. If using any other directory, update the `docker-compose.yaml` file accordingly. 
 
-to get the HTTPS working, your SSL cert "full chain" cert file and the private key file need to be placed in the `/mnt/volume1/hosting/nginx` dirctory. The "full chain" cert will be one file that contains your personal domain cert and your intermetiate cert all in one file. 
+to get the HTTPS working, your SSL cert "full chain" cert file and the private key file need to be placed in the `/mnt/volume1/hosting/nginx` directory. The "full chain" cert will be one file that contains your personal domain cert and your intermediate cert all in one file. 
 
 within TrueNAS go to `apps --> discover apps --> next to the "custom app" click on the three dots --> install via yaml`. Give the stack a name, I named it `web` and paste the contents of the docker-compose.yaml file. 
 
-once the stack is up, go to `http://<server-ip>:444/index.php` and you should see details of your PHP installation on the browser after you go through the cert warning page. The cert warning page is because we are accessing the site through the IP adress and not our domain name. I am configuring the port to be port `444` because port `443` is being used by Nginx Reverse Proxy Manager. We will be using NRPM to acess the site through our domain name, but we know that the communications between NRPM and our LEMP stack will also be encrypted. 
+once the stack is up, go to `http://<server-ip>:444/index.php` and you should see details of your PHP installation on the browser after you go through the cert warning page. The cert warning page is because we are accessing the site through the IP address and not our domain name. I am configuring the port to be port `444` because port `443` is being used by Nginx Reverse Proxy Manager. We will be using NRPM to access the site through our domain name, but we know that the communications between NRPM and our LEMP stack will also be encrypted. 
 
-Now we need to transfer some files from Synology. Let's start with SQL databases from synology. Some of my databases are hundreds of GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. If your files are small, importing through PHPMyAdmin should be fine. 
+Now we need to transfer some files from Synology. Let's start with SQL databases from Synology. Some of my databases are hundreds of GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. If your files are small, importing through PHPMyAdmin should be fine. 
 
-- export current databases on synology. I am not deatiling how to do this as there is no guarantee you have been using PHPMyAdmin on Synology. 
+- export current databases on Synology. I am not detailing how to do this as there is no guarantee you have been using PHPMyAdmin on Synology. 
 - copy files to SMB `\\<trueNAS_IP>\hosting`
 - Log into TrueNAS SSH and change to the hosting directory. `cd /mnt/volmume1/hosting`
 - Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
@@ -656,7 +656,7 @@ we need to copy any web hosted files from the synology and place those files in 
 
 Your web services should now be working
 
-If you wish to upgrade your version of PHP or if you wish to add or remove PHP modules, you wil need to edit the `/mnt/volmume1/hosting/php-dockerfile`
+If you wish to upgrade your version of PHP or if you wish to add or remove PHP modules, you will need to edit the `/mnt/volmume1/hosting/php-dockerfile`
 
 ```
 FROM php:8.4-fpm
@@ -677,7 +677,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 
 ```
 
-as of this writting, this file is using PHP 8.4 <a href="https://www.php.net/supported-versions">few months</a>. If a new PHP version is available the line `FROM php:8.4-fpm` would have to change to `FROM php:8.5-fpm` for example. After making the changes to the file, the stack will have to be **removed within TrueNAS**, and the option to `remove images` must be checked or we will have an un-used older image of PHP taking up disk space. Then recreate the stack using our docker-compose file and the new version of PHP and or the updated extensions wil be installed. 
+as of this writing, this file is using PHP 8.4 <a href="https://www.php.net/supported-versions">few months</a>. If a new PHP version is available the line `FROM php:8.4-fpm` would have to change to `FROM php:8.5-fpm` for example. After making the changes to the file, the stack will have to be **removed within TrueNAS**, and the option to `remove images` must be checked or we will have an un-used older image of PHP taking up disk space. Then recreate the stack using our docker-compose file and the new version of PHP and or the updated extensions will be installed. 
 
 Please note: This `/mnt/volmume1/hosting/php-dockerfile` file is also commanding docker-compose to install PIP (which also installs Python3) and YT-DLP within the PHP container itself. This is done so i can use my PHP based yt-dlp control page to command ty-dlp without using the command line. if you do not wish to have yt-dlp or PIP installed as part of your PHP image file, change the file to the following:
 
@@ -705,13 +705,13 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 
 20. ***Veeam*** *[Replaces Active Backup for Business]*
 
-I have been usingSynology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does exactly what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Buisnss. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good as, but i am OK with that. 
+I have been usingSynology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does exactly what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good as, but i am OK with that. 
 
 Veeam free for windows can be downloaded here: <a href="https://www.veeam.com/products/free/microsoft-windows.html">Veeam windows client free</a>
 
-The configuration settings that i sucessfully used to perform bare metal backups to by trueNAS server can be found <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/Veeam">here</a>. 
+The configuration settings that i successfully used to perform bare metal backups to by trueNAS server can be found <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/Veeam">here</a>. 
 
-I am also going to be combining Veeam with Syncthing to perform versioned backups of specific directories on my windows machines. <a href="https://www.youtube.com/watch?v=cccPnXnh6wA">Lawrence Systems - How I Use Syncthing for Real Time Backups</a>
+I am also going to be combining Veeam with Syncthing to perform version-ed backups of specific directories on my windows machines. <a href="https://www.youtube.com/watch?v=cccPnXnh6wA">Lawrence Systems - How I Use Syncthing for Real Time Backups</a>
 
 <div id="Grey_log"></div>
 
@@ -727,9 +727,9 @@ Grey log will be replacing Synology's "Log Center" for our SysLog Server.
   - all other settings can be as default
   - determine the user ID and group ID for `greylog`
 - create a new dataset for your greylog files and ensure the `greylog` user and group has access to it. 
-- download the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/greylog/docker-compose.yaml">doscker-compose.yaml</a>
+- download the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/greylog/docker-compose.yaml">docker-compose.yaml</a>
   - find the line `- "OPENSEARCH_INITIAL_ADMIN_PASSWORD=SetPassw0rdL3ttersAndNumb3r5"` and update the initial admin password
-  - find the line `GRAYLOG_PASSWORD_SECRET: "ThisIsYourPassword" # CHANGE ME (must be at least 16 characters)!` and enter the pasword you created the checksum of
+  - find the line `GRAYLOG_PASSWORD_SECRET: "ThisIsYourPassword" # CHANGE ME (must be at least 16 characters)!` and enter the password you created the checksum of
   - find the line `GRAYLOG_ROOT_PASSWORD_SHA2: "7e57c8ce23901a99a143d640d695384d3b7e22bcd801ed7507b10eb188fbe2e1"` and replace the value with your calculated checksum
   - find the line `GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL: "http://192.168.1.8:9000/"` and change to your server's address
   - for the `GRAYLOG_TRANSPORT_EMAIL` lines, edit to match your working SMTP server details to allow for email notifications
@@ -756,7 +756,7 @@ I have been using a  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/
 
  <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/ytdlp_downloader.png" alt="ytdlp_downloader.png" width="469" height="922"> 
 
-The actual YT-DLP binary and Python3 dependancies, plus the needed PHP web server must first be installed per  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a>. 
+The actual YT-DLP binary and Python3 dependencies, plus the needed PHP web server must first be installed per  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a>. 
 
 Once YT-DLP is installed within the PHP docker image, download the contents of <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/yt-dlp">this page</a> and place the contents in the `/mnt/volume1/hosting/web` directory used by the PHP server and extract the contents. 
 
@@ -772,7 +772,7 @@ The zip file is broken into several pieces as Github was preventing me from uplo
 
 `phantomjs` allows YT-DLP to download videos from sites other than youtube by simulating a normal web browser and isolating the video stream to download. 
 
-Please note that the `youtube-dl.php` file in my configuration is called within a different PHP file that has proper headers and formatting. If using the `youtube-dl.php` file stand alone, usea and edit the internal variables detailed below
+Please note that the `youtube-dl.php` file in my configuration is called within a different PHP file that has proper headers and formatting. If using the `youtube-dl.php` file stand alone, use and edit the internal variables detailed below
 
 ```
 //********************************
@@ -842,7 +842,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
       - Host Port: 9109
       - Protocol: TCP
     - Add #2:
-      - Container Port: 9108 [The web GUI where we wil be using InfluxDB to scrape the data from]
+      - Container Port: 9108 [The web GUI where we will be using InfluxDB to scrape the data from]
       - Host Port: 9108
       - Protocol: TCP
   - **Custom DNS Setup**: No items have been added yet.
@@ -958,7 +958,7 @@ capture_interval_adjustment=3
 ## 16.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
 
-I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS mnitoring, nework switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/trueNAS_snmp.sh">here</a>.
+I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS monitoring, network switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/trueNAS_snmp.sh">here</a>.
 
 I first started out using the `System --> Advanced Settings --> Cron Jobs` option and that worked. what i realized though is that this was clogging up my `Running Jobs` page and making lots of un-needed log files. As such i am instead directly editing the crontab file by `vi /etc/crontab`
 
@@ -968,7 +968,7 @@ here are the contents of my crontab file
 # /etc/crontab: system-wide crontab
 # Unlike any other crontab you don't have to run the `crontab'
 # command to install the new version when you edit this file
-# and files in /etc/cron.d. These files also have username fields,
+# and files in /etc/cron.d. These files also have user name fields,
 # that none of the other crontabs do.
 
 SHELL=/bin/sh
@@ -1045,15 +1045,15 @@ this script requires a working PHP web server per <a href="https://github.com/wa
 
 I have written a custom SMART test scheduling script detailed <a href="https://github.com/wallacebrf/Synology-SMART-test-scheduler">here</a>.
 
-The installation is the same as the details in that page <ins>EXCEPT</ins> that the `script_location="/mnt/volume1/hosting/web/synology_smart"` within the `synology_SMART_control.sh` file is where the file is located on the <ins>TrueNAS system</ins> **BUT** the value of `$script_location="/var/www/html/synology_smart";` within file `smart_scheduler_config.php` is the location of the script within the <ins>PHP docker continer</ins>. 
+The installation is the same as the details in that page <ins>EXCEPT</ins> that the `script_location="/mnt/volume1/hosting/web/synology_smart"` within the `synology_SMART_control.sh` file is where the file is located on the <ins>TrueNAS system</ins> **BUT** the value of `$script_location="/var/www/html/synology_smart";` within file `smart_scheduler_config.php` is the location of the script within the <ins>PHP docker container</ins>. 
 
 The reason why i prefer this over the functionality built into TrueNAS is that it allows for:
-- the option to more easilly see the live status of a SMART test
-- to scheudle SMART tests on disks seqentuially or all at once
-- receive email notiifcations of when tests finish and start
+- the option to more easily see the live status of a SMART test
+- to schedule SMART tests on disks sequentially or all at once
+- receive email notifications of when tests finish and start
 - better log history details
 
-to enable the script to run every 10 to 15 minutes, we need to edit crontab `nano /etc/crontab` and we need to add the fillowing line: `0,15,30,45 * * * * root bash /mnt/volume1/hosting/web/synology_smart/synology_SMART_control.sh` which will run the script at minute 0, 15, 30, andn 45 of every hour of every day
+to enable the script to run every 10 to 15 minutes, we need to edit crontab `nano /etc/crontab` and we need to add the following line: `0,15,30,45 * * * * root bash /mnt/volume1/hosting/web/synology_smart/synology_SMART_control.sh` which will run the script at minute 0, 15, 30, and 45 of every hour of every day
 
 ## 22.)  Configure Email Sending From CLI
 <div id="Configiure_email_sending_from_CLI"></div>
@@ -1130,7 +1130,7 @@ I created NFS permissions for some of my folders in Synology as seen below
 
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/synology_nfs_settings.png" alt="synology_nfs_settings.png" width="518" height="348">
 
-Then to mount the NFS share on TrueNAS, I created a dedicated dataset `/mnt/volume1/server2` since server2 is the name of one of my NAS and it makes it easier to know whcih NAS this is linked to. When creating this share, I left the `Dataset Preset` to `Generic` and left all other settings at default. I did not need to adjust permissions. 
+Then to mount the NFS share on TrueNAS, I created a dedicated dataset `/mnt/volume1/server2` since server2 is the name of one of my NAS and it makes it easier to know which NAS this is linked to. When creating this share, I left the `Dataset Preset` to `Generic` and left all other settings at default. I did not need to adjust permissions. 
 
 Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` and click Add
 
@@ -1186,7 +1186,7 @@ these scripts appear to be what they use to gather all of the details needed for
 ## 27.)  Rsync Files From Synology to TrueNAS
 <div id="Rsync_Files_From_Synology_to_TrueNAS"></div>
 
-this amazing guide is what i used small modfications
+this amazing guide is what i used small modifications
 https://www.reddit.com/r/truenas/comments/xk5nxm/solved_rsync_task_to_synology_nas/
 
 - Create a new user account on **both** your TrueNAS and Synology NAS. <ins>It needs to be the same user name (for example `rsync`)</ins>. The password does not matter; does not need to be the same.
@@ -1210,9 +1210,9 @@ chmod 600 syno.pw
 
 - go to `Data Protection --> Rsync Tasks --> Add` to set up the rsync task on TrueNAS. 
   - Select the `rsync` user created earlier. Choose `module` under the `rsync mode` drop down
-  - For the `module name` enter the root share of the synology. For example, if a share is `\\<Syno_nas_IP>\photos` then enter just `photos` for the module. This is case senstive!
-  - `Direcion` set to `PULL`
-  - for `Path` set to the dataset / direcotry inside a dataset where the data copied from Synolgy will be placed
+  - For the `module name` enter the root share of the synology. For example, if a share is `\\<Syno_nas_IP>\photos` then enter just `photos` for the module. This is case sensitive!
+  - `Direction` set to `PULL`
+  - for `Path` set to the dataset / directory inside a dataset where the data copied from Synolgy will be placed
   - Under `auxiliary parameters` enter: `-hv --dry-run --password-file=<path-to-your-file> --log-file=<path-to-your-log-file>` which for our example would be `-hv --dry-run --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
   - Ensure `Recursive` is checked
   - Ensure `enabled` is checked
@@ -1221,29 +1221,29 @@ chmod 600 syno.pw
 - To run the task right away, click the "play" icon
 
 
-- This will sync the particualr shared folder from the Synology System, HOWEVER we have configured rsync to perform a dry run using the `--dry-run` `auxiliary parameters`. We have also told it to log everythign to `/mnt/volume1/web/logging/syno_sync.log`. 
-- After the task completes, open the log file and ensure no errors occured and that the data would have been copied properly. 
+- This will sync the particular shared folder from the Synology System, HOWEVER we have configured rsync to perform a dry run using the `--dry-run` `auxiliary parameters`. We have also told it to log everything to `/mnt/volume1/web/logging/syno_sync.log`. 
+- After the task completes, open the log file and ensure no errors occurred and that the data would have been copied properly. 
 - If everything looks good, edit the rsync task and remove the `--dry-run` entry by changing the `auxiliary parameters` to `-hv --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
-- Since we are just copying the data, once the copy process is done, delete the task, and create a new task with the same settings but for another shared folder on the Synology until all shared folders that need to be copied over are sucessfully copied. 
+- Since we are just copying the data, once the copy process is done, delete the task, and create a new task with the same settings but for another shared folder on the Synology until all shared folders that need to be copied over are successfully copied. 
 
 ## 28.)  File Managers
 <div id="File_Managers"></div>
 
-Synology's File Manager is a fantastic app that is unfortunatyely missing from TrueNAS. I tried other apps like  <a href="https://filebrowser.org/">FileBrowser</a> but it did not support recycle bins and it did not show the active status of file copy and move activities like Synology File Manager. 
+Synology's File Manager is a fantastic app that is unfortunately missing from TrueNAS. I tried other apps like  <a href="https://filebrowser.org/">FileBrowser</a> but it did not support recycle bins and it did not show the active status of file copy and move activities like Synology File Manager. 
 
-I wanted something that would show me the speed files were copying/moving and I wnated something that would show me the percent complete. I found <a href="https://mariushosting.com/synology-install-double-commander-with-portainer/">This Article</a> that talked about <a href="https://doublecmd.sourceforge.io/">DoubleCommander</a>.
+I wanted something that would show me the speed files were copying/moving and I wanted something that would show me the percent complete. I found <a href="https://mariushosting.com/synology-install-double-commander-with-portainer/">This Article</a> that talked about <a href="https://doublecmd.sourceforge.io/">DoubleCommander</a>.
 
-This app does everything i was looking for. It has support for recycle bins, and shows the speed and progress of copy and move processes, and it allows you to CANCEL current active copy/move processes all in a nice web accessable GUI. 
+This app does everything i was looking for. It has support for recycle bins, and shows the speed and progress of copy and move processes, and it allows you to CANCEL current active copy/move processes all in a nice web accessible GUI. 
 
 I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/doublecommander/docker-compose.yaml">docker-compose.yaml</a> file available. Some notes on the configuration, i have 
 
 ```
-cap_drop:     #removing the ability of the container to create outside network connections to block access to the internet
+cap_drop:     #removing the ability of the container to create outside network connections to block access to the Internet
       - NET_RAW
       - NET_ADMIN
     dns:
-      - "0.0.0.0"    #removing the ability of the container to resolve DNS connections to block access to the internet
+      - "0.0.0.0"    #removing the ability of the container to resolve DNS connections to block access to the Internet
     container_name: Double-Commander
 ```
 
-to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ablity to phone home any informaiton. 
+to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ability to phone home any information. 
