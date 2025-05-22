@@ -1,0 +1,24 @@
+services:
+  doublecommander:
+    cap_drop:     #removing the ability of the container to create outside network connections to block access to the internet
+      - NET_RAW
+      - NET_ADMIN
+    dns:
+      - "0.0.0.0"    #removing the ability of the container to resolve DNS connections to block access to the internet
+    container_name: Double-Commander
+    image: ghcr.io/linuxserver/doublecommander:latest
+    security_opt:
+      - no-new-privileges:true
+    environment:
+     CUSTOM_USER: brian
+     PASSWORD: password
+     TZ: America/Chicago
+     PUID: 3007
+     PGID: 3006
+    volumes:
+      - /mnt/volume1/apps/doublecommander/config:/config:rw
+      - /mnt/volume1/apps/doublecommander/data:/data:rw
+      - /mnt/volume1:/volume1:rw
+    ports:
+      - 3278:3000
+    restart: unless-stopped
