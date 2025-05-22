@@ -4,8 +4,6 @@ My Guide when I moved from Synology to TrueNAS
 To-Do List:
 - <ins>DIUN</ins> (Docker Image Update Notifier)
   - **have not tried package yet**
-- <ins>Grey Log</ins>
-  - **have not tried package yet**
 - <ins>jellyfin</ins>
   - **have not tried package yet**
 - <ins>radar</ins>
@@ -22,7 +20,6 @@ To-Do List:
   - have working, need to update github
 - <ins>flaresolverr</ins>
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
-- <ins>address issue #2</ins> "Recycle bin in Truenas"
 - <ins>Configure Remote Access using Tail Scale</ins>
   - **have not tried package yet**
 - <ins>portainer</ins>
@@ -719,8 +716,33 @@ I am also going to be combining Veeam with Syncthing to perform versioned backup
 <div id="Grey_log"></div>
 
 21. ***Grey log***
-- https://www.youtube.com/watch?v=PoP9BTktlFc
-- https://www.youtube.com/watch?v=DwYwrADwCmg
+
+Grey log will be replacing Synology's "Log Center" for our SysLog Server. 
+
+- To create this app, we first need to generate a password and the SHA256 checksum of that password.
+  - go to `system --> shell` and type `echo -n YourPassword | shasum -a 256` with the password being a minimum of 16 characters long.
+- Create a new user `greylog`
+  - disable password
+  - do not make it an SMB user
+  - all other settings can be as default
+  - determine the user ID and group ID for `greylog`
+- create a new dataset for your greylog files and ensure the `greylog` user and group has access to it. 
+- download the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/greylog/docker-compose.yaml">doscker-compose.yaml</a>
+  - find the line `- "OPENSEARCH_INITIAL_ADMIN_PASSWORD=SetPassw0rdL3ttersAndNumb3r5"` and update the initial admin password
+  - find the line `GRAYLOG_PASSWORD_SECRET: "ThisIsYourPassword" # CHANGE ME (must be at least 16 characters)!` and enter the pasword you created the checksum of
+  - find the line `GRAYLOG_ROOT_PASSWORD_SHA2: "7e57c8ce23901a99a143d640d695384d3b7e22bcd801ed7507b10eb188fbe2e1"` and replace the value with your calculated checksum
+  - find the line `GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL: "http://192.168.1.8:9000/"` and change to your server's address
+  - for the `GRAYLOG_TRANSPORT_EMAIL` lines, edit to match your working SMTP server details to allow for email notifications
+- download the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/greylog/config/graylog.conf">greylog.conf</a> file
+  - scroll down to the bottom and find line `prometheus_exporter_bind_address = 192.168.1.8:9833` and change to your server IP address
+  - replace all of the `#Email Settings` with the same settings as the `docker-compose.yaml` file.
+  - place the `greylog.conf` file in a location on your server where the `greylog` user has access. 
+
+now go to "Apps --> Discover apps -> Install via Yaml` and copy the contents of the .yaml file and start up the stack. 
+
+two useful youtube videos
+<a href="https://www.youtube.com/watch?v=DwYwrADwCmg>Lawrence Systems - Graylog: Your Comprehensive Guide to Getting Started Open Source Log Management</a>
+<a href="https://www.youtube.com/watch?v=PoP9BTktlFc">Lawrence Systems - Graylog 6: The Best Open Source Logging Tool Got Better!</a>
 
 <div id="flaresolverr"></div>
 
