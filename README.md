@@ -14,8 +14,6 @@ To-Do List:
   - **have not tried package yet**
 - <ins>TrueCommand</ins>
   - **have not tried package yet**
-- <ins>Veeam</ins>
-  - have package working, need to update github
 - <ins>Setup Grafana Dashboard for TrueNAS</ins>
   - have working, need to update github
 - <ins>Configure Disk Standby</ins>
@@ -30,6 +28,7 @@ To-Do List:
 - <ins>portainer</ins>
   - have package working, need to update github
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
+- <ins>Syncthing</ins>
 - test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
 - try self hosted media comverter - https://www.xda-developers.com/free-self-hosted-tool-converts-basically-any-file-all-your-browser/
 
@@ -88,7 +87,8 @@ To-Do List:
 <li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
 <li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
 <li><a href="#Rsync_Files_From_Synology_to_TrueNAS">Rsync Files From Synology to TrueNAS</a></li>
-<li><a href="#On_Systems_with_IPMI_supported_motherboards">On Systems with IPMI supported motherboards/a></li>
+<li><a href="#On_Systems_with_IPMI_supported_motherboards">On Systems with IPMI supported motherboards</a></li>
+<li><a href="#File_Managers">File Managers</a></li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -708,20 +708,13 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 
 20. ***Veeam*** *[Replaces Active Backup for Business]*
 
-possibly use DSM within a docker container? https://github.com/vdsm/virtual-dsm
+I have been usingSynology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does exactly what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Buisnss. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good as, but i am OK with that. 
 
-Veeam details
-https://releases.ubuntu.com/ --> download ubuntu ISO
-https://www.truenas.com/docs/scale/scaletutorials/instances/  --> create VMs on truenas
-https://www.veeam.com/products/free/backup-recovery.html   -> download Veeam
-https://www.truenas.com/docs/scale/scaletutorials/datasets/addmanagezvols/  --> create zvol
-https://hostman.com/tutorials/how-to-install-vnc-on-ubuntu/ --> install VNC on ubuntu
-https://www.veeam.com/products/free/microsoft-windows.html --> Veeam windows client free
-https://helpcenter.veeam.com/docs/agentforwindows/userguide/active_full_backup.html?ver=60 --> Veeam user guides
-https://www.veeam.com/veeam_backup_12_user_guide_vsphere_pg.pdf --> User Manual
-https://www.veeam.com/solutions/small-business/pricing-calculator.html --> pricing
+Veeam free for windows can be downloaded here: <a href="https://www.veeam.com/products/free/microsoft-windows.html">Veeam windows client free</a>
 
-for addtional data backups, use syncthing with versions: https://www.youtube.com/watch?v=cccPnXnh6wA
+The configuration settings that i sucessfully used to perform bare metal backups to by trueNAS server can be found <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/Veeam">here</a>. 
+
+I am also going to be combining Veeam with Syncthing to perform versioned backups of specific directories on my windows machines. <a href="https://www.youtube.com/watch?v=cccPnXnh6wA">Lawrence Systems - How I Use Syncthing for Real Time Backups</a>
 
 <div id="Grey_log"></div>
 
@@ -1211,8 +1204,24 @@ chmod 600 syno.pw
 - If everything looks good, edit the rsync task and remove the `--dry-run` entry by changing the `auxiliary parameters` to `-hv --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
 - Since we are just copying the data, once the copy process is done, delete the task, and create a new task with the same settings but for another shared folder on the Synology until all shared folders that need to be copied over are sucessfully copied. 
 
-## 27.)  File Managers
+## 28.)  File Managers
 <div id="File_Managers"></div>
 
-document filebrowser
-document https://mariushosting.com/synology-install-double-commander-with-portainer/
+Synology's File Manager is a fantastic app that is unfortunatyely missing from TrueNAS. I tried other apps like  <a href="https://filebrowser.org/">FileBrowser</a> but it did not support recycle bins and it did not show the active status of file copy and move activities like Synology File Manager. 
+
+I wanted something that would show me the speed files were copying/moving and I wnated something that would show me the percent complete. I found <a href="https://mariushosting.com/synology-install-double-commander-with-portainer/">This Article</a> that talked about <a href="https://doublecmd.sourceforge.io/">DoubleCommander</a>.
+
+This app does everything i was looking for. It has support for recycle bins, and shows the speed and progress of copy and move processes, and it allows you to CANCEL current active copy/move processes all in a nice web accessable GUI. 
+
+I have my <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/doublecommander/docker-compose.yaml">docker-compose.yaml</a> file available. Some notes on the configuration, i have 
+
+```
+cap_drop:     #removing the ability of the container to create outside network connections to block access to the internet
+      - NET_RAW
+      - NET_ADMIN
+    dns:
+      - "0.0.0.0"    #removing the ability of the container to resolve DNS connections to block access to the internet
+    container_name: Double-Commander
+```
+
+to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ablity to phone home any informaiton. 
