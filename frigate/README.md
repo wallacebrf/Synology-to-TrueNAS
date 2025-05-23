@@ -145,3 +145,26 @@ As of 5/10/25 Frigate 0.15.1 does show available stats at https://<server-ip>:<p
 There is a docker container that is supposed to export data into a format compatable with Prometheus however it does not seem to be working for me. https://github.com/bairhys/prometheus-frigate-exporter
 
 with that said, it appears based on discussion here https://github.com/blakeblackshear/frigate/issues/2266 that Frigate version 0.16 will natevely support Prometheus formatted data exporting. In addtion it appears there is already some documentation showing how it will be formatted here https://github.com/blakeblackshear/frigate/blob/dev/docs/docs/configuration/metrics.md
+
+
+## 2.) Intel Arc 380 support
+https://www.reddit.com/r/frigate_nvr/comments/1f7yi9o/frigate_with_openvino_on_intel_arc_a380/?rdt=44320
+
+```
+detectors:
+  ov:
+    type: openvino
+    device: GPU
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+```
+
+https://docs.frigate.video/frigate/hardware/ --> Intel Arc A380 supported
+https://docs.frigate.video/configuration/object_detectors#openvino-detector --> SSDLite MobileNet v2
+https://github.com/blakeblackshear/frigate/discussions/16156 --> good discussions of suggested resolutions
+https://www.reddit.com/r/frigate_nvr/comments/1f7yi9o/frigate_with_openvino_on_intel_arc_a380/?rdt=44320
