@@ -1247,3 +1247,8 @@ cap_drop:     #removing the ability of the container to create outside network c
 ```
 
 to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ability to phone home any information. 
+
+## 29.)  Intel Arc GPUs
+<div id="File_Managers"></div>
+https://github.com/Disty0/intel-arc-monitor/blob/main/intel-arc-monitor
+https://www.oldcai.com/ai/intel-gpu-top/
