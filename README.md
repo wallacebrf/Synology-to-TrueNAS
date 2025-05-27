@@ -4,6 +4,10 @@ My Guide when I moved from Synology to TrueNAS
 To-Do List:
 - <ins>DIUN</ins> (Docker Image Update Notifier)
   - **have not tried package yet**
+- <ins>Dozzel</ins>
+  - have package working, need to update github
+- <ins>UrBackup</ins> (Replacing Veeam, which is replacing Active Backup For Business)
+  - have package working, need to update github
 - <ins>jellyfin</ins>
   - **have not tried package yet**
 - <ins>radar</ins>
@@ -69,6 +73,7 @@ To-Do List:
 <li><a href="#Grey_log">Grey log</a></li>
 <li><a href="#flaresolverr">flaresolverr</a></li>
 <li><a href="#ytdlp">YT-DLP</a></li>
+<li><a href="#dozzel">Dozzel</a></li>
 </ul>
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
 <li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a></li>
@@ -798,6 +803,11 @@ $use_sessions=false; #use log in sessions?
 
 `use_sessions` use sessions or do not use sessions. If using stand alone, do not enable sessions. 
 
+<div id="dozzel"></div>
+
+24. ***Dozzel***
+
+dozzel authentication: https://dozzle.dev/guide/authentication
 
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
