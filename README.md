@@ -4,10 +4,6 @@ My Guide when I moved from Synology to TrueNAS
 To-Do List:
 - <ins>DIUN</ins> (Docker Image Update Notifier)
   - **have not tried package yet**
-- <ins>Dozzel</ins>
-  - have package working, need to update github
-- <ins>UrBackup</ins> (Replacing Veeam, which is replacing Active Backup For Business)
-  - have package working, need to update github
 - <ins>jellyfin</ins>
   - **have not tried package yet**
 - <ins>radar</ins>
@@ -69,6 +65,7 @@ To-Do List:
 <li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a></li>
 <li><a href="#DIUN">DIUN - Docker Image Update Notifier</a></li>
 <li><a href="#TrueCommand">TrueCommand</a></li>
+<li><a href="#urbackup">UrBackup</a></li>
 <li><a href="#Veeam">Veeam</a></li>
 <li><a href="#Grey_log">Grey log</a></li>
 <li><a href="#flaresolverr">flaresolverr</a></li>
@@ -127,7 +124,7 @@ First and foremost if I wish to leave Synology I need to find replacements for a
   - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - LOg Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
-  - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam">Replaced by Veeam</a> 
+  - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam">Replaced by Veeam</a> or <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#urbackup">Replaced by UrBackup</a> 
   - Container Manager - replaced by TrueNAS native apps page
   - Snapshot Replication - <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Create_snapshots">replaced by TrueNAS native ZFS snapshots</a>
 
@@ -356,7 +353,7 @@ Two useful guides on how to use data sets and their permissions can be found her
 			   </ul>
 		   </ul>
 	   <li> <strong>Pictures</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-	   <li> <strong>Veeam</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+	   <li> <strong>Veeam</strong> or <strong>UrBackup</strong><small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
    </ul>
 </ol>
 <br>
@@ -706,11 +703,45 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 
 19. ***TrueCommand***
 
+<div id="urbackup"></div>
+
+20. ***UrBackup*** *[Replaces Active Backup for Business]*
+
+I have been using Synology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found <a href="#urbackup">Veeam</a> which i first thought would be able to replace Active Backup for Business. However Urbackup is much better at replicating what Synology offers. UrBackup has a server running on TrueNAS and an endpoint client running on your windows, linux, and (under beta) Mac systems. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Urbackup also does which is great to see.
+
+- I created a data set `backups` and then another data set under it `urbackup` for the app and its backups.
+- under `/mnt/volume1/backups/urbackup` i made a `backups` folder and a `config` folder.
+- the Urbackup app is available under `apps --> Discover apps`
+- most things can remain as their default values. For the user and group, configure as desired, but ensure it has full access to the `/mnt/volume1/backups/urbackup` folder.
+- for `UrBackup backup Storage` i chose to `Host Path` of `/mnt/volume1/Backups/urbackup/backups`
+- for `UrBackup database storage` i chose to `Host Path` of `/mnt/volume1/Backups/urbackup/config`
+- once Urbackup is up and running, launch its webUI
+- go to `Settings --> Users --> Create User` and create a new admin user as by default so authentication exists
+- go to `Settings --> Internet/Active Clients` and under `Server URL clients connect to:` enter `urbackup://192.168.1.8` with your TrueNAS IP.
+- go to `Settings --> File Backups` and configure the number of file backups that will be retained
+- go to `Settings --> Image Backups` and configure the number of image backups that will be retained
+- go to `Settings --> Mail` and configure an SMTP server to get emails of activities from UrBackup
+- go to `stats --> add new client`
+  - if the system is on a differnet subnet / VLAN from TrueNAS, choose the option `Add new Internet/active client`
+  - if the system s on the same subnet / VLAN as TrueNAS, choose `Discover new local/passive client accross networks`.
+- under the `Client added successfully` page, choose the option to `Download preconfigured client installer for XYZ` depending if you are using windows or Lunix.
+- install the client on your machine. It may take up to 5-10 minutes for the client to connect to the server. The client will indicate when it is connected and the web interface will indiacte under `Status` page `Online = YES` for the added client.
+- Refer here to the settings that i have choosen for all of the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/urbackup">different app pages</a>
+
+Backup In Progress - shows percent complete, estimated time remaining, current data transfer (this was done over a VPN while i was traveling out of state so the speed is slow)
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/backup_in_progress2.png" alt="backup_in_progress2.png" width="734" height="268"> 
+
+showing the compression (ratio of 1.5) used by the backup
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/compression.png" alt="compression.png" width="438" height="43"> 
+
+Showing incrmemntal backups and only backing up the data required
+<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/incrmental_example.png" alt="incrmental_example.png" width="720" height="202"> 
+
 <div id="Veeam"></div>
 
-20. ***Veeam*** *[Replaces Active Backup for Business]*
+21. ***Veeam*** *[Replaces Active Backup for Business]*
 
-I have been usingSynology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does exactly what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good as, but i am OK with that. 
+I have been using Synology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good at. However <a href="#urbackup">UrBackup</a> is an even better choice as it offers a truly more complete replacement for Active Backup For Business. 
 
 Veeam free for windows can be downloaded here: <a href="https://www.veeam.com/products/free/microsoft-windows.html">Veeam windows client free</a>
 
@@ -720,7 +751,7 @@ I am also going to be combining Veeam with Syncthing to perform version-ed backu
 
 <div id="Grey_log"></div>
 
-21. ***Grey log***
+22. ***Grey log***
 
 Grey log will be replacing Synology's "Log Center" for our SysLog Server. 
 
@@ -751,11 +782,11 @@ two useful youtube videos
 
 <div id="flaresolverr"></div>
 
-22. ***flaresolverr***
+23. ***flaresolverr***
 
 <div id="ytdlp"></div>
 
-23. ***ytdlp***
+24. ***ytdlp***
 
 I have been using a  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/yt-dlp/youtube-dl.php">custom made PHP based web page</a> that generates the commands needed to control YT-DLP. 
 
@@ -805,9 +836,37 @@ $use_sessions=false; #use log in sessions?
 
 <div id="dozzel"></div>
 
-24. ***Dozzel***
+25. ***Dozzel***
 
-dozzel authentication: https://dozzle.dev/guide/authentication
+Dozzel is a nice Docker Logs aggregation app that allows you to easilly see all docker logs in one spot and i feel it organizes it better than Portainer and other apps. 
+
+This app is available in the `apps --> discover app` page but does need some specific settings set. By default this app does not have authentication which for something acecssing docker logs is not a great idea. How authenication is setup is documented  <a href="https://dozzle.dev/guide/authentication">Here</a>. 
+
+- go to `system --> shell` and log into sudo with `sudo -i`
+- run the command `docker run -it --rm amir20/dozzle generate --name Admin --password <your_password_here> admin
+
+you will see the following output
+
+```
+users:
+  # "admin" here is username
+  admin:
+    email: me@email.net
+    name: Admin
+    # Generate with docker run run -it --rm amir20/dozzle generate --name Admin --email me@email.net --password secret admin
+    password: $2a$11$9ho4vY2LdJ/WBopFcsAS0uORC0x2vuFHQgT/yBqZyzclhHsoaIkzK
+    filter:
+```
+
+- the hash of your chosen password will be calculated and the username of `admin` will be used.
+- save this text to a `users.yml` file in a location on your TrueNAS server. The Dozzel app will need read permissions to the location where this file is saved, ensure the ACL for that location is configured correctly for the user/group the dozzel app will be assigned.
+- go to `apps --> discover apps` and find `dozzzel` and install
+- under `Additional Environment Variables` add the variable `DOZZLE_AUTH_PROVIDER` and set the value to `simple`
+- configure the user and group as desired
+- add an additional storage option
+  - for `mount path` enter `/data/users.yml`
+  - for `host path` set to the location where the file is located for example `/mnt/volume1/apps/users.yml`
+- all other settings can remain as default
 
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
