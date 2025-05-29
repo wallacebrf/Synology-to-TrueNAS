@@ -31,6 +31,8 @@ services:
       - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
       - 8081:8081/tcp #SickChill
       - '9117:30118' #jackett
+      - '30025:7878' #radarr
+      - '8191:8191' #FlareSolverr
     pull_policy: always
     restart: unless-stopped
     volumes:
