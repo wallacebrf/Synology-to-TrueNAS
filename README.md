@@ -12,7 +12,6 @@ To-Do List:
   - **have not tried package yet**
 - <ins>Setup Grafana Dashboard for TrueNAS</ins>
   - have working, need to update github
-- <ins>Configure Disk Standby</ins>
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
 - <ins>Replace “DS File” app – Android Only</ins>
   - have working, need to update github
@@ -22,7 +21,6 @@ To-Do List:
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
 - <ins>Syncthing</ins>
 - test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
-- try self hosted media converter - https://www.xda-developers.com/free-self-hosted-tool-converts-basically-any-file-all-your-browser/
 
 
 
@@ -66,6 +64,7 @@ To-Do List:
 <li><a href="#flaresolverr">flaresolverr</a></li>
 <li><a href="#ytdlp">YT-DLP</a></li>
 <li><a href="#dozzel">Dozzel</a></li>
+<li><a href="#convertx">ConvertX</a></li>
 </ul>
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
 <li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a></li>
@@ -888,6 +887,36 @@ users:
   - for `host path` set to the location where the file is located for example `/mnt/volume1/apps/users.yml`
 - all other settings can remain as default
 
+<div id="convertx"></div>
+
+26. ***ConvertX***
+
+This application lets you convert file formats to a different file format over a large range of formats. 
+
+Here is my YAML config
+
+As usual i created a user account for this app and ensured the `/mnt/volume1/apps/convertx` had full control for that user group. to generate your needed secret value, go ton this site: https://it-tools.tech/token-generator?length=64&numbers=false
+
+```
+services:
+  convertx: 
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: Convertx
+    ports:
+      - 3522:3000
+    environment:
+      PUID: 3016
+      PGID: 3016
+#https://it-tools.tech/token-generator?length=64&numbers=false
+      JWT_SECRET: PGqZgBVCTeHpsgKdqOVTVJdSSdLPSrkDSTihptJUYOgoMyuPLIfdlPQcTdBcCUbt
+      ACCOUNT_REGISTRATION: true
+      HTTP_ALLOWED: true
+      ALLOW_UNAUTHENTICATED: false
+    volumes:
+      - /mnt/volume1/apps/convertx:/app/data:rw
+    restart: unless-stopped
+```
+
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
@@ -1093,6 +1122,18 @@ line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMAR
 
 ## 17.)  Configure Disk Standby
 <div id="Configure_Disk_Standby"></div>
+
+For my TrueNAS installation of 25.04, all disks by default were set ot always be on and never go to stand by. For me that is the setting i want as i personaly do not let my drives turn off. 
+
+However if you wish to have your drives turn off when not in use:
+
+- go to `Storage --> Disks`
+- you can either configure one drive or multiple drives at a time by clicking the check box to the left of the disk(s) you wish to configure.
+- click `Edit Disks`
+- under `HDD Standby` configure the drive for the Minutes of inactivity before the drive enters standby mode. Please note that Temperature monitoring is disabled for standby disks.
+- under `Advanced Power Management` configure how agressive the systemn will be with reducing drive power draw.
+- SMART settings can also be configured here
+- click `save` when done
 
 ## 18.)  Cloud backups to BackBlaze B2 Bucket
 <div id="Cloud_backups_to_BackBlaze_B2_Bucket"></div>
