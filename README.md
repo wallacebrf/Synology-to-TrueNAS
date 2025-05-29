@@ -82,6 +82,7 @@ To-Do List:
 <li><a href="#Rsync_Files_From_Synology_to_TrueNAS">Rsync Files From Synology to TrueNAS</a></li>
 <li><a href="#On_Systems_with_IPMI_supported_motherboards">On Systems with IPMI supported motherboards</a></li>
 <li><a href="#File_Managers">File Managers</a></li>
+<li><a href="#app_backups">Automated APP Backups</a></li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -1378,7 +1379,16 @@ cap_drop:     #removing the ability of the container to create outside network c
 
 to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ability to phone home any information. 
 
-## 29.)  Intel Arc GPUs
-<div id="File_Managers"></div>
+## 30.)  Automated APP Backups
+<div id="app_backups"></div>
+
+I have a script that i run weekly that will backup the app directory for each of my applications. The scrpt first stops the applocation, makes a TAR file of the app direcotry, moves it to your desired location, and restarts the application. It sends an email with the logs of the process when complete. This way i always have a backup archive of my app containers. It will also save multiple backups to a pre-configured level. the default is to save thre last 4x backups. 
+
+the script can be found here: https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/truenas_app_backup.sh
+
+either a cron job under `system --> Advanced Settings` or edit `nano /etc/crontab` and add an entry there to run the script weekly. 
+
+## 30.)  Intel Arc GPUs
+<div id="arc_gpus"></div>
 https://github.com/Disty0/intel-arc-monitor/blob/main/intel-arc-monitor
 https://www.oldcai.com/ai/intel-gpu-top/
