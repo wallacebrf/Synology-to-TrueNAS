@@ -6,8 +6,6 @@ To-Do List:
   - **have not tried package yet**
 - <ins>jellyfin</ins>
   - **have not tried package yet**
-- <ins>radar</ins>
-  - have package working, need to update github
 - <ins>Tautulli</ins>
   - **have not tried package yet**
 - <ins>TrueCommand</ins>
@@ -18,7 +16,6 @@ To-Do List:
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
 - <ins>Replace “DS File” app – Android Only</ins>
   - have working, need to update github
-- <ins>flaresolverr</ins>
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
 - <ins>Configure Remote Access using Tail Scale</ins>
   - **have not tried package yet**
@@ -506,6 +503,8 @@ Nothing too special is needed for PLEX as it is available directly through the D
 
 8. ***radarr***
 
+We do NOT want to install the version of Radarr directly available through Discover Apps because we want to ensure Radarr runs through our GlueTUN VPN tunnel. <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/Radarr/docker-compose.yaml">Here are my settings</a>. 
+
 <div id="sickchill"></div>
 
 9. ***sickchill***
@@ -592,6 +591,9 @@ ports:
       - 6881:6881/udp  #torrent download port
       - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
       - 8081:8081/tcp #sickchill
+      - '9117:30118' #jackett
+      - '30025:7878' #radarr
+      - '8191:8191' #FlareSolverr
 ```
 
 ALL containers that you wish to have tunneled through the GlueTUN app must have their ports defined here. Due to this, every time a new app is added needing to run through the tunnel, the compose file will need to be revised and the container relaunched. 
@@ -783,6 +785,24 @@ two useful youtube videos
 <div id="flaresolverr"></div>
 
 23. ***flaresolverr***
+
+We want to make sure flaresolverr runs through our GlueTUN tunnel for our VPN. Below is m configuration. 
+```
+services:
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=America/Chicago
+    network_mode: "container:gluetun"
+#ports not needed here due to container running through the GlueTUN container. 
+#    ports:
+#      - "${PORT:-8191}:8191"
+    restart: unless-stopped
+```
 
 <div id="ytdlp"></div>
 
