@@ -1,0 +1,15 @@
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=3012
+      - PGID=3012
+      - TZ=America/Chicago
+    volumes:
+      - /mnt/volume1/apps/radarr/config:/config
+      - /mnt/volume1/apps/radarr/downloads:/downloads
+    network_mode: "container:gluetun"
+#	ports:
+#      - 30025:7878
+    restart: unless-stopped
