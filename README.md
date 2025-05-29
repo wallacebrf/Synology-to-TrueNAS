@@ -19,8 +19,6 @@ To-Do List:
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
 - <ins>Configure Remote Access using Tail Scale</ins>
   - **have not tried package yet**
-- <ins>portainer</ins>
-  - have package working, need to update github
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
 - <ins>Syncthing</ins>
 - test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
@@ -556,6 +554,8 @@ My actual public IPv4 address starts with 98.... which is what the normal chromi
 <div id="Portainer"></div>
 
 15. ***Portainer***
+
+The portainer app does not allow changing the PUID and GUID. The only setting i had to change from the default values is where the config data is saved. I used `/mnt/volume1/apps/portainer` and ensured this folder had full control by the `apps` user group. 
 
 <div id="Torrent_downloader_VPN"></div>
 
