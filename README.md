@@ -1392,3 +1392,65 @@ either a cron job under `system --> Advanced Settings` or edit `nano /etc/cronta
 <div id="arc_gpus"></div>
 https://github.com/Disty0/intel-arc-monitor/blob/main/intel-arc-monitor
 https://www.oldcai.com/ai/intel-gpu-top/
+
+
+## 30.)  HBA Monitoring
+<div id="arc_gpus"></div>
+
+download storcli64 from https://www.broadcom.com/support/download-search?dk=storcli and expand `Management Software and Tools` choose `Latest Storcli for all OS`
+inside zip file go to `storcli_rel --> Unified_storcli_all_os.zip --> Unified_storcli_all_os --> Ubuntu --> storcli_xxx.xxxx.xxxx.xxxx_all.deb --> data.tar --> . --> opt --> MegaRAID --> storcli` and extract the `storcli64` binary and extract it to the `/mnt/volume1/logging` directory
+
+to use `./storcli64 show all` and see the listing of your different HBAs available for example:
+
+```
+CLI Version = 007.3306.0000.0000 Feb 21, 2025
+Operating system = Linux 6.12.15-production+truenas
+Status Code = 0
+Status = Success
+Description = None
+
+Number of Controllers = 2
+Host Name = truenas
+Operating System  = Linux 6.12.15-production+truenas
+StoreLib IT Version = 07.3303.0200.0000
+StoreLib IR3 Version = 16.16-0
+
+IT System Overview :
+==================
+
+--------------------------------------------------------------------------
+Ctl Model       AdapterType   VendId DevId SubVendId SubDevId PCI Address
+--------------------------------------------------------------------------
+  0 HBA 9400-8e   SAS3408(B0) 0x1000  0xAF    0x1000   0x3030 00:68:00:00
+  1 LSI3008-IR    SAS3008(C0) 0x1000  0x97    0x15D9    0x808 00:19:00:00
+--------------------------------------------------------------------------
+
+Ctl=Controller Index|DGs=Drive groups|VDs=Virtual drives|Fld=Failed
+PDs=Physical drives|DNOpt=Array NotOptimal|VNOpt=VD NotOptimal|Opt=Optimal
+Msng=Missing|Dgd=Degraded|NdAtn=Need Attention|Unkwn=Unknown
+sPR=Scheduled Patrol Read|DS=DimmerSwitch|EHS=Emergency Spare Drive
+Y=Yes|N=No|ASOs=Advanced Software Options|BBU=Battery backup unit/CV
+Hlth=Health|Safe=Safe-mode boot|CertProv-Certificate Provision mode
+```
+
+to get temperatures of the two cards:
+
+`./storcli64 /c0 show all nolog | egrep ROC`
+
+which returns
+
+```
+Temperature Sensor for ROC = Present
+ROC temperature(Degree Celsius) = 49
+```
+
+and 
+
+`./storcli64 /c1 show all nolog | egrep ROC`
+
+which returns
+
+```
+Temperature Sensor for ROC = Present
+ROC temperature(Degree Celsius) = 60
+```
