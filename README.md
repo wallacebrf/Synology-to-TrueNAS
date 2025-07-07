@@ -1031,6 +1031,12 @@ I have the script configured to run every 60 seconds, and each execution, it wil
 
 This script does need to have a working PHP web site to allow for the configuration of the script. As of 5/11/2025, I have not yet written the PHP web page code for this script. 
 
+todo: check to see if other MIBs/IODs are available
+
+https://github.com/tr1plus/zabbix_truenas_SCALE_snmp/blob/main/template_app_truenas_scale_snmp.yaml
+https://www.zabbix.com/integrations/truenas
+https://www.truenas.com/docs/core/13.0/coretutorials/services/configuringsnmp/
+
 2. **Install Script and Support Files**
 
 - This assumes you already have the <a href="#ngninx_PHP_Maria_DB_Stack">nginx + PHP + MySQL docker stack</a> installed which means it assumes you already have some data sets and folder structures already created.
