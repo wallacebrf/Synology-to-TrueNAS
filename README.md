@@ -1303,6 +1303,9 @@ Then within PLEX I was free to add the needed folders to my libraries
 https://github.com/kneutron/ansitest/blob/master/ZFS/scrubwatch.sh
 https://github.com/markusressel/zfs-inplace-rebalancing
 
+using docker execute to perform SQL command
+docker exec $MYSQL_CONTAINER_NAME mysql -uuser -puser -D mydb -e "SELECT CURRENT_TIMSTAMP;"
+
 ## 26.)  On Systems with IPMI supported motherboards
 <div id="On_Systems_with_IPMI_supported_motherboards"></div>
 
