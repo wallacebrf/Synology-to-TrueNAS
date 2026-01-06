@@ -15,7 +15,7 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>disk queue depth script due to "known" issues with WD gold dirves</ins>
 - <ins>immich</ins>
 - <ins>prowler</ins>
-- <ins>enabling NTP server in truenas</ins>
+- <ins>enabling NTP server in truenas needed for Frigate security cameras to update NTP without needing to access the internet</ins>
 - <ins>turning off snapshots on certain directories</ins>
 - <ins>replacing Nvidia GPU with different card</ins>
 - <ins>add details about log errors that occur when logging HBA temps</ins>
