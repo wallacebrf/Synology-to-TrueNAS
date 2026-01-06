@@ -17,19 +17,19 @@ How I have (Currently) Installed Frigate
 ## 1.) About the project Details
 <div id="About_the_project_Details"></div>
 
-I have been using Synology Surrveilance Station (Referred here on out as SSS) since 2019. Prior to that i had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and i have been very happy since. 
+I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that I had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and I have been very happy since.
 
-If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what i was seeing with Frigate. 
+Moving away from Synology, then needed to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what I was seeing with Frigate.
 
-With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "dep video analsysis" features to perform person, vehicle and object detetion, which has been working well. What has really made me appreciate Frigate is that i can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill. 
+With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that I can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
 
-To acheive this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU passthrough from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analsys on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to arond 50%, loads the GPU to around 90%. 
+To achieve this I am using an Nvidia RTX A2000 ADA GPU to the container to perform all of the analysis on 12x cameras at the same time. The CPU usage is around 10-13% and the GPU is loaded to only around 3% and using about 1200MB of VRAM. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
 
-I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power diffrential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analsysis!!. 
+I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power differential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analysis!!.
 
-something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leaveraged by Frigate. Persoanlly after using Frigate, i think Frigate does a better job anyways but your milage may vary. 
+something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, I think Frigate does a better job anyways but your mileage may vary.
 
-another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video wil NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras to gether. 
+another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video will NOT be 100% live by default. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together. The Frigate team has been working on significantly expanding the GUI and now you can select if the screen shows live video.
 
 ## 2.) Frigate Configuration
 <div id="Frigate_Configuration"></div>
@@ -42,7 +42,7 @@ I have supplied my configuration file for my Frigate Installation <a href="https
   - I have MQTT off as i am NOT using any MQTT services like home assistant.
 
 2.) detectors:
-  - This is where one defines what is going to be used for object detection proessing. As i said before i have a Google Coral TPU going through <a href="https://www.amazon.com/dp/B0CDGT75SH">USB</a> and I need to tell Frigate to use it. For the USB version of Coral, no drivers are needed as they are included, but Coral TPUs are available in M.2 and PCIe versions and those need drivers, so i went the lazy route and used the USB version, even though it is twice the cost of the other versions. 
+  - This is where one defines what is going to be used for object detection proessing. As i said before have an Nvidia GPU and I need to tell Frigate to use it.
 
 2.) tls
   - This controlls if the Frigate web GUI uses HTTP or HTTPS, i went with HTTPS. 
@@ -57,7 +57,7 @@ I have supplied my configuration file for my Frigate Installation <a href="https
   - Seeing has how all of my cameras do not support audio, i just disabled it system wide.
 
 4.) birdseye
-  - as of 5/10/2025 i have NOT actually messed wiht this functionality of Frigate, but i beleive this will do what i want, but until i complete my testing etc and know my config is good, i will be skpping the explaination for this section for now. 
+  - as of 1/6/2026 i have NOT actually messed wiht this functionality of Frigate, but i beleive this will do what i want, but until i complete my testing etc and know my config is good, i will be skpping the explaination for this section for now. 
 
 4.) ffmpeg
   - Frigate uses ffmpeg to perform all of the video processing.
@@ -66,35 +66,35 @@ I have supplied my configuration file for my Frigate Installation <a href="https
   - output_args are set to their default settings, i just had them in the config incase i needed to adjust them
 
 4.) detect
-  - fps are limited to only 5 frame per second being sent to the Coral TPU, but that is enough for it to do its job. Having this too high requires more processing and therefore more wattage.
+  - fps are limited to only 5 frame per second being sent to the GPU, but that is enough for it to do its job. Having this too high requires more processing and therefore more wattage.
   - enabled -> by default this needs to be disabled until you know your cameras are working, after you get your cameras working, then you can come back and set this to enabled.
   - stationary is left at the default values for now
 
 4.) objects
   - these are all of the object types that i wish Frigate to tag my videos with.
-  - Frigate is free to use, however they offer Frigate+ (which i have not used as of 5/10/25) that costs $50 per year, but allows for custom trained models on your cameras and what they see to cut down on false positives. It also enables a LOT more types of detections down to birds, squirrels, even logos on delivery vehicles. I do plan on tinkering with Frigate + but i want to wait until i build my final system so i know what kind of hardware i am using. 
+  - Frigate is free to use, however they offer Frigate+ (which i have have been using) that costs $50 per year, but allows for custom trained models on your cameras and what they see to cut down on false positives. It also enables a LOT more types of detections down to birds, squirrels, even logos on delivery vehicles. By training my cameras i now have basically zero false and incorrect detections. once in a while it mixes up dogs vs cats but otherwise i have been able to correct incorrect detections like my gas grill not being a car, or snow mounds being a dog, or a door wreath being marked as a bycicle wheel. 
 
 4.) motion
   - This enables plain motion detection
   - enabled --> when you first start, set this to disabled until you have all of your cameras working and sending video to Frigate. After they are workig come back and enable this.
-  - threshold --> i set this to 100 as (at least for me) i am getting the detections i want, but am getting fewer flase postives. Again this may be different for your setup. To start i suggest using the default values.
+  - threshold --> i set this to xxxx. Again this may be different for your setup. To start i suggest using the default values.
   - lightning_threshold i kept at the default value
   - contour_area i set a little higher to reduce false positives
 
 4.) record:
-  - NOTE: unlike SSS which can delete video after a user defined amount of disk space is used, Frigate will do one of two things, either it will fill the disks to 100% and then start deleting olf videos, or it will be limited to a certain number of days of record. My test system only has 256GB of disk space to work with so i cannot record much 4k video. as such i ave realy small numbers here. Please adjust to match your needs.
+  - NOTE: unlike SSS which can delete video after a user defined amount of disk space is used, Frigate will do one of two things, either it will fill the disks to 100% and then start deleting old videos, or it will be limited to a certain number of days of record. My test system only has 7.5Tb of usable of disk space to work with as such i have specific settings good for me, but adjust to your needs
   - enabled --> like other areas, i suggest leaving this disabled until you have all of your camera feeds working in Frigate then come back and enable it
   - sync_recordings --> if you are manaully deleting files, you may need to enable this feature so Frigate can discover the files are mssing, but this does use more processing power. I am letting Frigate handle everything so i am leaving it disabled
-  - retain -> I have this set to ALL. I plan to set this to around 1 day so that if i have a triggered event and it failed to record the entire event, i have at least 24 hours of ALL video recorded so i can rewind etc. This does take up a lot of disk spoace when using 12x 4k cameras at 20FPS. once i am using my final 4x 8TB raid5 array i will have to experiment with settings to get the best retention time and staying below 90% disk usage.
-  - export --> i thought this would be liks SSS time lapse, but as of 5/10/25 i have not confirmed if this is working
-  - alerts --> I have this set to `active_objects` so that i will get alerts when according to my `objects` settings when people vehicles etc are detected. I have configured the alerts to save 15 seconds before and after the event is over and currently only retaining 0.05 days of time again since i am limited to my 256GB disk.
-  - detections i have set to motion, so that if anything not detected by the alerts will still be recorded as well.
+  - retain -> I have this set to ALL. I set this to 24 hours so that if i have a triggered event and it failed to record the entire event
+  - alerts --> I have this set to `active_objects` so that i will get alerts when according to my `objects` settings when people vehicles etc are detected. I have configured the alerts to save 15 seconds before and after the event is over and currently retaining 150 days of time 
+  - detections i have set to motion, so that if anything not detected by the alerts will still be recorded as well for 150 days
+  - using approximnately 60% of my 7.5TB
 
 4.) snapshots
-  - I configured this to take a photo of what caused a trigger so it can be quick and easy to see what caused the trigger.
+  - I configured this to take a photo of what caused a trigger so it can be quick and easy to see what caused the trigger and keep for 150 days
 
 4.) go2rtc
-  - This is where i configured my camera details. I have two video feeds per camera, the main stream which in my case is the 4k video at 20FPS, and the secondary stream used for liek view and processing that is limited to a much smaller resolution. This is probably the HARDEST part of using Frigate. In SSS you had MANY MANY pre-built camera options where SSS just knew how to talk to the camera whcih made setup so simple. With Frigate you need to figure out on your own how to get to your camera's video streams as they are NOT the same with every camera. I am lucky that my SWANN 4k cameras ae just rebranded hikvision casmeras (knew this from looking at the web interface of the cameras) so i was able to google hikvision camera details. Frigate does document the default stream details for several major camera types, but it is not guaranteed your cameras will be easy to figure out.
+  - This is where i configured my camera details. I have two video feeds per camera, the main stream which in my case is the 4k video at 20FPS, and the secondary stream used for live view and processing that is limited to a much smaller resolution. This is probably the HARDEST part of using Frigate. In SSS you had MANY MANY pre-built camera options where SSS just knew how to talk to the camera whcih made setup so simple. With Frigate you need to figure out on your own how to get to your camera's video streams as they are NOT the same with every camera. I am lucky that my SWANN 4k cameras ae just rebranded hikvision casmeras (knew this from looking at the web interface of the cameras) so i was able to google hikvision camera details. Frigate does document the default stream details for several major camera types, but it is not guaranteed your cameras will be easy to figure out.
   - please note how each camers (we will use `FRONT LEFT CANMERA`) has a `front_left` and a `front_left_sub`. The text `front_left` is what Frigate will display as the camera's name in its Web GUI. the substream needs to be the same name, just with `_sub` added to the end.
 
 4.) cameras
@@ -140,31 +140,26 @@ Frigate App Config During Install in TrueNAS "Apps" page
 ## 1.) Frigate Metrics Export
 <div id="frigate_metrics_export"></div>
 
-As of 5/10/25 Frigate 0.15.1 does show available stats at https://<server-ip>:<port>/api/stats however it is not in a format things like prometheus can scrape. 
+Frigate shows available stats at https://<server-ip>:<port>/api/stats however it is not in a format things like prometheus can scrape. 
 
-There is a docker container that is supposed to export data into a format compatable with Prometheus however it does not seem to be working for me. https://github.com/bairhys/prometheus-frigate-exporter
+There is a docker container that is supposed to export data into a format compatable with Prometheus however it does not seem to be working for me as i do not allow the "no auth" port to be open and the exporter cannot authorize itself. Due to this i made my own script. this script does
 
-with that said, it appears based on discussion here https://github.com/blakeblackshear/frigate/issues/2266 that Frigate version 0.16 will natevely support Prometheus formatted data exporting. In addtion it appears there is already some documentation showing how it will be formatted here https://github.com/blakeblackshear/frigate/blob/dev/docs/docs/configuration/metrics.md
+ <ul>
+    <li>
+      scrape metrics from Frigate and allows it to authorize itself by generating session tokens every hour and save metrics to InfluxDB
+   </li>
+   <li>
+      monitor if cameras are online or offline. If cameras go offline and email notiifcation is sent and another notification will be sent when the camera comes online
+   </li>
+   <li>
+      Frigate docker seems to have a memory leak where it uses more and more memory. the script monitors the container memory usage and restarts frigate at a set memory level at a set hour of the day. i have mine set to restart at 2:00 AM if the container uses more than 10GB. 
+   </li>
+ </ul>
 
 
-## 2.) Intel Arc 380 support
-https://www.reddit.com/r/frigate_nvr/comments/1f7yi9o/frigate_with_openvino_on_intel_arc_a380/?rdt=44320
+## 2.) Nvidia GPU support
 
 ```
 detectors:
-  ov:
-    type: openvino
-    device: GPU
-model:
-  width: 300
-  height: 300
-  input_tensor: nhwc
-  input_pixel_format: bgr
-  path: /openvino-model/ssdlite_mobilenet_v2.xml
-  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+  
 ```
-
-https://docs.frigate.video/frigate/hardware/ --> Intel Arc A380 supported
-https://docs.frigate.video/configuration/object_detectors#openvino-detector --> SSDLite MobileNet v2
-https://github.com/blakeblackshear/frigate/discussions/16156 --> good discussions of suggested resolutions
-https://www.reddit.com/r/frigate_nvr/comments/1f7yi9o/frigate_with_openvino_on_intel_arc_a380/?rdt=44320
