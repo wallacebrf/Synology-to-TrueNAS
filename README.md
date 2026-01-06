@@ -1,27 +1,27 @@
 # Synology-to-TrueNAS
 My Guide when I moved from Synology to TrueNAS
 
-To-Do List:
-- <ins>DIUN</ins> (Docker Image Update Notifier)
-  - **have not tried package yet**
+To-Do List - items i need to update in this guide as my system is 100% working for a while now (updated 1/6/2026):
 - <ins>jellyfin</ins>
-  - **have not tried package yet**
 - <ins>Tautulli</ins>
-  - **have not tried package yet**
-- <ins>TrueCommand</ins>
-  - **have not tried package yet**
 - <ins>Setup Grafana Dashboard for TrueNAS</ins>
-  - have working, need to update github
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
 - <ins>Replace “DS File” app – Android Only</ins>
-  - have working, need to update github
 - <ins>address issue #1</ins> "DSM in docker to mitigate DS apps"
-- <ins>Configure Remote Access using Tail Scale</ins>
-  - **have not tried package yet**
+- <ins>Configure Remote Access using Pangolin</ins>
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
-- <ins>Syncthing</ins>
-- test new frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main
-
+- <ins>frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main</ins>
+- <ins>arc resize script</ins>
+- <ins>disk queue depth script due to "known" issues with WD gold dirves</ins>
+- <ins>immich</ins>
+- <ins>prowler</ins>
+- <ins>enabling NTP server in truenas</ins>
+- <ins>turning off snapshots on certain directories</ins>
+- <ins>replacing Nvidia GPU with different card</ins>
+- <ins>add details about log errors that occur when logging HBA temps</ins>
+- <ins>FileBrowser app</ins>
+- <ins>Update all docker-compose files to latest compose files</ins>
+- <ins>Update instructions here and there as the guide started with 25.04 and the new 25.10 version changed GUI layouts a bit</ins>
 
 
 <div id="top"></div>
@@ -56,10 +56,7 @@ To-Do List:
 <li><a href="#Chromium">Chromium</a></li>
 <li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
 <li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a></li>
-<li><a href="#DIUN">DIUN - Docker Image Update Notifier</a></li>
-<li><a href="#TrueCommand">TrueCommand</a></li>
 <li><a href="#urbackup">UrBackup</a></li>
-<li><a href="#Veeam">Veeam</a></li>
 <li><a href="#Grey_log">Grey log</a></li>
 <li><a href="#flaresolverr">flaresolverr</a></li>
 <li><a href="#ytdlp">YT-DLP</a></li>
@@ -69,14 +66,13 @@ To-Do List:
 <li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
 <li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a></li>
 <li><a href="#Setup_Grafana_Dashboard_for_TrueNAS">Setup Grafana Dashboard for TrueNAS</a></li>   
-<li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li>
-<li><a href="#Configure_Disk_Standby">Configure Disk Standby</a></li>    
+<li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li> 
 <li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
 <li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
 <li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
 <li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
 <li><a href="#Configiure_email_sending_from_CLI">Configure Email Sending From CLI</a></li>
-<li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Tail Scale</a></li>
+<li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Pangolin</a></li>
 <li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
 <li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
 <li><a href="#Rsync_Files_From_Synology_to_TrueNAS">Rsync Files From Synology to TrueNAS</a></li>
@@ -89,37 +85,80 @@ To-Do List:
 ## 1.) About the project Details
 <div id="About_the_project_Details"></div>
 
-I currently have as of May 2025 a Synology DVA3219 with an attached DX517 expansion unit. This unit is running 4x WD Purple drives for Surveillance Station and has 5x drives for PLEX media. I have another DS920 with 3x 1.92TB SSD for running PLEX itself. Finally I have a DS920+ with an attached DX517 expansion unit. This has 9x drives for PLEX media, backups, docker containers, my home web interfaces and automation and all of my docker container. 
+I was using a Synology DVA3219 with an attached DX517 expansion unit. This unit is running 4x WD Purple drives for Surveillance Station and has 5x drives for PLEX media. I had another DS920 with 3x 1.92TB SSD for running PLEX itself. Finally I had a DS920+ with an attached DX517 expansion unit. This has 9x drives for PLEX media, backups, docker containers, my home web interfaces and automation and all of my docker container. 
 
-It is obvious from the details above that I am a big Synology user however with the details of the new 2025 models and their restrictive HDD policies are causing me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
+It is obvious from the details above that I was a big Synology user however with the details of the new 2025 models and their restrictive HDD policies, and dissapoitment in their limited hadrware specs caused me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
 
-With this news I have decided to move away from Synology and I am eying TrueNAS Community (SCALE). I am currently testing TrueNAS on an old Dell Micro PC I had available. I first tried to use a M.2 to 4x SATA adapter to try adding more drives to the box as the processor and IGPU would actually be enough for me to comfortably move to if I could get drive expansion options to work. Unfortunately with the adapter in the M.2 slot, the system refused to POST.
+With this news I decided to move away from Synology and I am moved to TrueNAS Community (SCALE) on a 45-Drives HL15 (1.0) with:
 
-For my testing I am using a 256GB SSD from an old laptop and the 512GB NVME drive in the Dell's M.2 slot. 
+ <ul>
+    <li>
+      128GB RAM (2x Micron 64GB RDIMM ECC DDR4 3200MHz)
+   </li>
+   <li>
+      Intel Xeon Silver 4216
+   </li>
+   <li>
+      Supermicro X11SPH-NCTPF motherboard
+   </li>
+   <li>
+	 Kingston NV2 1TB boot drive
+   </li>
+   <li>
+	  CORSAIR RM1000x modular ATX power supply
+   </li>
+   <li>
+	  PNY NVIDIA RTX 2000 Ada Generation 16GB GDDR6 PCI Express 4.0 SINGLE Slot GPU
+	</li>
+	<li>
+	 StarTech.com 4 Port PCIe Network Card - RJ45 Port - Intel i350 Chipset - Gigabit NIC Card (ST4000SPEXI)
+     </li>
+	<li>
+	 Broadcom 9400-8i (replacing the 9300 HBA built into the Motherboard)
+     </li>
+	<li>
+	 Broadcom 9400-8e (allowing for external JBOD)
+     </li>
+	<li>
+	 Dell JBOD 24 internal 12 external lane SAS2 6Gbps expander board N4C2D
+     </li>
+	<li>
+	 14x WG Gold 18TB drives
+     </li>
+	<li>
+	 1x WG Purple 8TB drive (For Surrveilance Recording)
+     </li>
+	<li>
+	 4x Micron 5400 ECO 1.92TB drives
+     </li>
+	<li>
+	 2x Micron 5200 ECO 1.92TB drives
+     </li>
+ </ul>
 
-In the long run in about 1-year's time I plan to build a custom system that can fit all of my drives. I am eying products from 45 Home lab, but that can fit 15x 3.5" HDD plus 6x 2.5" SSDs, but I have 18x 3.5" HDD so that will obviously not work unless I do something else. 
+ I do not have a case yet for the 6x SSDs attached through the Dell JBOD controller. I will Eventually. 
 
-## 2.) Current Applications Used on My Various Synology Systems
+## 2.) Applications Used on My Various Synology Systems
 <div id="Current_Applications_Used_on_My_Various_Synology_Systems"></div>
 
 PLEASE NOTE: I have never used Synology Photos, and I have never used Synology Drive. As such I am not going to be researching replacements for those apps. If someone wishes for me to figure out how to use a possible replacement I can try. However since I have no experience with Photos or Drive, I have no way of comparing functionality to determine if it is a viable replacement. With this said, it is my understanding that https://immich.app/ appears to be a viable replacement for Synology Photos. 
 
 Please also note I have never used Apple products so I am not in a position to suggest services that are compatible with Apple. If someone with Apple products has done things to over from Synology to TrueNAS and I am not detailing that, please submit an issue request and I can work with you to add those details to this guide. 
 
-First and foremost if I wish to leave Synology I need to find replacements for all of the main Apps I am using. This guide will detail what I chose to replace the Synology Apps. 
+First and foremost I needed to find replacements for all of the main Apps I am using on my Synology systems. This guide will detail what I chose to replace the Synology Apps. 
 
 1.) My Main DS920 with attached DX517
-  - Synology Calendar
-  - Antivirus Essential
+  - Synology Calendar (did not really use much, so did not bother with a replacement)
+  - Antivirus Essential (not bothering to replace)
   - Synology Mail Plus Server  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Configiure_email_sending_from_CLI">Replaced by scripts to send emails through CLI</a> 
   - Web Station <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - Hyper Backup <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Cloud_backups_to_BackBlaze_B2_Bucket">Replaced by Cloud backups to BackBlaze B2 Bucket</a> 
-  - Hyper Backup Vault
-  - Central Management System
+  - Hyper Backup Vault (only used as i had multiple synology systems. now that i have one main system, i do not need to replace this)
+  - Central Management System (only used as i had multiple synology systems. now that i have one main system, i do not need to replace this) - Truenas does have "Truenas Connect" that does cost some money but allows for basically the same funcitons
   - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
-  - LOg Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
-  - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam">Replaced by Veeam</a> or <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#urbackup">Replaced by UrBackup</a> 
+  - Log Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
+  - Active Backup For Business <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Veeam"><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#urbackup">Replaced by UrBackup</a> 
   - Container Manager - replaced by TrueNAS native apps page
   - Snapshot Replication - <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Create_snapshots">replaced by TrueNAS native ZFS snapshots</a>
 
@@ -144,7 +183,7 @@ First and foremost if I wish to leave Synology I need to find replacements for a
 
 A lot detail on line will indicate that one should have approximately 1GB of RAM for every TB of disk space used for NFS to work best. I feel good information can be found here: <a href="https://www.youtube.com/watch?v=xp6g-8VS06M">Lawrence Systems - How Much Memory Does ZFS Need and Does It Have To Be ECC?</a>
 
-I plan to have 128GB of RAM in the system I will eventually build as it will have 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. As most of my space is comprised on large media files that basically never change, I do not anticipate any issues. 
+I have 128GB of RAM in the system with 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. I have seen zero issues in this setup to date. My services all use approximatly 30GB of RAM, the rest has been used by either ARC or or marked as free. 
 
 The big thing to understand about TrueNAS and the ZFS file system that accompanies it, is that it will use un-used RAM space as a cache drive. This caching is doing the same thing a read only NVMA cache does on Synology. It will save commonly accessed files in the RAM cache so it does not need to read the data of the hard disks. ZFS calls this ARC or `Adaptive Replacement Cache`. This cache again is for reading data off the system, it does not help writing data to the drives. 
 
@@ -156,14 +195,14 @@ Like Synology READ/WRITE cache TrueNAS can use write caching which uses `SLOG` s
 
 The real question is what is the actual performance difference with using ARC, L2ARC, SLOG etc, and unfortunately that is not always easy to answer as it depends on your usage patterns. 
 
-Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM. The system will run fine, but may not possibly be at the maximum performance it could otherwise achieve. 
+Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM depedning on the number of apps or virtual machines being used. The system will run fine, but may not possibly be at the maximum performance it could otherwise achieve. 
 
 More useful information can be found here <a href="https://www.45drives.com/community/articles/zfs-caching/">45 Drive ZFS Caching Discussion</a>
 
 ## 4.) Change TrueNAS GUI Port settings
 <div id="Change_TrueNAS_GUI_Port_settings"></div>
 
-This section is not required if you are not planning to host any web services on your TrueNAS lie one would do with Synology's "Web STation" package. I am planning to use the TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI by default. Since I am moving from Synology I am already very used to using ports 5000 and 5001, so I decided to use those same ports with TrueNAS. 
+This section is not required if you are not planning to host any web services on your TrueNAS like one would do with Synology's "Web STation" package. I am using my TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI by default. Since I am moving from Synology I am already very used to using ports 5000 and 5001, so I decided to use those same ports with TrueNAS. 
 
 - `System --> General Settings --> GUI --> Settings`
 - Change Web Interface HTTP Port from 80 to 5000
@@ -213,9 +252,9 @@ This is something I am not going to go into significant detail on as the choices
 
 I will however touch on a few key details. 
 
-1. If you are using Synology SHR or SHR2 where your disks are of various different sizes, that functionality as of 5/8/2025 is NOT available on ZFS. On ZFS all disks need to be the same size or larger, and if you do use larger drives with smaller drives, you will loose any of the extra space, ZFS cannot use it.
+1. If you are using Synology SHR or SHR2 where your disks are of various different sizes, that functionality as of 1/6/2026 is NOT available on ZFS. On ZFS all disks need to be the same size or larger, and if you do use larger drives with smaller drives, you will loose any of the extra space, ZFS cannot use it.
 2. Synology does have the ability to go from one raid type to the next when using SHR/SHR2. For example you could start with two drives, which Synology will put into a mirror, then add another drive to the pool and have the option to change to raid 5 and so on. On ZFS once you make your VDEV, you are stuck with the type you make (mirror, Z1, Z2 ect) and the only way to change the type is to destroy the Vdev which will destroy what ever pool is attached to it.
-3. You can (as of late 2024) now expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods.
+3. You can expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods. There is a strange issue that when expanding by adding individual drives, your available space as reported by Truenas will be incorrect. <a href="https://forums.truenas.com/t/24-10-rc2-raidz-expansion-caused-miscalculated-available-storage/15358">24.10 RC2 Raidz expansion caused miscalculated available storage</a> or <a href="https://forums.truenas.com/t/extended-vdev-but-no-extra-space/24247">Extended vdev, but no extra space</a> and so forth. 
 
 For more details on expanding ZFS, these two videos are very helpful: <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">Lawrence Systems - TrueNAS: How To Expand A ZFS Pool</a> and <a href="https://www.youtube.com/watch?v=uPCrDmjWV_I">Lawrence Systems - TrueNAS Tutorial: Expanding Your ZFS RAIDz VDEV with a Single Drive</a>
 
@@ -227,7 +266,7 @@ I also suggest this video on creating your disk storage: <a href="https://www.yo
 Two useful guides on how to use data sets and their permissions can be found here: <a href="https://www.youtube.com/watch?v=0d4_nvdZdOc">Lawrence Systems - ZFS 101: Leveraging Datasets and Zvols for Better Data Management</a> and  <a href="https://www.youtube.com/watch?v=59NGNZ0kO04">Lawrence Systems - TrueNAS Scale: A Step-by-Step Guide to Dataset, Shares, and App Permissions</a>
 
 <ol>
-<li>For example I have 1 storage pool <strong>volume1</strong></li>
+<li>For example I my "main" storage pool <strong>volume1</strong></li>
 <li>On <b></b>/mnt/volume1</b> I have the following data sets</li>
    <ul>
 	   <li> <strong>Apps</strong> <small>[Note, only make the data sets / folders as needed for your desired apps]. [Ensure the “Dataset Preset” is set to “Apps”]</small></li>
@@ -461,17 +500,17 @@ The PID and GID created for this user, in this example “Plex” will be used t
 
 I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that I had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and I have been very happy since.
 
-If I was going to move away from Synology, then would need to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what I was seeing with Frigate.
+Moving away from Synology, then needed to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what I was seeing with Frigate.
 
 With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that I can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
 
-To achieve this I am using a single Google Coral Tensor Processor Unit (TPU) and iGPU pass-through from my Core i7-8700T CPU in my test Dell Micro PC to the container to perform all of the analysis on 12x cameras at the same time. The TPU uses less than 5 watts, and the iGPU is only being loaded to 4-ish percent and the CPU was loaded to around 20%. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
+To achieve this I am using an Nvidia RTX A2000 ADA GPU to the container to perform all of the analysis on 12x cameras at the same time. The CPU usage is around 10-13% and the GPU is loaded to only around 3% and using about 1200MB of VRAM. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
 
 I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power differential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analysis!!.
 
 something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, I think Frigate does a better job anyways but your mileage may vary.
 
-another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video will NOT be 100% live. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together.
+another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video will NOT be 100% live by default. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together. The Frigate team has been working on significantly expanding the GUI and now you can select if the screen shows live video. 
 
 <div id="Grafana"></div>
 
@@ -697,17 +736,9 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
 
 ```
 
-<div id="DIUN"></div>
-
-18. ***DIUN – Docker Image Update Notifier***
-
-<div id="TrueCommand"></div>
-
-19. ***TrueCommand***
-
 <div id="urbackup"></div>
 
-20. ***UrBackup*** *[Replaces Active Backup for Business]*
+18. ***UrBackup*** *[Replaces Active Backup for Business]*
 
 I have been using Synology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found <a href="#urbackup">Veeam</a> which i first thought would be able to replace Active Backup for Business. However Urbackup is much better at replicating what Synology offers. UrBackup has a server running on TrueNAS and an endpoint client running on your windows, linux, and (under beta) Mac systems. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Urbackup also does which is great to see.
 
@@ -739,21 +770,9 @@ showing the compression (ratio of 1.5) used by the backup
 Showing incrmemntal backups and only backing up the data required
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/incrmental_example.png" alt="incrmental_example.png" width="720" height="202"> 
 
-<div id="Veeam"></div>
-
-21. ***Veeam*** *[Replaces Active Backup for Business]*
-
-I have been using Synology Active Backup for Business to perform bare metal backups of my 4x windows machines and needed a way to perform this same function. I found Veeam free for windows which does what i needed. This is a program that runs solely on the windows machine and simply uses SMB to save the backup data to your trueNAS. It allows for incremental backups, backup retention policies just like Active Backup for Business. One thing Active Backup for Business was really good at was de-duplication which Veeam is not as good at. However <a href="#urbackup">UrBackup</a> is an even better choice as it offers a truly more complete replacement for Active Backup For Business. 
-
-Veeam free for windows can be downloaded here: <a href="https://www.veeam.com/products/free/microsoft-windows.html">Veeam windows client free</a>
-
-The configuration settings that i successfully used to perform bare metal backups to by trueNAS server can be found <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/Veeam">here</a>. 
-
-I am also going to be combining Veeam with Syncthing to perform version-ed backups of specific directories on my windows machines. <a href="https://www.youtube.com/watch?v=cccPnXnh6wA">Lawrence Systems - How I Use Syncthing for Real Time Backups</a>
-
 <div id="Grey_log"></div>
 
-22. ***Grey log***
+19. ***Grey log***
 
 Grey log will be replacing Synology's "Log Center" for our SysLog Server. 
 
@@ -784,7 +803,7 @@ two useful youtube videos
 
 <div id="flaresolverr"></div>
 
-23. ***flaresolverr***
+20. ***flaresolverr***
 
 We want to make sure flaresolverr runs through our GlueTUN tunnel for our VPN. Below is m configuration. 
 ```
@@ -806,7 +825,7 @@ services:
 
 <div id="ytdlp"></div>
 
-24. ***ytdlp***
+21. ***ytdlp***
 
 I have been using a  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/yt-dlp/youtube-dl.php">custom made PHP based web page</a> that generates the commands needed to control YT-DLP. 
 
@@ -1127,21 +1146,6 @@ line `* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh` runs my true
 
 line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMART logging script every hour
 
-## 17.)  Configure Disk Standby
-<div id="Configure_Disk_Standby"></div>
-
-For my TrueNAS installation of 25.04, all disks by default were set ot always be on and never go to stand by. For me that is the setting i want as i personaly do not let my drives turn off. 
-
-However if you wish to have your drives turn off when not in use:
-
-- go to `Storage --> Disks`
-- you can either configure one drive or multiple drives at a time by clicking the check box to the left of the disk(s) you wish to configure.
-- click `Edit Disks`
-- under `HDD Standby` configure the drive for the Minutes of inactivity before the drive enters standby mode. Please note that Temperature monitoring is disabled for standby disks.
-- under `Advanced Power Management` configure how agressive the systemn will be with reducing drive power draw.
-- SMART settings can also be configured here
-- click `save` when done
-
 ## 18.)  Cloud backups to BackBlaze B2 Bucket
 <div id="Cloud_backups_to_BackBlaze_B2_Bucket"></div>
 
@@ -1161,20 +1165,7 @@ I have the `Schedule` set to daily, however the key is i have `Threshold Days` s
 ## 21.)  Schedule SMART tests
 <div id="Schedule_SMART_tests"></div>
 
-There will be two ways of scheduling SMART tests. The first is TrueNAS native SMART scheduling. The second uses my custom SMART scheduler. I will describe how to setup both. 
-
-**Native TrueNAS SMART scheduling**
-
-`Data Protection--> Periodic S.M.A.R.T. Tests --> Add`
-
-We will add two tasks, one short, one long
-
-Long SMART settings:
-<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/long_smart.png" alt="long_smart.png">
-Notice the custom settings, this will run the long SMART test every 3 months on the 1st day of the month on only January, April, July, and October at 4:00 AM in the morning. 
-
-Short SMART settings:
-<img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/short_smart.png" alt="short_smart.png">
+Truenas as of 25.10 has removed the ability to perform SMART tests or view SMART data in the GUI. I am using my own custom scheduler to still perform SMART tests
 
 **Custom SMART Scheduler**
 
@@ -1253,7 +1244,7 @@ Within TrueNAS go to `System --> Advanced Settings --> Init/Shutdown Scripts` an
 - set time out to 3
 
 
-## 23.)  Configure Remote Access using Tail Scale
+## 23.)  Configure Remote Access using Pangolin
 <div id="Configure_Remote_Access_using_Tail_Scale"></div>
 
 https://www.youtube.com/watch?v=o0Py62k63_c
@@ -1388,6 +1379,8 @@ cap_drop:     #removing the ability of the container to create outside network c
 
 to prevent the container from accessing any external network. since his app will have basically read/write access to my ENTIRE server basically, i want to make sure it has little to no ability to phone home any information. 
 
+add details about filebrowser
+
 ## 30.)  Automated APP Backups
 <div id="app_backups"></div>
 
@@ -1396,12 +1389,6 @@ I have a script that i run weekly that will backup the app directory for each of
 the script can be found here: https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/truenas_app_backup.sh
 
 either a cron job under `system --> Advanced Settings` or edit `nano /etc/crontab` and add an entry there to run the script weekly. 
-
-## 30.)  Intel Arc GPUs
-<div id="arc_gpus"></div>
-https://github.com/Disty0/intel-arc-monitor/blob/main/intel-arc-monitor
-https://www.oldcai.com/ai/intel-gpu-top/
-
 
 ## 30.)  HBA Monitoring
 <div id="arc_gpus"></div>
