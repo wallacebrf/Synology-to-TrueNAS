@@ -22,6 +22,12 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>FileBrowser app</ins>
 - <ins>Update all docker-compose files to latest compose files</ins>
 - <ins>Update instructions here and there as the guide started with 25.04 and the new 25.10 version changed GUI layouts a bit</ins>
+- <ins>Update hardware_logger.sh script</ins>
+- <ins>Update multireport_sendemail.py script</ins>
+- <ins>Update trueNAS_snmp.sh script</ins>
+- <ins>truenas_app_backup.sh</ins>
+- <ins>detail "Frigate Monitor" script</ins>
+
 
 
 <div id="top"></div>
