@@ -27,6 +27,7 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>Update trueNAS_snmp.sh script</ins>
 - <ins>truenas_app_backup.sh</ins>
 - <ins>detail "Frigate Monitor" script</ins>
+- <ins>detail YT-DLP as it now needs DENO</ins>
 
 
 
