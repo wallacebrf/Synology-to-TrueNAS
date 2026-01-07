@@ -12,10 +12,10 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>complete PHP config page for TrueNAS SNMP</ins>
 - <ins>frigate phone app - https://github.com/sfortis/frigate-viewer/tree/main</ins>
 - <ins>arc resize script</ins>
-- <ins>disk queue depth script due to "known" issues with WD gold dirves</ins>
+- <ins>disk queue depth script due to "known" issues with WD gold drives</ins>
 - <ins>immich</ins>
 - <ins>prowler</ins>
-- <ins>enabling NTP server in truenas needed for Frigate security cameras to update NTP without needing to access the internet</ins>
+- <ins>enabling NTP server in TrueNAS needed for Frigate security cameras to update NTP without needing to access the Internet</ins>
 - <ins>turning off snapshots on certain directories</ins>
 - <ins>replacing Nvidia GPU with different card</ins>
 - <ins>add details about log errors that occur when logging HBA temps</ins>
@@ -24,8 +24,8 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>Update instructions here and there as the guide started with 25.04 and the new 25.10 version changed GUI layouts a bit</ins>
 - <ins>Update hardware_logger.sh script</ins>
 - <ins>Update multireport_sendemail.py script</ins>
-- <ins>Update trueNAS_snmp.sh script</ins>
-- <ins>truenas_app_backup.sh</ins>
+- <ins>Update TrueNAS_snmp.sh script</ins>
+- <ins>TrueNAS_app_backup.sh</ins>
 - <ins>detail "Frigate Monitor" script</ins>
 - <ins>detail YT-DLP as it now needs DENO</ins>
 
@@ -94,7 +94,7 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 
 I was using a Synology DVA3219 with an attached DX517 expansion unit. This unit is running 4x WD Purple drives for Surveillance Station and has 5x drives for PLEX media. I had another DS920 with 3x 1.92TB SSD for running PLEX itself. Finally I had a DS920+ with an attached DX517 expansion unit. This has 9x drives for PLEX media, backups, docker containers, my home web interfaces and automation and all of my docker container. 
 
-It is obvious from the details above that I was a big Synology user however with the details of the new 2025 models and their restrictive HDD policies, and dissapoitment in their limited hadrware specs caused me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
+It is obvious from the details above that I was a big Synology user however with the details of the new 2025 models and their restrictive HDD policies, and disappointment in their limited hardware specs caused me to look else where. Synology has indicated that it is possible to move existing drives from a pre-2025 unit to a 2025 unit and the drives will work. Based on community discussion that has been proven to be true. However if any of those drives fail, unless you use the great script https://github.com/007revad/Synology_HDD_db, replacement drives must be Synology brand. 
 
 With this news I decided to move away from Synology and I am moved to TrueNAS Community (SCALE) on a 45-Drives HL15 (1.0) with:
 
@@ -118,13 +118,13 @@ With this news I decided to move away from Synology and I am moved to TrueNAS Co
 	  PNY NVIDIA RTX 2000 Ada Generation 16GB GDDR6 PCI Express 4.0 SINGLE Slot GPU
 	</li>
 	<li>
-	 StarTech.com 4 Port PCIe Network Card - RJ45 Port - Intel i350 Chipset - Gigabit NIC Card (ST4000SPEXI)
+	 StarTech.com 4 Port PCIe Network Card - RJ45 Port - Intel i350 Chip-set - Gigabit NIC Card (ST4000SPEXI)
      </li>
 	<li>
-	 Broadcom 9400-8i (replacing the 9300 HBA built into the Motherboard)
+	 Broad-com 9400-8i (replacing the 9300 HBA built into the Motherboard)
      </li>
 	<li>
-	 Broadcom 9400-8e (allowing for external JBOD)
+	 Broad-com 9400-8e (allowing for external JBOD)
      </li>
 	<li>
 	 Dell JBOD 24 internal 12 external lane SAS2 6Gbps expander board N4C2D
@@ -133,7 +133,7 @@ With this news I decided to move away from Synology and I am moved to TrueNAS Co
 	 14x WG Gold 18TB drives
      </li>
 	<li>
-	 1x WG Purple 8TB drive (For Surrveilance Recording)
+	 1x WG Purple 8TB drive (For Surveillance Recording)
      </li>
 	<li>
 	 4x Micron 5400 ECO 1.92TB drives
@@ -156,12 +156,12 @@ First and foremost I needed to find replacements for all of the main Apps I am u
 
 1.) My Main DS920 with attached DX517
   - Synology Calendar (did not really use much, so did not bother with a replacement)
-  - Antivirus Essential (not bothering to replace)
+  - Anti-virus Essential (not bothering to replace)
   - Synology Mail Plus Server  <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Configiure_email_sending_from_CLI">Replaced by scripts to send emails through CLI</a> 
   - Web Station <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - Hyper Backup <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Cloud_backups_to_BackBlaze_B2_Bucket">Replaced by Cloud backups to BackBlaze B2 Bucket</a> 
-  - Hyper Backup Vault (only used as i had multiple synology systems. now that i have one main system, i do not need to replace this)
-  - Central Management System (only used as i had multiple synology systems. now that i have one main system, i do not need to replace this) - Truenas does have "Truenas Connect" that does cost some money but allows for basically the same funcitons
+  - Hyper Backup Vault (only used as i had multiple Synology systems. now that i have one main system, i do not need to replace this)
+  - Central Management System (only used as i had multiple Synology systems. now that i have one main system, i do not need to replace this) - TrueNAS does have "TrueNAS Connect" that does cost some money but allows for basically the same functions
   - Maria DB <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - PHP My Admin <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#ngninx_PHP_Maria_DB_Stack">Replaced by ngninx + PHP + MySQL Stack + PHPMyAdmin also known as LEMP stack</a> 
   - Log Center <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Grey_log">Replaced by Grey log</a> 
@@ -170,7 +170,7 @@ First and foremost I needed to find replacements for all of the main Apps I am u
   - Snapshot Replication - <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main?tab=readme-ov-file#Create_snapshots">replaced by TrueNAS native ZFS snapshots</a>
 
 2.) On my DVA3219
-  - Antivirus Essential
+  - Anti-virus Essential
   - Synology Mail Plus Server
   - Hyper Backup
   - Log Center
@@ -179,7 +179,7 @@ First and foremost I needed to find replacements for all of the main Apps I am u
 
 3.) On my DS920 running plex
   - PLEX
-  - Antivirus Essential
+  - Anti-virus Essential
   - Synology Mail Plus Server
   - Hyper Backup
   - Log Center
@@ -190,7 +190,7 @@ First and foremost I needed to find replacements for all of the main Apps I am u
 
 A lot detail on line will indicate that one should have approximately 1GB of RAM for every TB of disk space used for NFS to work best. I feel good information can be found here: <a href="https://www.youtube.com/watch?v=xp6g-8VS06M">Lawrence Systems - How Much Memory Does ZFS Need and Does It Have To Be ECC?</a>
 
-I have 128GB of RAM in the system with 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. I have seen zero issues in this setup to date. My services all use approximatly 30GB of RAM, the rest has been used by either ARC or or marked as free. 
+I have 128GB of RAM in the system with 14x 18TB drives + 4x 8TB drives and 6x 1.92TB SSD for a total RAW capacity of 295.52TB of space. I have seen zero issues in this setup to date. My services all use approximately 30GB of RAM, the rest has been used by either ARC or or marked as free. 
 
 The big thing to understand about TrueNAS and the ZFS file system that accompanies it, is that it will use un-used RAM space as a cache drive. This caching is doing the same thing a read only NVMA cache does on Synology. It will save commonly accessed files in the RAM cache so it does not need to read the data of the hard disks. ZFS calls this ARC or `Adaptive Replacement Cache`. This cache again is for reading data off the system, it does not help writing data to the drives. 
 
@@ -202,14 +202,14 @@ Like Synology READ/WRITE cache TrueNAS can use write caching which uses `SLOG` s
 
 The real question is what is the actual performance difference with using ARC, L2ARC, SLOG etc, and unfortunately that is not always easy to answer as it depends on your usage patterns. 
 
-Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM depedning on the number of apps or virtual machines being used. The system will run fine, but may not possibly be at the maximum performance it could otherwise achieve. 
+Many people moving from a Synology should be able to comfortably use TrueNAS with ZFS on systems with 32GB of RAM depending on the number of apps or virtual machines being used. The system will run fine, but may not possibly be at the maximum performance it could otherwise achieve. 
 
 More useful information can be found here <a href="https://www.45drives.com/community/articles/zfs-caching/">45 Drive ZFS Caching Discussion</a>
 
 ## 4.) Change TrueNAS GUI Port settings
 <div id="Change_TrueNAS_GUI_Port_settings"></div>
 
-This section is not required if you are not planning to host any web services on your TrueNAS like one would do with Synology's "Web STation" package. I am using my TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI by default. Since I am moving from Synology I am already very used to using ports 5000 and 5001, so I decided to use those same ports with TrueNAS. 
+This section is not required if you are not planning to host any web services on your TrueNAS like one would do with Synology's "Web Station" package. I am using my TrueNAS system to host my internal web pages and so I need to free up the ports 80 and 443 used by the TrueNAS GUI by default. Since I am moving from Synology I am already very used to using ports 5000 and 5001, so I decided to use those same ports with TrueNAS. 
 
 - `System --> General Settings --> GUI --> Settings`
 - Change Web Interface HTTP Port from 80 to 5000
@@ -261,7 +261,7 @@ I will however touch on a few key details.
 
 1. If you are using Synology SHR or SHR2 where your disks are of various different sizes, that functionality as of 1/6/2026 is NOT available on ZFS. On ZFS all disks need to be the same size or larger, and if you do use larger drives with smaller drives, you will loose any of the extra space, ZFS cannot use it.
 2. Synology does have the ability to go from one raid type to the next when using SHR/SHR2. For example you could start with two drives, which Synology will put into a mirror, then add another drive to the pool and have the option to change to raid 5 and so on. On ZFS once you make your VDEV, you are stuck with the type you make (mirror, Z1, Z2 ect) and the only way to change the type is to destroy the Vdev which will destroy what ever pool is attached to it.
-3. You can expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods. There is a strange issue that when expanding by adding individual drives, your available space as reported by Truenas will be incorrect. <a href="https://forums.truenas.com/t/24-10-rc2-raidz-expansion-caused-miscalculated-available-storage/15358">24.10 RC2 Raidz expansion caused miscalculated available storage</a> or <a href="https://forums.truenas.com/t/extended-vdev-but-no-extra-space/24247">Extended vdev, but no extra space</a> and so forth. 
+3. You can expand ZFS by adding one drive at a time. So for example if you have a raid Z1 with 4 disks, you can add a 5th drive to that Vdev like we could with Synology, however the underlying methods on how ZFS expansion work are different from the Synology MDADM / Linux Volume Manager methods. There is a strange issue that when expanding by adding individual drives, your available space as reported by TrueNAS will be incorrect. <a href="https://forums.TrueNAS.com/t/24-10-rc2-raidz-expansion-caused-miscalculated-available-storage/15358">24.10 RC2 Raidz expansion caused miscalculated available storage</a> or <a href="https://forums.TrueNAS.com/t/extended-vdev-but-no-extra-space/24247">Extended vdev, but no extra space</a> and so forth. 
 
 For more details on expanding ZFS, these two videos are very helpful: <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">Lawrence Systems - TrueNAS: How To Expand A ZFS Pool</a> and <a href="https://www.youtube.com/watch?v=uPCrDmjWV_I">Lawrence Systems - TrueNAS Tutorial: Expanding Your ZFS RAIDz VDEV with a Single Drive</a>
 
@@ -319,10 +319,7 @@ Two useful guides on how to use data sets and their permissions can be found her
 		<li><ins>filebrowser</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>jellyfin</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>sickchill</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>flaresolverr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>grey_log</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>truecommand</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>diun</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
 		<li><ins>nginx_reverse_proxy</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
    		   <ul>
 			   <li>Then created the following additional “regular folders”</li>
@@ -505,20 +502,6 @@ The PID and GID created for this user, in this example “Plex” will be used t
 3. **Frigate**
 - Refer here for detailed information on <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate Configuration on TrueNAS</a>
 
-I have been using Synology Surveillance Station (Referred here on out as SSS) since 2019. Prior to that I had been using a SWANN 8x camera system with 4k cameras. I kept the cameras but simply replaced the NVR with the DVA3219 and I have been very happy since.
-
-Moving away from Synology, then needed to find a good replacement for SSS. I looked into various options like Blue Iris but that only runs on windows. I also looked into Zoneminder and Frigate and really liked what I was seeing with Frigate.
-
-With my DVA3219 and the NVidia graphics card inside it I have currently been utilizing its 4x max concurrent "deep video analysis" features to perform person, vehicle and object detection, which has been working well. What has really made me appreciate Frigate is that I can do the same object detection and MORE on ALL of my 12x cameras while also using LESS wattage on my electricity bill.
-
-To achieve this I am using an Nvidia RTX A2000 ADA GPU to the container to perform all of the analysis on 12x cameras at the same time. The CPU usage is around 10-13% and the GPU is loaded to only around 3% and using about 1200MB of VRAM. This is compared to the DVA3219 which loads by CPU to around 50%, loads the GPU to around 90%.
-
-I used a kilo-watt meter to get a good understanding of the power draw on the Dell micro PC when Frigate was ON and when it was OFF and the power usage difference was around 18 watts. I did the same comparison on the DVA3219 and the power differential when SSS is ON vs OFF was about 75 watts. That is a huge difference in 24/7 on-going power draw and yet Frigate is doing even more analysis!!.
-
-something of note: Frigate does NOT use any of the detections built into cameras, it only performs all processing and detections/triggers internally using your CPU, GPU, TPU etc. This means if you have really fancy AI cameras that can natively perform people, object, motion detection etc, those features cannot be leveraged by Frigate. Personally after using Frigate, I think Frigate does a better job anyways but your mileage may vary.
-
-another thing to note: when looking at the Frigate web GUI live stream page showing multiple cameras, the video will NOT be 100% live by default. The video will only "activate" when there is actively detected motion, alerts, or detections. Then the video will show the live stream and as soon as the event(s) are over the video will "pause". This was initially confusing for me as SSS will show the live stream at all times when looking at all the cameras together. The Frigate team has been working on significantly expanding the GUI and now you can select if the screen shows live video. 
-
 <div id="Grafana"></div>
 
 4. ***Grafana***
@@ -676,7 +659,7 @@ if the gluetun app is not running, the qBittorrent app will not run
 
 I based my stack off the following: <a href="https://linuxiac.com/how-to-set-up-lemp-stack-with-docker-compose/">how-to-set-up-lemp-stack-with-docker-compose</a> combined with the example here detailing <a href="https://www.hostmycode.in/tutorials/lemp-stack-on-docker">Nginx with port 80 to 443 forwarding and ssl certs</a>. 
 
-I am aware this is not considered the best security practice however I was not able to get the LEMP stack to work unless I set the permissions to `/mnt/volume1/hosting` to `777`. To acheive this I went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
+I am aware this is not considered the best security practice however I was not able to get the LEMP stack to work unless I set the permissions to `/mnt/volume1/hosting` to `777`. To achieve this I went to the permissions for the `/mnt/volume1/hosting` share, wiped the ACL and set the user and group to the `web` user and set all permissions to read/write/execute. I have been experimenting on trying to rein in these permissions, but anything other than this prevents the stack from working correctly. 
 
 My final configuration and needed files are <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20%2B%20PHP%20%2B%20MariaDB%20Stack">found here</a>. 
 
@@ -691,18 +674,18 @@ once the stack is up, go to `http://<server-ip>:444/index.php` and you should se
 Now we need to transfer some files from Synology. Let's start with SQL databases from Synology. Some of my databases are hundreds of GB in size and to prevent timeout issues when importing .SQL files within PHPMyAdmin, I decided to import the .SQL files through the command line. If your files are small, importing through PHPMyAdmin should be fine. 
 
 - export current databases on Synology. I am not detailing how to do this as there is no guarantee you have been using PHPMyAdmin on Synology. 
-- copy files to SMB `\\<trueNAS_IP>\hosting`
+- copy files to SMB `\\<TrueNAS_IP>\hosting`
 - Log into TrueNAS SSH and change to the hosting directory. `cd /mnt/volmume1/hosting`
-- Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
+- Copy the files from the hosting directory to where the SQL data is being saved. `cp home_temp.sql /mnt/volume1/hosting/sql/home_temp.sql` where `home_temp.sql`is the backup file exported from Synology and `/mnt/volume1/hosting/sql/` is where my `mysql` container is saving data. 
 - go to apps, click on "web" app we created and select MySQL's shell
 - within MySQL's shell: `cd /var/lib/mysql`
 - log into sql. `mysql -u root -p` and enter password when asked
-- create database with same name as one exported from synology. `CREATE DATABASE home_temp;` 
+- create database with same name as one exported from Synology. `CREATE DATABASE home_temp;` 
 - we now need to tell MySQL to use the new database to ensure our import goes into it correctly: `use home_temp;`
 - import sql file. `source home_temp.sql`
 - you can now delete the .SQL files in the `/mnt/volmume1/hosting` and `/mnt/volume1/hosting/sql` we copied over from Synology. 
 
-we need to copy any web hosted files from the synology and place those files in the `/mnt/volmume1/hosting/web`
+we need to copy any web hosted files from the Synology and place those files in the `/mnt/volmume1/hosting/web`
 
 Your web services should now be working
 
@@ -762,11 +745,11 @@ I have been using Synology Active Backup for Business to perform bare metal back
 - go to `Settings --> Image Backups` and configure the number of image backups that will be retained
 - go to `Settings --> Mail` and configure an SMTP server to get emails of activities from UrBackup
 - go to `stats --> add new client`
-  - if the system is on a differnet subnet / VLAN from TrueNAS, choose the option `Add new Internet/active client`
-  - if the system s on the same subnet / VLAN as TrueNAS, choose `Discover new local/passive client accross networks`.
-- under the `Client added successfully` page, choose the option to `Download preconfigured client installer for XYZ` depending if you are using windows or Lunix.
-- install the client on your machine. It may take up to 5-10 minutes for the client to connect to the server. The client will indicate when it is connected and the web interface will indiacte under `Status` page `Online = YES` for the added client.
-- Refer here to the settings that i have choosen for all of the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/urbackup">different app pages</a>
+  - if the system is on a different subnet / VLAN from TrueNAS, choose the option `Add new Internet/active client`
+  - if the system s on the same subnet / VLAN as TrueNAS, choose `Discover new local/passive client across networks`.
+- under the `Client added successfully` page, choose the option to `Download pre-configured client installer for XYZ` depending if you are using windows or Lunix.
+- install the client on your machine. It may take up to 5-10 minutes for the client to connect to the server. The client will indicate when it is connected and the web interface will indicate under `Status` page `Online = YES` for the added client.
+- Refer here to the settings that i have chosen for all of the <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/urbackup">different app pages</a>
 
 Backup In Progress - shows percent complete, estimated time remaining, current data transfer (this was done over a VPN while i was traveling out of state so the speed is slow)
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/backup_in_progress2.png" alt="backup_in_progress2.png" width="734" height="268"> 
@@ -774,7 +757,7 @@ Backup In Progress - shows percent complete, estimated time remaining, current d
 showing the compression (ratio of 1.5) used by the backup
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/compression.png" alt="compression.png" width="438" height="43"> 
 
-Showing incrmemntal backups and only backing up the data required
+Showing incremental backups and only backing up the data required
 <img src="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/urbackup/incrmental_example.png" alt="incrmental_example.png" width="720" height="202"> 
 
 <div id="Grey_log"></div>
@@ -886,7 +869,7 @@ $use_sessions=false; #use log in sessions?
 
 Dozzel is a nice Docker Logs aggregation app that allows you to easilly see all docker logs in one spot and i feel it organizes it better than Portainer and other apps. 
 
-This app is available in the `apps --> discover app` page but does need some specific settings set. By default this app does not have authentication which for something acecssing docker logs is not a great idea. How authenication is setup is documented  <a href="https://dozzle.dev/guide/authentication">Here</a>. 
+This app is available in the `apps --> discover app` page but does need some specific settings set. By default this app does not have authentication which for something accessing docker logs is not a great idea. How authentication is setup is documented  <a href="https://dozzle.dev/guide/authentication">Here</a>. 
 
 - go to `system --> shell` and log into sudo with `sudo -i`
 - run the command `docker run -it --rm amir20/dozzle generate --name Admin --password <your_password_here> admin
@@ -947,22 +930,22 @@ services:
 ## 13.)  Data Logging Exporting to Influx DB v2  
 <div id="Data_Logging_Exporting_to_Influx_DB_v2"></div>
 
-TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but one might want to export this data to be able to better display it in Grafana for example. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this I needed an intermediary step to convert the graphite data into something InfluxDB could ingest. To do this I used a `truenas-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
+TrueNAS has built in metrics that show CPU usage, network usage and more. This is great, but one might want to export this data to be able to better display it in Grafana for example. Unfortunately TrueNAS only exports data over Graphite and I like to use InfluxDB v2 which removed the ability to natively ingest graphite formatted data. Because of this I needed an intermediary step to convert the graphite data into something InfluxDB could ingest. To do this I used a `TrueNAS-graphite-to-prometheus` exporter. InfluxDB can ingest prometheus data. 
 
 1. Setup TrueNAS exporter under `Reporting --> Exporters` so we can get the data out of TrueNAS. 
 - **Name**: netdata
 - **Type**: Graphite
 - **Destination IP**: 192.168.1.8 (TrueNAS System IP)
 - **Destination Port**: 9109 [This will be the port used in the custom app we are about to install in the next section]
-- **Prefix**: truenas
+- **Prefix**: TrueNAS
 - **Update Every**: 10
 - **Buffer On Failures**: 10
 - **Matching Charts**: *
 - Click Save
-2. Create Custom App per *https://github.com/Supporterino/truenas-graphite-to-prometheus/blob/main/TRUENAS.md*
+2. Create Custom App per *https://github.com/Supporterino/TrueNAS-graphite-to-prometheus/blob/main/TrueNAS.md*
 - Install App through `Apps --> Discover Apps --> Custom App`
   - **Application Name**: netdata
-  - **Image -> Repository**: ghcr.io/supporterino/truenas-graphite-to-prometheus
+  - **Image -> Repository**: ghcr.io/supporterino/TrueNAS-graphite-to-prometheus
   - **Tag**: latest
   - **Pull Policy**: Pull the image if it is not already present on the host.
   - **Hostname**: <leave blank>
@@ -1023,7 +1006,7 @@ TrueNAS has built in metrics that show CPU usage, network usage and more. This i
 1.) **Intro**
 We now have a lot of the available data metrics from TrueNAS being saved to InfluxDB, but this is not ALL of the data available to use. The rest needs to be accessed over SNMP or directly off things like smartctl and NVidia drivers. You are going to want to enable SNMP to use this script which I will document below so the script I will detail can collect the needed information. 
 
-The SNMP data is collected based on the details of the <a href="https://www.truenas.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/">TrueNAS MIB file</a>
+The SNMP data is collected based on the details of the <a href="https://www.TrueNAS.com/docs/scale/scaletutorials/systemsettings/services/snmpservicescale/">TrueNAS MIB file</a>
 
 on a system not running NVidia drivers, here is an example of the data it can collect:
 
@@ -1059,17 +1042,17 @@ This script does need to have a working PHP web site to allow for the configurat
 
 todo: check to see if other MIBs/IODs are available
 
-https://github.com/tr1plus/zabbix_truenas_SCALE_snmp/blob/main/template_app_truenas_scale_snmp.yaml
-https://www.zabbix.com/integrations/truenas
-https://www.truenas.com/docs/core/13.0/coretutorials/services/configuringsnmp/
+https://github.com/tr1plus/zabbix_TrueNAS_SCALE_snmp/blob/main/template_app_TrueNAS_scale_snmp.yaml
+https://www.zabbix.com/integrations/TrueNAS
+https://www.TrueNAS.com/docs/core/13.0/coretutorials/services/configuringsnmp/
 
 2. **Install Script and Support Files**
 
 - This assumes you already have the <a href="#ngninx_PHP_Maria_DB_Stack">nginx + PHP + MySQL docker stack</a> installed which means it assumes you already have some data sets and folder structures already created.
-- Download the following files `multireport_sendemail.py` and `trueNAS_snmp.sh` and place them in the `/mnt/volume1/web/logging` directory if you used the same folder structure I did, or place it where you have your web site files stored.
+- Download the following files `multireport_sendemail.py` and `TrueNAS_snmp.sh` and place them in the `/mnt/volume1/web/logging` directory if you used the same folder structure I did, or place it where you have your web site files stored.
 - create a `/mnt/volume1/web/logging/notifications` directory as the script will use this for temp files
 - create a `/mnt/volume1/web/config` directory as this is where the script will save its config file.
-- download the example `trueNAS_snmp_config.txt` file and place it in your `/mnt/volume1/web/config` directory
+- download the example `TrueNAS_snmp_config.txt` file and place it in your `/mnt/volume1/web/config` directory
 - download the TBD .PHP file to the `/mnt/volume1/web/config` directory so we can configure the script
 
 3. **Configure the .SH script file**
@@ -1086,8 +1069,8 @@ from_email_address="email@email.com"
 - the script has the following settings that need to be set if you are using a folder structure different from my example
 ```
 log_file_location="/mnt/volume1/web/logging/notifications"
-lock_file_location="$log_file_location/trueNAS_snmp.lock"
-config_file_location="/mnt/volume1/web/config/trueNAS_snmp_config.txt"
+lock_file_location="$log_file_location/TrueNAS_snmp.lock"
+config_file_location="/mnt/volume1/web/config/TrueNAS_snmp_config.txt"
 
 nas_name="TrueNAS" #this is only needed if the script cannot access the server name over SNMP, or if the config file is unavailable and will be used in any error messages
 capture_interval_adjustment=3
@@ -1099,7 +1082,7 @@ capture_interval_adjustment=3
 - `capture_interval_adjustment` is used if the script takes too long to execute and does not complete in less than 60 seconds. The default is 3. This should not need to be adjusted.
 
 4. **Configure the .PHP Config File**
-- open the .PHP file and ensure the line `$config_file_location="/mnt/volume1/web/config/trueNAS_snmp_config.txt";` matches the same directory as the .SH script file.
+- open the .PHP file and ensure the line `$config_file_location="/mnt/volume1/web/config/TrueNAS_snmp_config.txt";` matches the same directory as the .SH script file.
 
 5. **Launch PHP web page and configure the script**
 
@@ -1109,7 +1092,7 @@ capture_interval_adjustment=3
 ## 16.)  Setup Custom Logging Scripts and Configure CRON
 <div id="Setup_Custom_Logging_Scripts_and_Configure_CRON"></div>
 
-I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS monitoring, network switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/trueNAS_snmp.sh">here</a>.
+I have many scripts running on my Synology that collect data from themselves (DSM SNMP monitoring), UPS monitoring, network switch monitoring and more. These scripts need to be configured to run automatically. One example of this type of script is <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/TrueNAS_snmp.sh">here</a>.
 
 I first started out using the `System --> Advanced Settings --> Cron Jobs` option and that worked. what i realized though is that this was clogging up my `Running Jobs` page and making lots of un-needed log files. As such i am instead directly editing the crontab file by `vi /etc/crontab`
 
@@ -1138,18 +1121,18 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 47 6    * * 7   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.weekly; }
 52 6    1 * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.monthly; }
 #
-* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh
+* * * * * root bash /mnt/volume1/web/logging/TrueNAS_snmp.sh
 0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh
 ```
 
 please note the last two lines, these are the lines i added. 
 
 ```
-* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh
+* * * * * root bash /mnt/volume1/web/logging/TrueNAS_snmp.sh
 0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh
 ```
 
-line `* * * * * root bash /mnt/volume1/web/logging/trueNAS_snmp.sh` runs my truenas logging script every 60 seconds
+line `* * * * * root bash /mnt/volume1/web/logging/TrueNAS_snmp.sh` runs my TrueNAS logging script every 60 seconds
 
 line `0 * * * * root bash /mnt/volume1/web/logging/smart_logger.sh` runs my SMART logging script every hour
 
@@ -1172,7 +1155,7 @@ I have the `Schedule` set to daily, however the key is i have `Threshold Days` s
 ## 21.)  Schedule SMART tests
 <div id="Schedule_SMART_tests"></div>
 
-Truenas as of 25.10 has removed the ability to perform SMART tests or view SMART data in the GUI. I am using my own custom scheduler to still perform SMART tests
+TrueNAS as of 25.10 has removed the ability to perform SMART tests or view SMART data in the GUI. I am using my own custom scheduler to still perform SMART tests
 
 **Custom SMART Scheduler**
 
@@ -1325,7 +1308,7 @@ these scripts appear to be what they use to gather all of the details needed for
 <div id="Rsync_Files_From_Synology_to_TrueNAS"></div>
 
 this amazing guide is what i used small modifications
-https://www.reddit.com/r/truenas/comments/xk5nxm/solved_rsync_task_to_synology_nas/
+https://www.reddit.com/r/TrueNAS/comments/xk5nxm/solved_rsync_task_to_synology_nas/
 
 - Create a new user account on **both** your TrueNAS and Synology NAS. <ins>It needs to be the same user name (for example `rsync`)</ins>. The password does not matter; does not need to be the same.
 - enable the Rsync service on your Synology: `Control Panel --> File services --> "rsync" tab.
@@ -1348,9 +1331,9 @@ chmod 600 syno.pw
 
 - go to `Data Protection --> Rsync Tasks --> Add` to set up the rsync task on TrueNAS. 
   - Select the `rsync` user created earlier. Choose `module` under the `rsync mode` drop down
-  - For the `module name` enter the root share of the synology. For example, if a share is `\\<Syno_nas_IP>\photos` then enter just `photos` for the module. This is case sensitive!
+  - For the `module name` enter the root share of the Synology. For example, if a share is `\\<Syno_nas_IP>\photos` then enter just `photos` for the module. This is case sensitive!
   - `Direction` set to `PULL`
-  - for `Path` set to the dataset / directory inside a dataset where the data copied from Synolgy will be placed
+  - for `Path` set to the dataset / directory inside a dataset where the data copied from Synology will be placed
   - Under `auxiliary parameters` enter: `-hv --dry-run --password-file=<path-to-your-file> --log-file=<path-to-your-log-file>` which for our example would be `-hv --dry-run --password-file=/mnt/volume1/web/logging/syno.pw --log-file=/mnt/volume1/web/logging/syno_sync.log`
   - Ensure `Recursive` is checked
   - Ensure `enabled` is checked
@@ -1391,9 +1374,9 @@ add details about filebrowser
 ## 30.)  Automated APP Backups
 <div id="app_backups"></div>
 
-I have a script that i run weekly that will backup the app directory for each of my applications. The scrpt first stops the applocation, makes a TAR file of the app direcotry, moves it to your desired location, and restarts the application. It sends an email with the logs of the process when complete. This way i always have a backup archive of my app containers. It will also save multiple backups to a pre-configured level. the default is to save thre last 4x backups. 
+I have a script that i run weekly that will backup the app directory for each of my applications. The script first stops the application, makes a TAR file of the app directory, moves it to your desired location, and restarts the application. It sends an email with the logs of the process when complete. This way i always have a backup archive of my app containers. It will also save multiple backups to a pre-configured level. the default is to save the last 4x backups. 
 
-the script can be found here: https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/truenas_app_backup.sh
+the script can be found here: https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/TrueNAS_app_backup.sh
 
 either a cron job under `system --> Advanced Settings` or edit `nano /etc/crontab` and add an entry there to run the script weekly. 
 
@@ -1407,14 +1390,14 @@ to use `./storcli64 show all` and see the listing of your different HBAs availab
 
 ```
 CLI Version = 007.3306.0000.0000 Feb 21, 2025
-Operating system = Linux 6.12.15-production+truenas
+Operating system = Linux 6.12.15-production+TrueNAS
 Status Code = 0
 Status = Success
 Description = None
 
 Number of Controllers = 2
-Host Name = truenas
-Operating System  = Linux 6.12.15-production+truenas
+Host Name = TrueNAS
+Operating System  = Linux 6.12.15-production+TrueNAS
 StoreLib IT Version = 07.3303.0200.0000
 StoreLib IR3 Version = 16.16-0
 
