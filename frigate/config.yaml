@@ -1,10 +1,24 @@
 mqtt:
   enabled: false
 
+model:
+  path: plus://xxxxxxxxxxxxxxxxxxxxxxxxxx
+  attributes_map:
+    person:
+      - amazon
+      - face
+    car:
+      - amazon
+      - fedex
+      - license_plate
+      - ups
+      - garbage_truck
+
 detectors:
-  coral:
-    type: edgetpu
-    device: usb
+  onnx_0:
+    type: onnx
+  onnx_1:
+    type: onnx
 
 tls:
   enabled: true # Optional: Enable TLS for port 8971
@@ -39,8 +53,8 @@ birdseye:
     max_cameras: 12
 
 ffmpeg:
+  hwaccel_args: preset-nvidia # More information about presets at https://docs.frigate.video/configuration/ffmpeg_presets
   #hwaccel_args: preset-intel-qsv-h265 # More information about presets at https://docs.frigate.video/configuration/ffmpeg_presets
-  hwaccel_args: preset-vaapi # More information about presets at https://docs.frigate.video/configuration/ffmpeg_presets
   input_args: preset-rtsp-generic
   output_args:
     # Optional: output args for detect streams
@@ -68,28 +82,11 @@ objects:
     - motorcycle
     - cat
     - dog
+    - deer
 
 motion:
   # NOTE: Motion detection is required for object detection, setting this to False and leaving detect enable will result in an error on startup.
   enabled: true
-  # Optional: The threshold passed to cv2.threshold to determine if a pixel is different enough to be counted as motion.
-  # Increasing this value will make motion detection less sensitive and decreasing it will make motion detection more sensitive.
-  # The value should be between 1 and 255.
-  threshold: 100
-  # Optional: The percentage of the image used to detect lightning or other substantial changes where motion detection
-  #           needs to recalibrate. (default: 0.8)
-  # Increasing this value will make motion detection more likely to consider lightning or ir mode changes as valid motion.
-  # Decreasing this value will make motion detection more likely to ignore large amounts of motion such as a person approaching
-  # a doorbell camera.
-  lightning_threshold: 0.8
-  # Optional: Minimum size in pixels in the resized motion image that counts as motion
-  # Increasing this value will prevent smaller areas of motion from being detected. Decreasing will
-  # make motion detection more sensitive to smaller moving objects.
-  # As a rule of thumb:
-  #  - 10 - high sensitivity
-  #  - 30 - medium sensitivity
-  #  - 50 - low sensitivity
-  contour_area: 30
 
 notifications:
   enabled: 'true'
@@ -98,14 +95,9 @@ notifications:
 record:
   # WARNING: If recording is disabled in the config, turning it on via the UI or MQTT later will have no effect.
   enabled: true
-  #
-  #(3 x 8TB)*(10.9/12) = 21.8TB = 22,323.2GB = 20,090.88GB @ 90% used capacaity
-  #150 GB / 0.05 days = 3000GB / day
-  #20,090.88GB / 3000GB/day = 6.69 days worth of recordings if recording non-stop 24/7
-  #
   sync_recordings: false # Optional: Sync recordings with disk on startup and once a day.
   retain:
-    days: 0.05 #set this to 1.0 days for final 4x 8TB drive array
+    days: 1
     #   all - save all recording segments regardless of activity
     #   motion - save all recordings segments with any detected motion
     #   active_objects - save all recording segments with active/moving objects
@@ -121,19 +113,19 @@ record:
     # So the args would be -vf setpts=0.02*PTS -r 30 in that case.
     timelapse_args: -vf setpts=PTS/60 -r 25
   alerts:
-    pre_capture: 15 # Optional: Number of seconds before the alert to include
-    post_capture: 15 # Optional: Number of seconds after the alert to include
+    pre_capture: 60 # Optional: Number of seconds before the alert to include
+    post_capture: 60 # Optional: Number of seconds after the alert to include
     retain:
-      days: 0.05 #set this to 6.5 days for final 4x 8TB drive array and see how full drives get
+      days: 150
       #   all - save all recording segments for alerts regardless of activity
       #   motion - save all recordings segments for alerts with any detected motion
       #   active_objects - save all recording segments for alerts with active/moving objects
       mode: active_objects
   detections:
-    pre_capture: 15 # Optional: Number of seconds before the detection to include
-    post_capture: 15 # Optional: Number of seconds after the detection to include
+    pre_capture: 60 # Optional: Number of seconds before the detection to include
+    post_capture: 60 # Optional: Number of seconds after the detection to include
     retain:
-      days: 0.05  #set this to 6.5 days for final 4x 8TB drive array and see how full drives get
+      days: 150
       #   all - save all recording segments for detections regardless of activity
       #   motion - save all recordings segments for detections with any detected motion
       #   active_objects - save all recording segments for detections with active/moving objects
@@ -144,10 +136,10 @@ snapshots:
   enabled: true # Optional: Enable writing jpg snapshot to /media/frigate/clips
   clean_copy: true # Optional: save a clean PNG copy of the snapshot image
   retain:
-    default: .5
+    default: 150
     objects:
-      person: .5
-      car: .5
+      person: 150
+      car: 150
   quality: 70 # Optional: quality of the encoded jpeg, 0-100
 
 semantic_search:
@@ -213,6 +205,11 @@ go2rtc:
       - rtsp://admin:password@192.168.100.10:554/Streaming/Channels/101
     reardoor_sub:
       - rtsp://admin:password@192.168.100.10:554/Streaming/Channels/102
+    #APPLES CAMERA
+    apples:
+      - rtsp://admin:password@192.168.100.16:554/Streaming/Channels/101#video=h264#video_size=2592x1944
+    apples_sub:
+      - rtsp://admin:password@192.168.100.16:554/Streaming/Channels/102#video=h264#video_size=640x360
 
 cameras:
   ###########################
@@ -239,14 +236,14 @@ cameras:
     zones:
       Outside-front-left:
         coordinates: 
-          0.123,0.303,0,0.394,0,1,0.924,1,0.917,0.691,0.777,0.747,0.708,0.704,0.648,0.612,0.637,0.532,0.647,0.462,0.676,0.354,0.747,0.358,0.786,0.18,0.668,0.149,0.449,0.2
+          0,0.326,0,0.394,0,1,0.924,1,0.917,0.691,0.777,0.747,0.708,0.704,0.648,0.612,0.637,0.532,0.647,0.462,0.676,0.354,0.747,0.358,0.767,0.25,0.788,0.165,0.546,0.119,0.161,0.22
         inertia: 3
         loitering_time: 0
     motion:
       mask: 
         0.907,0.242,0.828,0.192,0.784,0.205,0.773,0.248,0.768,0.328,0.751,0.365,0.717,0.362,0.689,0.364,0.674,0.374,0.667,0.402,0.654,0.457,0.647,0.494,0.644,0.528,0.648,0.568,0.658,0.605,0.679,0.64,0.709,0.682,0.736,0.708,0.773,0.733,0.882,0.604,0.895,0.509
-      threshold: 60
-      contour_area: 30
+      threshold: 30
+      contour_area: 16
       improve_contrast: true
     review:
       detections:
@@ -256,7 +253,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: front_left_sub
+      streams:
+        front_left_sub: front_left_sub
     ui:
       order: 0
       dashboard: true
@@ -286,12 +284,15 @@ cameras:
     zones:
       Outside-Front-Right:
         coordinates: 
-          0.006,0.987,0.7,0.92,0.729,0.758,0.892,0.653,0.997,0.66,0.997,0.164,0.827,0.113,0.641,0.082,0.387,0.089,0.184,0.129,0.037,0.182,0.005,0.204
+          0.006,0.987,0.7,0.92,0.729,0.758,0.892,0.653,0.997,0.66,0.997,0.164,1,0,0.782,0,0.412,0,0.208,0,0.008,0.094,0.005,0.204
         inertia: 3
         loitering_time: 0
     motion:
       mask: 
         0.215,0.979,0.623,0.943,0.705,0.923,0.732,0.765,0.892,0.662,0.996,0.666,0.996,0.99
+      threshold: 30
+      contour_area: 16
+      improve_contrast: true
     review:
       detections:
         required_zones: Outside-Front-Right
@@ -300,7 +301,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: front_right_sub
+      streams:
+        front_right_sub: front_right_sub
     ui:
       order: 1
     birdseye:
@@ -329,7 +331,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: drive_sub
+      streams:
+        drive_sub: drive_sub
     ui:
       order: 2
     birdseye:
@@ -337,21 +340,25 @@ cameras:
     zones:
       driveway:
         coordinates: 
-          0.002,0.995,0.76,0.991,0.779,0.622,0.828,0.313,0.848,0.26,0.85,0.16,0.845,0.099,0.643,0.017,0.632,0.104,0.568,0.147,0.469,0.082,0.392,0.094,0.456,0.193,0.352,0.26,0.279,0.142,0.004,0.075
+          0.002,0.995,0.76,0.991,0.779,0.622,0.828,0.313,0.848,0.26,0.85,0.16,0.843,0.087,0.862,0,0.83,0,0.649,0,0.632,0.104,0.568,0.147,0.469,0.082,0.462,0,0.378,0,0.392,0.094,0.456,0.193,0.352,0.26,0.279,0.142,0.227,0,0.004,0
         loitering_time: 0
+        inertia: 3
     motion:
       mask:
         - 0.279,0.135,0.354,0.256,0.45,0.192,0.39,0.095
         - 0.474,0.003,0.475,0.077,0.567,0.139,0.629,0.098,0.642,0.012
         - 0.867,0.005,0.847,0.095,0.855,0.183,0.853,0.246,0.841,0.298,0.828,0.334,0.806,0.478,0.787,0.598,0.767,0.991,0.999,0.992,0.997,0.006
+      threshold: 30
+      contour_area: 16
+      improve_contrast: true
     review:
       detections:
+        required_zones: driveway
+      alerts:
         required_zones: driveway
   ###########################
   #PATIO CANMERA
   ###########################
-      alerts:
-        required_zones: driveway
   patio:
     enabled: true
     webui_url: http://192.168.100.12
@@ -373,23 +380,31 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: patio_sub
+      streams:
+        patio_sub: patio_sub
     ui:
       order: 3
     birdseye:
       order: 3
     zones:
       Patio:
-        coordinates: 0.002,0.121,0.001,0.995,0.997,0.992,0.991,0.013,0.257,0.006
+        coordinates: 
+          0,0.662,0.001,0.995,0.997,0.992,0.991,0.013,0.265,0.008,0.283,0.251,0.297,0.392,0.298,0.47
+#summer:        coordinates: 0.002,0.121,0.001,0.995,0.997,0.992,0.991,0.013,0.257,0.006
         loitering_time: 0
+        inertia: 3
     review:
       detections:
+        required_zones: Patio
+      alerts:
         required_zones: Patio
   ###########################
   #GARAGE CANMERA
   ###########################
-      alerts:
-        required_zones: Patio
+    motion:
+      threshold: 30
+      contour_area: 16
+      improve_contrast: true
   garage:
     enabled: true
     webui_url: http://192.168.100.13
@@ -411,7 +426,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: garage_sub
+      streams:
+        garage_sub: garage_sub
     ui:
       order: 4
     birdseye:
@@ -420,18 +436,20 @@ cameras:
       garage_zone:
         coordinates: 0.989,0.013,0.004,0.013,0.003,0.995,0.995,0.991
         loitering_time: 0
+        objects:
+          - person
     review:
       detections:
+        required_zones: garage_zone
+      alerts:
         required_zones: garage_zone
   ###########################
   #SHED CANMERA
   ###########################
-      alerts:
-        required_zones: garage_zone
-    objects:
-      filters:
-        car:
-          mask: 0.002,0.006,0.002,0.992,0.999,0.997,0.994,0.008
+    motion:
+      threshold: 30
+      contour_area: 10
+      improve_contrast: true
   shed:
     enabled: true
     webui_url: http://192.168.100.14
@@ -453,33 +471,40 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: shed_sub
+      streams:
+        shed_sub: shed_sub
     ui:
       order: 5
     birdseye:
       order: 5
     zones:
       shed_zone:
+#summer:          0.327,0.992,0.999,0.993,0.995,0.857,0.746,0.819,0.733,0.264,0.814,0.279,0.805,0.619,0.949,0.61,0.971,0.3,0.616,0.208,0.522,0.217,0.515,0.372,0.492,0.384,0.485,0.213,0.302,0.233,0.274,0.178,0.176,0.192,0.205,0.611
         coordinates: 
-          0.327,0.992,0.999,0.993,0.995,0.857,0.746,0.819,0.733,0.264,0.814,0.279,0.805,0.619,0.949,0.61,0.971,0.3,0.616,0.208,0.522,0.217,0.515,0.372,0.492,0.384,0.485,0.213,0.302,0.233,0.274,0.178,0.176,0.192,0.205,0.611
+          0.327,0.992,0.999,0.993,1,0.808,0.921,0.776,0.925,0.744,0.949,0.61,0.971,0.3,0.616,0.208,0.522,0.217,0.511,0.224,0.506,0.218,0.485,0.213,0.302,0.233,0.274,0.178,0.176,0.192,0.205,0.611
         loitering_time: 0
         inertia: 3
     motion:
+#summer        - 0.003,0.003,0.206,0.008,0.165,0.097,0.201,0.61,0.326,0.994,0.002,0.995
+#summer        - 0.999,0.854,0.747,0.819,0.735,0.267,0.813,0.277,0.813,0.614,0.952,0.612,0.974,0.299,0.613,0.202,0.524,0.207,0.515,0.374,0.496,0.385,0.487,0.211,0.306,0.232,0.277,0.178,0.173,0.19,0.167,0.103,0.214,0.001,0.999,0.002
       mask:
         - 0.003,0.003,0.206,0.008,0.165,0.097,0.201,0.61,0.326,0.994,0.002,0.995
-        - 0.999,0.854,0.747,0.819,0.735,0.267,0.813,0.277,0.813,0.614,0.952,0.612,0.974,0.299,0.613,0.202,0.524,0.207,0.515,0.374,0.496,0.385,0.487,0.211,0.306,0.232,0.277,0.178,0.173,0.19,0.167,0.103,0.214,0.001,0.999,0.002
+        - 1,0.79,0.934,0.767,0.932,0.735,0.941,0.709,0.943,0.677,0.952,0.612,0.974,0.299,0.613,0.202,0.524,0.207,0.513,0.205,0.498,0.208,0.487,0.211,0.306,0.232,0.277,0.178,0.173,0.19,0.167,0.103,0.214,0.001,0.999,0.002
+      threshold: 30
+      contour_area: 10
+      improve_contrast: true
     review:
       detections:
         required_zones: shed_zone
-  ###########################
-  #NORTH EAST CANMERA
-  ###########################
       alerts:
         required_zones: shed_zone
     objects:
       filters:
         person:
           mask: 0.479,0.269,0.48,0.39,0.526,0.396,0.534,0.273
+  ###########################
+  #NORTH EAST CANMERA
+  ###########################
   north_east:
     enabled: true
     webui_url: http://192.168.100.5
@@ -501,27 +526,32 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: north_east_sub
+      streams:
+        north_east_sub: north_east_sub
     ui:
       order: 6
     birdseye:
       order: 6
     zones:
       northeast_zone:
-        coordinates: 0.224,0.01,0.23,0.992,0.896,0.992,0.665,0.485,0.542,0.255,0.547,0.004
+        coordinates: 
+          0.224,0.01,0.23,0.992,0.896,0.992,0.665,0.485,0.542,0.255,0.547,0.004
         loitering_time: 0
     motion:
       mask:
         - 0.55,0.003,0.547,0.253,0.9,0.994,0.998,0.996,0.998,0.005
         - 0.003,0.003,0.003,0.995,0.226,0.995,0.218,0.006
+      threshold: 30
+      contour_area: 16
+      improve_contrast: true
     review:
       detections:
+        required_zones: northeast_zone
+      alerts:
         required_zones: northeast_zone
   ###########################
   #NORTH WEST CANMERA
   ###########################
-      alerts:
-        required_zones: northeast_zone
   north_west:
     enabled: true
     webui_url: http://192.168.100.6
@@ -543,7 +573,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: north_west_sub
+      streams:
+        north_west_sub: north_west_sub
     ui:
       order: 7
     birdseye:
@@ -551,14 +582,18 @@ cameras:
     zones:
       northwest1:
         coordinates: 
-          0.845,0.684,0.629,0.591,0.446,0.732,0.446,0.902,0.592,0.991,0.866,0.994,0.916,0.579,0.862,0.419
+          0.796,0.588,0.629,0.591,0.446,0.732,0.446,0.902,0.592,0.991,0.866,0.994,0.916,0.579,0.862,0.419
         loitering_time: 0
+        inertia: 3
       northwest2:
         coordinates: 0.001,0.634,0.234,0.845,0.242,0.988,0.003,0.99
         loitering_time: 0
     motion:
       mask: 
-        0.001,0.008,0.004,0.625,0.232,0.831,0.445,0.736,0.624,0.585,0.841,0.674,0.86,0.407,0.921,0.541,0.995,0.452,0.995,0.005
+        0.001,0.008,0.004,0.625,0.232,0.831,0.445,0.736,0.624,0.585,0.792,0.583,0.86,0.407,0.921,0.541,0.995,0.452,0.995,0.005
+      threshold: 30
+      contour_area: 11
+      improve_contrast: true
     review:
       detections:
         required_zones:
@@ -568,6 +603,9 @@ cameras:
         required_zones:
           - northwest1
           - northwest2
+  ###########################
+  #BACKYARD CANMERA
+  ###########################
   backyard:
     enabled: true
     webui_url: http://192.168.100.7
@@ -589,27 +627,34 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: backyard_sub
+      streams:
+        backyard_sub: backyard_sub
     ui:
       order: 8
     birdseye:
       order: 8
     zones:
       backyard_zone:
+#summer:0.003,0.006,0.003,0.988,0.994,0.988,0.996,0.393,0.947,0.393,0.932,0.683,0.866,0.666,0.857,0.425,0.761,0.403,0.764,0.68,0.748,0.749,0.688,0.756,0.673,0.894,0.615,0.903,0.617,0.777,0.653,0.298,0.49,0.32,0.321,0.287,0.312,0.252,0.222,0.255,0.234,0.012      
         coordinates: 
-          0.003,0.006,0.003,0.988,0.994,0.988,0.996,0.393,0.947,0.393,0.932,0.683,0.866,0.666,0.857,0.425,0.761,0.403,0.764,0.68,0.748,0.749,0.688,0.756,0.673,0.894,0.615,0.903,0.617,0.777,0.653,0.298,0.49,0.32,0.355,0.399,0.361,0.483,0.214,0.479,0.234,0.012
+          0.003,0.006,0.003,0.988,0.878,0.991,0.739,0.948,0.673,0.894,0.615,0.903,0.617,0.777,0.653,0.298,0.49,0.32,0.321,0.287,0.312,0.252,0.222,0.255,0.234,0.012
         loitering_time: 0
+        inertia: 3
     motion:
+#summer: 0.239,0.004,0.227,0.247,0.331,0.244,0.322,0.28,0.491,0.314,0.654,0.291,0.618,0.898,0.671,0.888,0.687,0.745,0.745,0.745,0.761,0.674,0.755,0.398,0.859,0.414,0.871,0.664,0.929,0.679,0.946,0.385,0.999,0.385,0.998,0
       mask: 
-        0.239,0.004,0.217,0.472,0.357,0.478,0.35,0.393,0.491,0.314,0.654,0.291,0.618,0.898,0.671,0.888,0.687,0.745,0.745,0.745,0.761,0.674,0.755,0.398,0.859,0.414,0.871,0.664,0.929,0.679,0.946,0.385,0.999,0.385,0.998,0
+        0.239,0.004,0.227,0.247,0.331,0.244,0.322,0.28,0.491,0.314,0.654,0.291,0.618,0.898,0.671,0.888,0.757,0.942,0.898,0.987,0.994,0.99,0.999,0.385,0.998,0
+      threshold: 30
+      contour_area: 11
+      improve_contrast: true
     review:
       detections:
+        required_zones: backyard_zone
+      alerts:
         required_zones: backyard_zone
   ###########################
   #FRONTDOOR CANMERA
   ###########################
-      alerts:
-        required_zones: backyard_zone
   frontdoor:
     enabled: true
     webui_url: http://192.168.100.9
@@ -631,23 +676,33 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: frontdoor_sub
+      streams:
+        frontdoor_sub: frontdoor_sub
     ui:
       order: 9
     birdseye:
       order: 9
     zones:
       front_door_zone:
-        coordinates: 0.001,0.004,0.003,0.986,0.995,0.979,0.98,0.019
+        coordinates: 
+          0.001,0.004,0.003,0.986,0.995,0.979,0.98,0.019,0.714,0.014,0.711,0.066,0.707,0.171,0.605,0.14,0.605,0.039,0.521,0.008,0.506,0.338,0.338,0.281,0.342,0.014
         loitering_time: 0
+        inertia: 3
     review:
       detections:
+        required_zones: front_door_zone
+      alerts:
         required_zones: front_door_zone
   ###########################
   #REARDOOR CANMERA
   ###########################
-      alerts:
-        required_zones: front_door_zone
+    motion:
+      threshold: 30
+      contour_area: 14
+      improve_contrast: true
+      mask:
+        - 0.35,0.062,0.343,0.271,0.5,0.33,0.515,0.021,0.345,0.006
+        - 0.611,0.034,0.607,0.138,0.704,0.168,0.708,0.054
   reardoor:
     enabled: true
     webui_url: http://192.168.100.9
@@ -669,7 +724,8 @@ cameras:
     record:
       enabled: true
     live:
-      stream_name: reardoor_sub
+      streams:
+        reardoor_sub: reardoor_sub
     ui:
       order: 10
     birdseye:
@@ -677,42 +733,95 @@ cameras:
     zones:
       rear_zone:
         coordinates: 
-          0.003,0.012,0.003,0.988,0.995,0.987,0.991,0.014,0.65,0.009,0.637,0.46,0.366,0.499,0.347,0.015
+          0.003,0.012,0.003,0.988,0.995,0.987,0.991,0.014,0.65,0.009,0.602,0,0.406,0.011,0.347,0.015
         loitering_time: 0
+        inertia: 3
     review:
       detections:
+        required_zones: rear_zone
+      alerts:
+        required_zones: rear_zone
+  ###########################
+  #APPLES CANMERA
+  ###########################
+    motion:
+      threshold: 31
+      contour_area: 16
+      improve_contrast: true
+  apples:
+    enabled: true
+    webui_url: http://192.168.100.16
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/apples # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+            - detect
+    detect:
+      enabled: true
+      width: 864
+      height: 648
+      fps: 5
+    record:
+      enabled: true
+    live:
+      streams:
+        apples_sub: apples_sub
+    onvif:
+      host: 192.168.100.16
+      port: 80
+      user: ''
+      password: ''
+    ui:
+      order: 11
+    birdseye:
+      order: 11
+    zones:
+      rear_zone:
+        coordinates: 
+          0.003,0.012,0.003,0.988,0.995,0.987,0.991,0.014,0.65,0.009,0.602,0,0.406,0.011,0.347,0.015
+        loitering_time: 0
+        inertia: 3
+    review:
+      detections:
+        required_zones: rear_zone
+      alerts:
         required_zones: rear_zone
 ###########################
 #CANMERA GROUPS
 ###########################
-      alerts:
-        required_zones: rear_zone
+    motion:
+      threshold: 30
+      contour_area: 18
+      improve_contrast: true
 camera_groups:
   front:
     cameras:
       - front_left
       - front_right
       - drive
-    icon: house #https://lucide.dev/icons/
+    icon: LuStore #https://lucide.dev/icons/
     order: 0
   back:
     cameras:
       - patio
       - shed
       - backyard
-    icon: house #https://lucide.dev/icons/
+      - apples
+    icon: LuWheat #https://lucide.dev/icons/
     order: 1
   inside:
     cameras:
       - garage
       - frontdoor
       - reardoor
-    icon: house #https://lucide.dev/icons/
+    icon: LuHouse       #https://lucide.dev/icons/
     order: 2
   north:
     cameras:
       - north_east
       - north_west
-    icon: house #https://lucide.dev/icons/
+    icon: LuMoveUp #https://lucide.dev/icons/
     order: 3
-version: 0.15-1
+version: 0.16-0
