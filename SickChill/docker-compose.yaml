@@ -2,12 +2,10 @@ services:
   sickchill:
     container_name: sickchill
     environment:
-      - PUID=3001
-      - PGID=3000
+      - PUID=3013
+      - PGID=3013
     image: sickchill/sickchill:latest
-    network_mode: "container:gluetun"
-    #ports:         not needed as we will be passing through the gluetun app
-    #  - 8081:8081/tcp  #needs to be added to the ports used by the gluetun app
+    network_mode: container:gluetun
     pull_policy: always
     restart: unless-stopped
     volumes:
@@ -15,4 +13,4 @@ services:
       - /mnt/volume1/apps/sickchill/config:/config
       - /mnt/volume1/apps/sickchill/data:/data
       - /mnt/volume1/apps/sickchill/tv:/tv
-  
+      - /mnt/volume1/apps/torrent/bt/blackhole:/blackhole
