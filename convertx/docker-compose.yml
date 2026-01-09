@@ -1,0 +1,16 @@
+services:
+  convertx:
+    container_name: Convertx
+    environment:
+      ACCOUNT_REGISTRATION: True
+      ALLOW_UNAUTHENTICATED: False
+      HTTP_ALLOWED: True
+      JWT_SECRET: secret
+      PGID: 3016
+      PUID: 3016
+    image: ghcr.io/c4illin/convertx:latest
+    ports:
+      - '3522:3000'
+    restart: unless-stopped
+    volumes:
+      - /mnt/volume1/apps/convertx:/app/data:rw

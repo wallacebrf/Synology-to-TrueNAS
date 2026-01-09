@@ -1,0 +1,12 @@
+services:
+  prowlarr:
+    container_name: prowlarr
+    environment:
+      - PUID=3007
+      - PGID=3007
+      - TZ=Chicago
+    image: lscr.io/linuxserver/prowlarr:latest
+    network_mode: container:gluetun
+    restart: unless-stopped
+    volumes:
+      - /mnt/volume1/apps/prowlarr:/config
