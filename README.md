@@ -4,6 +4,15 @@ My Guide when I moved from Synology to TrueNAS
 To-Do List - items i need to update in this guide as my system is 100% working for a while now (updated 1/6/2026):
 - <ins>jellyfin</ins>
 - <ins>Tautulli</ins>
+- <ins>TFTP_Server</ins>
+- <ins>convertx</ins>
+- <ins>dozzel</ins>
+- <ins>filebrowser</ins>
+- <ins>prowlarr</ins>
+- <ins>sftpgo</ins>
+- <ins>docker logging script</ins>
+- <ins>ZFS scrub status notifier</ins>
+- <ins>ZFS allocation scheduled email</ins>
 - <ins>Setup Grafana Dashboard for TrueNAS</ins>
 - <ins>Cloud backups to BackBlaze B2 Bucket</ins>
 - <ins>Replace “DS File” app – Android Only</ins>
@@ -14,20 +23,20 @@ To-Do List - items i need to update in this guide as my system is 100% working f
 - <ins>arc resize script</ins>
 - <ins>disk queue depth script due to "known" issues with WD gold drives</ins>
 - <ins>immich</ins>
-- <ins>prowler</ins>
 - <ins>enabling NTP server in TrueNAS needed for Frigate security cameras to update NTP without needing to access the Internet</ins>
 - <ins>turning off snapshots on certain directories</ins>
 - <ins>replacing Nvidia GPU with different card</ins>
 - <ins>add details about log errors that occur when logging HBA temps</ins>
 - <ins>FileBrowser app</ins>
-- <ins>Update all docker-compose files to latest compose files</ins>
 - <ins>Update instructions here and there as the guide started with 25.04 and the new 25.10 version changed GUI layouts a bit</ins>
 - <ins>Update hardware_logger.sh script</ins>
 - <ins>Update multireport_sendemail.py script</ins>
 - <ins>Update TrueNAS_snmp.sh script</ins>
 - <ins>TrueNAS_app_backup.sh</ins>
 - <ins>detail "Frigate Monitor" script</ins>
+- <ins>detail camera reboot script</ins>
 - <ins>detail YT-DLP as it now needs DENO</ins>
+- <ins>detail JBOD</ins>
 
 
 
