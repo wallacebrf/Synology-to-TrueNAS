@@ -3,23 +3,23 @@ services:
     environment:
       MYSQL_DATABASE: home
       MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password1
-      MYSQL_USER: brian
-      PGID: 3005
-      PUID: 3006
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      PGID: 3018
+      PUID: 3018
     image: mysql:latest
     ports:
       - '3306:3306'
     pull_policy: always
     restart: unless-stopped
     volumes:
-      - /mnt/volume1/hosting/sql:/var/lib/mysql   #Docker will create the volume for you in the /var/lib/docker/volumes folder.
+      - /mnt/volume1/hosting/sql:/var/lib/mysql
   nginx:
     depends_on:
       - php
     environment:
-      PGID: 3005
-      PUID: 3006
+      PGID: 3018
+      PUID: 3018
     image: nginx:latest
     links:
       - php
@@ -37,8 +37,8 @@ services:
     depends_on:
       - mysql
     environment:
-      PGID: 3005
-      PUID: 3006
+      PGID: 3018
+      PUID: 3018
     pull_policy: always
     restart: unless-stopped
     volumes:
@@ -47,10 +47,10 @@ services:
     depends_on:
       - mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password1
-      PGID: 3005
+      MYSQL_ROOT_PASSWORD: password
+      PGID: 3018
       PMA_HOST: mysql
-      PUID: 3006
+      PUID: 3018
     image: phpmyadmin/phpmyadmin:latest
     ports:
       - '82:80'
