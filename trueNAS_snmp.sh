@@ -31,9 +31,9 @@ from_email_address="email@email.com"
 #########################################################
 
 
-log_file_location="/mnt/volume1/web/logging/notifications"
+log_file_location="/mnt/volume1/logging/notifications"
 lock_file_location="$log_file_location/trueNAS_snmp.lock"
-config_file_location="/mnt/volume1/web/config/trueNAS_snmp_config.txt"
+config_file_location="/mnt/volume1/hosting/web/config/config_files/trueNAS_snmp_config.txt"
 
 nas_name="TrueNAS" #this is only needed if the script cannot access the server name over SNMP, or if the config file is unavailable and will be used in any error messages
 capture_interval_adjustment=3
@@ -60,6 +60,13 @@ debug=0
 if [[ $( whoami ) != "root" ]]; then
 	echo -e "ERROR - Script requires ROOT permissions, exiting script"
 	exit 1
+fi
+
+if [ -d "/mnt/ramfs" ]; then
+	echo "RAM disk \"/mnt/ramfs\" Exists"
+else
+	echo "creating RAM disk \"/mnt/ramfs\""
+	mkdir /mnt/ramfs && mount -t tmpfs -o size=100m ramdisk /mnt/ramfs
 fi
 
 #check that the required working directory is available, readable, and writable. it should be since we are root, but better check
@@ -116,9 +123,9 @@ function send_mail(){
 		address_explode=(`echo "$email_address" | sed 's/;/\n/g'`)
 		local bb=0
 		for bb in "${!address_explode[@]}"; do
-			python3 /mnt/volume1/web/logging/multireport_sendemail.py --subject "${3}" --to_address "${address_explode[$bb]}" --mail_body_html "$now - ${2}" --override_fromemail "$from_email_address"
+			python3 /mnt/volume1/logging/multireport_sendemail.py --subject "${3}" --to_address "${address_explode[$bb]}" --mail_body_html "$now - ${2}" --override_fromemail "$from_email_address"
 		done
-  		echo -n "$current_time" > "${1}"
+		echo -n "$current_time" > "${1}"
 	else
 		echo -e "Only $time_diff minuets have passed since the last notification, email will be sent every ${4} minutes. $(( ${4} - $time_diff )) Minutes Remaining Until Next Email\n"
 	fi
@@ -228,61 +235,91 @@ if [ -r "$config_file_location" ]; then
 				
 				xx=0
 				while IFS= read -r line; do	
+					if [[ $xx -eq 0 ]]; then
+						#since this is the first time we have performed a SNMP request to the switch, let's make sure we did not receive any errors that could be caused by things like bad passwords, bad username, incorrect auth or privacy types etc
+						#if we receive an error now, then something is wrong with the SNMP settings and this script will not be able to function so we should exit out of it. 
+						#different errors and responses can be received from the UPS network management card when SNMP fails
+						#1.) wrong username --> "Authentication failed for"
+						#2.) wrong authentication/privacy protocol/password --> "Timeout: No Response from"
+						#3.) too short of auth/privacy password --> "Error: passphrase chosen is below the length requirements"
+						#4.) wrong IP/Port --> "snmpwalk: Timeout"
+						#5.) bad IOD --> "No Such Instance currently exists at this OID"
+						#6.) result is blank
+
+												
+						if [[ "$line" == "Authentication failed for"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP Authentication Failed." "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+						
+						if [[ "$line" == "snmpwalk: Unknown user name"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP Authentication unknown user name." "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+									
+						if [[ "$line" == "Timeout: No Response from"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP Timeout No Response from UPS." "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+									
+						if [[ "$line" == "Error: passphrase chosen is below the length requirements"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP passphrase chosen is below the length requirements" "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+									
+						if [[ "$line" == "snmpwalk: Timeout"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP where the SNMP request timed out" "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+									
+						if [[ "$line" == "No Such Instance currently exists at this OID"* ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP No Such Instance currently exists at this OID" "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+									
+						if [[ "$line" == "" ]]; then 
+							send_mail "$log_file_location/${0##*/}_SNMP-Error_last_message_sent.txt" "ALERT TrueNAS appears to have an issue with SNMP as it returned blank data." "ALERT script \"${0##*/}\" - appears to have an issue with SNMP" 60
+							exit 1
+						fi
+					fi
+								
+								
 					zpool_index+=($(filter_data "INTEGER: " "$line"))
 					let xx=xx+1
-				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.1 -Ovt)
+				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.1 -Ovt 2>&1)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_name+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.2 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_health+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.3 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_read_ops+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.4 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_write_ops+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.5 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_write_ops+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.5 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_read_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.6 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_write_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.7 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zpool_write_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.1.1.1.7 -Ovt)
-
-
-
-		
+				
 				xx=0
 				for xx in "${!zpool_index[@]}"; do
 					post_url=$post_url"$measurement,nas_name=$nas_name,zpool_index=${zpool_index[$xx]} zpool_name=\"${zpool_name[$xx]}\",zpool_health=\"${zpool_health[$xx]}\",zpool_read_ops=${zpool_read_ops[$xx]},zpool_write_ops=${zpool_write_ops[$xx]},zpool_read_bytes=${zpool_read_bytes[$xx]},zpool_write_bytes=${zpool_write_bytes[$xx]}
@@ -301,34 +338,24 @@ if [ -r "$config_file_location" ]; then
 				zvol_available_bytes=()
 				zvol_referenced_bytes=()
 				
-				xx=0
 				while IFS= read -r line; do	
 					zvol_index+=($(filter_data "INTEGER: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.2.1.1.1 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zvol_descr+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.2.1.1.2 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zvol_used_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.2.1.1.3 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zvol_available_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.2.1.1.4 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zvol_referenced_bytes+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.2.1.1.5 -Ovt)
 
 
@@ -354,58 +381,40 @@ if [ -r "$config_file_location" ]; then
 				zfs_arc_cache_hit_ratio=()
 				zfs_arc_cache_miss_ratio=()
 				
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_size+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.1.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_meta+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.2.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_data+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.3.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_hits+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.4.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_misses+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.5.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arcc+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.6.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_miss_percent+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.8.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_cache_hit_ratio+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.9.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_arc_cache_miss_ratio+=($(filter_data "STRING: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.3.10.0 -Ovt)
 
 				xx=0
@@ -424,34 +433,24 @@ if [ -r "$config_file_location" ]; then
 				zfsl2arc_write=()
 				zfsl2arc_size=()
 				
-				xx=0
 				while IFS= read -r line; do	
 					zfsl2arc_hits+=($(filter_data "Counter32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.4.1.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfsl2arc_misses+=($(filter_data "Counter32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.4.2.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfsl2arc_read+=($(filter_data "Counter32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.4.3.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfsl2arc_write+=($(filter_data "Counter32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.4.4.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfsl2arc_size+=($(filter_data "Gauge32: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.4.5.0 -Ovt)
 
 				xx=0
@@ -467,22 +466,16 @@ if [ -r "$config_file_location" ]; then
 				zfs_zilstat_ops5sec=()
 				zfs_zilstat_ops10sec=()
 				
-				xx=0
 				while IFS= read -r line; do	
 					zfs_zilstat_ops1sec+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.5.1.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_zilstat_ops5sec+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.5.2.0 -Ovt)
 				#########################################	
-				xx=0
 				while IFS= read -r line; do	
 					zfs_zilstat_ops10sec+=($(filter_data "Counter64: " "$line"))
-					let xx=xx+1
 				done < <(snmpwalk -v3 -l authPriv -u $nas_snmp_user -a $snmp_auth_protocol -A $snmp_authPass1 -x $snmp_privacy_protocol -X $snmp_privPass2 $snmp_device_url:161 1.3.6.1.4.1.50536.1.5.3.0 -Ovt)
 				
 				xx=0
@@ -586,7 +579,7 @@ if [ -r "$config_file_location" ]; then
 					raw_data=$(echo ${raw_data// MHz/}) #remove all instances of " MHz"
 					raw_data=$(echo ${raw_data// /}) #replace all remaining spaces with ""
 					
-					echo -e "\n\n$raw_data\n\n"
+					#echo -e "\n\n$raw_data\n\n"
 					
 					raw_data=(`echo $raw_data | sed 's/,/\n/g'`) #explode the results into an array so we can extract each item
 
@@ -631,7 +624,11 @@ if [ -r "$config_file_location" ]; then
 					
 					power_draw=${raw_data[18]}
 					if [[ "$power_draw" == "[NotSupported]" ]]; then
-						power_draw=0
+						power_draw=-1
+					fi
+					
+					if [[ "$power_draw" == "[N/A]" ]]; then
+						power_draw=-1
 					fi
 					
 					power_limit=${raw_data[19]}
@@ -654,7 +651,6 @@ if [ -r "$config_file_location" ]; then
 					
 					post_url=$post_url"$measurement,nas_name=$nas_name gpuTemperature=$gpuTemperature,gpuName=\"$gpuName\",gpuFanSpeed=$gpuFanSpeed,gpu_bus_id=\"$gpu_bus_id\",vbios_version=\"$vbios_version\",driver_version=\"$driver_version\",pcie_link_gen_max=$pcie_link_gen_max,utilization_gpu=$utilization_gpu,utilization_memory=$utilization_memory,memory_total=$memory_total,memory_free=$memory_free,memory_used=$memory_used,gpu_serial=\"$gpu_serial\",pstate=\"$pstate\",encoder_stats_sessionCount=$encoder_stats_sessionCount,encoder_stats_averageFps=$encoder_stats_averageFps,encoder_stats_averageLatency=$encoder_stats_averageLatency,temperature_memory=$temperature_memory,power_draw=$power_draw,power_limit=$power_limit,clocks_current_graphics=$clocks_current_graphics,clocks_current_sm=$clocks_current_sm,clocks_current_memory=$clocks_current_memory,clocks_current_video=$clocks_current_video
 "
-					echo "$post_url"
 				fi
 			else
 				echo "Skipping NVidia Capture"
@@ -665,7 +661,9 @@ if [ -r "$config_file_location" ]; then
 				echo "$post_url"
 			fi
 			
-			curl -XPOST "http://$influxdb_host:$influxdb_port/api/v2/write?bucket=$influxdb_name&org=$influxdb_org" -H "Authorization: Token $influxdb_pass" --data-raw "$post_url"
+			echo "$post_url" > "/mnt/ramfs/trueNAS_snmp.txt"
+			
+			curl -XPOST "http://$influxdb_host:$influxdb_port/api/v2/write?bucket=$influxdb_name&org=$influxdb_org" -H "Authorization: Token $influxdb_pass" --data-binary "@/mnt/ramfs/trueNAS_snmp.txt"
 			
 			let i=i+1
 			echo "Capture #$i complete"
