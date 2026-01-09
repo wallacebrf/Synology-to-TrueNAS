@@ -7,45 +7,47 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
-      - PUID=3003
-      - PGID=3002
+      - PUID=3014
+      - PGID=3014
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=openvpn
       - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
       - OPENVPN_USER=user
       - OPENVPN_PASSWORD=password
-      - HEALTH_TARGET_ADDRESS=google.com
-      - HEALTH_VPN_DURATION_INITIAL=30s
-      - HEALTH_VPN_DURATION_ADDITION=10s
-      - HEALTH_SUCCESS_WAIT_DURATION=60s
       - DOT=off
-      - DNS_ADDRESS=103.86.96.100 #nord VPN DNS
+      - DNS_ADDRESS=103.86.96.100
+      - HEALTH_TARGET_ADDRESS=nordvpn.com:443
+      - HEALTH_SUCCESS_WAIT_DURATION=86400s
     image: qmcgaw/gluetun:latest
     ports:
-      - 8888:8888/tcp #proxy port
-      - 8388:8388/tcp #shadowsocket
-      - 8388:8388/udp #shadowsocket
-      - '10095:10095' #qbittorrent web interface
-      - '16881:16881' #torrent download port
-      - 6881:6881/udp #torrent download port
-      - '3410:3001' #chromium HTTPS port (host port 3410, container port 3001)
-      - 8081:8081/tcp #SickChill
-      - '9117:30118' #jackett
-      - '30025:7878' #radarr
-      - '8191:8191' #FlareSolverr
+      - 8888:8888/tcp
+      - 8388:8388/tcp
+      - 8388:8388/udp
+      - '10095:10095'
+      - '16881:16881'
+      - 6881:6881/udp
+      - '3410:3001'
+      - 8081:8081/tcp
+      - '9117:9117'
+      - '30025:7878'
+      - '8191:8191'
+      - '9696:9696'
+      - '8080:8080'
     pull_policy: always
     restart: unless-stopped
     volumes:
       - /mnt/volume1/apps/torrent/gluetun_config:/gluetun
       - >-
-        /mnt/volume1/apps/torrent/us6722.nordvpn.com.tcp443.ovpn:/gluetun/custom.conf
+        /mnt/volume1/apps/torrent/us6723.nordvpn.com.tcp443.ovpn:/gluetun/custom.conf
   qbittorrent:
     container_name: qbittorrent
     depends_on:
-      - gluetun
+      gluetun:
+        condition: service_healthy
+        restart: True
     environment:
-      - PUID=3003
-      - PGID=3002
+      - PUID=3014
+      - PGID=3014
       - TZ=America/Chicago
       - WEBUI_PORT=10095
       - TORRENTING_PORT=16881
@@ -56,3 +58,4 @@ services:
     volumes:
       - /mnt/volume1/apps/torrent/transmission_config:/config
       - /mnt/volume1/apps/torrent/bt:/downloads
+      - /mnt/volume1/apps/torrent/bt/blackhole:/blackhole
