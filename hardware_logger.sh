@@ -300,31 +300,31 @@ if [ -r "$config_file_location"/"$config_file_name" ]; then
 		while [ $i -lt $total_executions ]; do
 		
 			post_url=""
-			if [[ $i -eq 0 ]]; then
-				measurement="HBA_Temp"
-				num_controllers=$(/mnt/volume1/logging/storcli64 show ctrlcount nolog | grep "Count" | sed 's/^.\{19\}//')
-				echo "HBA Controllers Found: $num_controllers"
-			
-				xx=0
-				while [ $xx -lt $num_controllers ]; do
-					hba_name_raw="$(/mnt/volume1/logging/storcli64 show nolog | grep -B 0 -A 3 "Ctl Model" | grep -m 1 " $xx " | cut -c 5- | cut -d 'x' -f 1 | sed 's/.\{2\}$//')"
-					
-					secondString="_"
-					hba_name_raw=${hba_name_raw//\ /$secondString} #replace spaces with underscore
-					hba_name+=("$hba_name_raw")
-					
-					hba_temp+=("$(/mnt/volume1/logging/storcli64 /c$xx show all nolog | egrep Degree | sed 's/^.\{34\}//')")
-					
-					post_url=$post_url"$measurement,nas_name=$nas_name,hba_name=${hba_name[$xx]} hba_temp=${hba_temp[$xx]}
-"
-					if [[ $enable_email_notifications == 1 ]]; then
-						if [[ "${hba_temp[$xx]}" -gt "${hba_max_temp[$xx]}" ]]; then
-							send_mail "$email_last_sent" "Warning HBA \"${hba_name[$xx]}\" on $nas_name has exceeded the max temperature of ${hba_max_temp[$xx]} Degrees C. It currently is reporting a value of ${hba_temp[$xx]} Degrees C." "HBA ALERT for $nas_name" "$email_contents" "HBA Alert" 60
-						fi
-					fi
-					let xx=xx+1
-				done
-			fi
+		#	if [[ $i -eq 0 ]]; then
+		#		measurement="HBA_Temp"
+		#		num_controllers=$(/mnt/volume1/logging/storcli64 show ctrlcount nolog | grep "Count" | sed 's/^.\{19\}//')
+		#		echo "HBA Controllers Found: $num_controllers"
+		#	
+		#		xx=0
+		#		while [ $xx -lt $num_controllers ]; do
+		#			hba_name_raw="$(/mnt/volume1/logging/storcli64 show nolog | grep -B 0 -A 3 "Ctl Model" | grep -m 1 " $xx " | cut -c 5- | cut -d 'x' -f 1 | sed 's/.\{2\}$//')"
+		#			
+		#			secondString="_"
+		#			hba_name_raw=${hba_name_raw//\ /$secondString} #replace spaces with underscore
+		#			hba_name+=("$hba_name_raw")
+		#			
+		#			hba_temp+=("$(/mnt/volume1/logging/storcli64 /c$xx show all nolog | egrep Degree | sed 's/^.\{34\}//')")
+		#			
+		#			post_url=$post_url"$measurement,nas_name=$nas_name,hba_name=${hba_name[$xx]} hba_temp=${hba_temp[$xx]}
+#"
+		#			if [[ $enable_email_notifications == 1 ]]; then
+		#				if [[ "${hba_temp[$xx]}" -gt "${hba_max_temp[$xx]}" ]]; then
+		#					send_mail "$email_last_sent" "Warning HBA \"${hba_name[$xx]}\" on $nas_name has exceeded the max temperature of ${hba_max_temp[$xx]} Degrees C. It currently is reporting a value of ${hba_temp[$xx]} Degrees C." "HBA ALERT for $nas_name" "$email_contents" "HBA Alert" 60
+		#				fi
+		#			fi
+		#			let xx=xx+1
+		#		done
+		#	fi
 			
 			measurement="IPMI_sensors"
 			xx=0
