@@ -1,14 +1,14 @@
 services:
   jackett:
-    image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=3003
-      - PGID=3002
+      - PUID=3007
+      - PGID=3007
       - TZ=America/Chicago
-      - AUTO_UPDATE=true
+      - AUTO_UPDATE=false
+    image: lscr.io/linuxserver/jackett:latest
+    network_mode: container:gluetun
+    restart: unless-stopped
     volumes:
       - /mnt/volume1/apps/jackett/config:/config
       - /mnt/volume1/apps/jackett/blackhole:/blackhole
-    network_mode: "container:gluetun"
-    restart: unless-stopped
