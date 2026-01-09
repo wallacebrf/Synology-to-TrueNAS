@@ -8,8 +8,9 @@ $form_submit_location="index.php?page=13";			#the form submit location. NOTE: i 
 #include_once 'header_yt_dlp.php';					#note, as previously indicated i am running this PHP file through another file which is handling the header details for me. If running this PHP stand alone, uncomment this line to allow proper formatting
 $youtube_folder_location="/var/www/html/youtube";   #this is the directory within the PHP docker container NOT the TrueNAS operating system
 $page_title="Youtube-dlp --> Video/Audio Downloader";
-$web_url_to_youtube_directory="http://192.168.1.8/youtube"; #replace with your TrueNAS IP or replace with your TrueNAS domain name
-$use_sessions=false; #use log in sessions?
+$web_url_to_youtube_directory="https://home.mydomain.com/youtube"; #replace with your TrueNAS IP or replace with your TrueNAS domain name
+$use_sessions=true; #use log in sessions?
+$use_deno=true;
 
 //********************************
 //Code Start
@@ -161,11 +162,11 @@ $generic_error="";
 			should youtube-dl display the user agent information?
 			this is only visible if the log file is viewed 
 			/**************************************/
-			if (($_POST['dump_user_agent'])=="--dump-user-agent"){
-				$dump_user_agent="--dump-user-agent";
-			}else{
-			   $dump_user_agent="";
-			}
+//			if (($_POST['dump_user_agent'])=="--dump-user-agent"){
+//				$dump_user_agent="--dump-user-agent";
+//			}else{
+//			   $dump_user_agent="";
+//			}
 		   
 			/***************************************
 			should youtube-dl list the possible extractor operations?
@@ -453,11 +454,11 @@ $generic_error="";
 			/***************************************
 			should youtube-dl save any annotations of the video to a file?
 			/**************************************/
-			if (($_POST['write_annotations'])=="--write-annotations"){
-				$write_annotations="--write-annotations";
-			}else{
-				$write_annotations="";
-			}
+//			if (($_POST['write_annotations'])=="--write-annotations"){
+//				$write_annotations="--write-annotations";
+//			}else{
+//				$write_annotations="";
+//			}
 			
 			
 			/***************************************
@@ -545,9 +546,11 @@ $generic_error="";
 			format the command to youtube-dl
 			/**************************************/
 			
-			$command="yt-dlp --paths \"".$youtube_folder_location."\" --cache-dir ".$youtube_folder_location." --ffmpeg-location ".$youtube_folder_location."/ffmpeg --default-search auto --restrict-filenames ".$postprocessor_args." ".$extract_audio." ".$extract_audio_keep_video." ".$audio_format." ".$audio_quality." ".$ignore_errors." ".$dump_user_agent." ".$list_extractors." ".$extractor_descriptions." ".$force_generic_extractor." ".$flat_playlist." ".$mark_watched." ".$playlist_start_enable." ".$playlist_start." ".$playlist_end_enbale." ".$playlist_end." ".$playlist_items_enable." ".$playlist_items." ".$max_downloads_enable." ".$max_downloads." ".$process_playlists." ".$no_overwrites." ".$resume_download." ".$no_part." ".$no_mtime." ".$write_discriptions." ".$write_info_json." ".$write_annotations." ".$write_thumbnail." ".$verbose." ".$write_sub." ".$username." ".$password." ".$two_f_auth_code." ".$video_file." > log/yt-dl-progress_".$today['mon']."-".$today['mday']."-".$today['year']."_".$today['hours']."_".$today['minutes']."_".$today['seconds'].".txt  2>&1 &";
-		  
-		  
+			if ($use_deno){
+				$command="yt-dlp --paths \"".$youtube_folder_location."\" --cache-dir ".$youtube_folder_location." --ffmpeg-location ".$youtube_folder_location."/ffmpeg --js-runtimes deno:".$youtube_folder_location." --remote-components ejs:npm --default-search auto --restrict-filenames ".$postprocessor_args." ".$extract_audio." ".$extract_audio_keep_video." ".$audio_format." ".$audio_quality." ".$ignore_errors." ".$list_extractors." ".$extractor_descriptions." ".$force_generic_extractor." ".$flat_playlist." ".$mark_watched." ".$playlist_start_enable." ".$playlist_start." ".$playlist_end_enbale." ".$playlist_end." ".$playlist_items_enable." ".$playlist_items." ".$max_downloads_enable." ".$max_downloads." ".$process_playlists." ".$no_overwrites." ".$resume_download." ".$no_part." ".$no_mtime." ".$write_discriptions." ".$write_info_json." ".$write_thumbnail." ".$verbose." ".$write_sub." ".$username." ".$password." ".$two_f_auth_code." ".$video_file." > log/yt-dl-progress_".$today['mon']."-".$today['mday']."-".$today['year']."_".$today['hours']."_".$today['minutes']."_".$today['seconds'].".txt  2>&1 &";
+			}else{
+				$command="yt-dlp --paths \"".$youtube_folder_location."\" --cache-dir ".$youtube_folder_location." --ffmpeg-location ".$youtube_folder_location."/ffmpeg --default-search auto --restrict-filenames ".$postprocessor_args." ".$extract_audio." ".$extract_audio_keep_video." ".$audio_format." ".$audio_quality." ".$ignore_errors." ".$list_extractors." ".$extractor_descriptions." ".$force_generic_extractor." ".$flat_playlist." ".$mark_watched." ".$playlist_start_enable." ".$playlist_start." ".$playlist_end_enbale." ".$playlist_end." ".$playlist_items_enable." ".$playlist_items." ".$max_downloads_enable." ".$max_downloads." ".$process_playlists." ".$no_overwrites." ".$resume_download." ".$no_part." ".$no_mtime." ".$write_discriptions." ".$write_info_json." ".$write_thumbnail." ".$verbose." ".$write_sub." ".$username." ".$password." ".$two_f_auth_code." ".$video_file." > log/yt-dl-progress_".$today['mon']."-".$today['mday']."-".$today['year']."_".$today['hours']."_".$today['minutes']."_".$today['seconds'].".txt  2>&1 &";
+			}
 		}
 	   
 	   
@@ -576,10 +579,19 @@ $generic_error="";
 		has the user chosen to see what version of youtube-dl is currently installed? 
 		/**************************************/
 		print "<form action=\"".$form_submit_location."\" method=\"post\">";
-		print "</p><input type=\"submit\" name=\"version_check\" value=\"Display Youtube-dlp Version\" /></p></form>";
+		if ($use_deno){
+			print "</p><input type=\"submit\" name=\"version_check\" value=\"Display Youtube-dlp and DENO Version\" /></p></form>";
+		}else{
+			print "</p><input type=\"submit\" name=\"version_check\" value=\"Display Youtube-dlp Version\" /></p></form>";
+		}
 		if(isset($_POST['version_check'])){
 			$output = shell_exec('yt-dlp --version');
 			print "Youtube-dlp Version: $output";
+			if ($use_deno){
+				$output = shell_exec('cd youtube; ./deno --version');
+				print "<br>DENO Version: $output";
+				print "<br>Latest Release of DENO:  <a href=\"https://github.com/denoland/deno/releases\" target=\"blank\">DENO Releases</a> ";
+			}
 		}
 		
 		
@@ -603,14 +615,16 @@ $generic_error="";
 										if ($value!="youtube-nsig"){
 											if ($value!="youtube-sigfuncs"){
 												if ($value!="youtube-sts"){
-													print "<form action=\"".$form_submit_location."\" method=\"post\">";
-													print "<p>".$counter.".) <a href=\"".$web_url_to_youtube_directory."/".$value."\" download><font size=\"2\">".$value."</font></a>";
-													$size=round(filesize("".$dir."/".$value."")/1024,0);
-													print " (".$size." KB)";
-													print "  |  <input type=\"submit\" name=\"delete_files_submit\" value=\"Delete File\" />";
-													print "<input type=\"hidden\" name=\"delete_file\" value=\"".$value."\" />";
-													print "</p></form>";
-													$counter++;
+													if (!str_contains($value, 'deno')){
+														print "<form action=\"".$form_submit_location."\" method=\"post\">";
+														print "<p>".$counter.".) <a href=\"".$web_url_to_youtube_directory."/".$value."\" download><font size=\"2\">".$value."</font></a>";
+														$size=round(filesize("".$dir."/".$value."")/1024,0);
+														print " (".$size." KB)";
+														print "  |  <input type=\"submit\" name=\"delete_files_submit\" value=\"Delete File\" />";
+														print "<input type=\"hidden\" name=\"delete_file\" value=\"".$value."\" />";
+														print "</p></form>";
+														$counter++;
+													}
 												}
 											}
 										}
@@ -983,7 +997,7 @@ $generic_error="";
 		print "<p>Ignore Errors? <select name=\"ignore_errors\">
 			<option value=\"--ignore-errors\"><font size=\"1\">Continue on download errors, for example to skip unavailable videos in a playlist</option>
 			<option value=\"--abort-on-error\">Abort downloading of further videos (in the playlist or the command line) if an error occurs</option></select></p>";
-		print "<p><input type=\"checkbox\" name=\"dump_user_agent\" value=\"--dump-user-agent\">Dump User Agent <font size=\"1\">Display the current browser identification</font></p>";
+//		print "<p><input type=\"checkbox\" name=\"dump_user_agent\" value=\"--dump-user-agent\">Dump User Agent <font size=\"1\">Display the current browser identification</font></p>";
 		print "<p><input type=\"checkbox\" name=\"list_extractors\" value=\"--list-extractors\">List Extractors <font size=\"1\">List all supported extractors</font></p>";
 		print "<p><input type=\"checkbox\" name=\"extractor_descriptions\" value=\"--extractor-descriptions\">List Extractors Descriptions <font size=\"1\">Output descriptions of all supported extractors</font></p>";
 		print "<p><input type=\"checkbox\" name=\"force_generic_extractor\" value=\"--force-generic-extractor\">Force Generic Extractor <font size=\"1\">Output descriptions of all supported extractors</font></p>";
@@ -1031,7 +1045,7 @@ $generic_error="";
 		print "<p><input type=\"checkbox\" name=\"no_mtime\" value=\"--no-mtime\">Do not use the Last-modified header to set the file modification time</p>";
 		print "<p><input type=\"checkbox\" name=\"write_discriptions\" value=\"--write-description\">Write video description to a .description file</p>";
 		print "<p><input type=\"checkbox\" name=\"write_info_json\" value=\"--write-info-json\">Write video metadata to a .info.json file</p>";
-		print "<p><input type=\"checkbox\" name=\"write_annotations\" value=\"--write-annotations\">Write video annotations to a .annotations.xml file</p>";
+//		print "<p><input type=\"checkbox\" name=\"write_annotations\" value=\"--write-annotations\">Write video annotations to a .annotations.xml file</p>";
 		   
 		print "________________________________________________<br><br><b>THUMBNAIL IMAGE OPTIONS</b>";
 		print "<p>Write thumbnail image to disk? <select name=\"write_thumbnail\">
