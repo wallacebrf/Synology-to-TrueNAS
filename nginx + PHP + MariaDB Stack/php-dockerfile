@@ -6,10 +6,14 @@ RUN apt-get update && \
 	cd /bin && \
 	apt-get install pip -y && \
 	echo "Python and PIP now installed" && \
+	apt install python3-certifi && \
+	apt install python3-brotli && \
+	apt install python3-websockets && \
 	curl -L "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o yt-dlp && \
 	echo "YT-DLP Binary downloaded to /bin" && \
 	chmod a+rx yt-dlp && \
-	echo "YT-DLP binary now executable\nInstallation Complete"
+	yt-dlp -U && \
+	echo "YT-DLP binary now executable and dependancies installed\nInstallation Complete"
 
 # Installing additional PHP modules
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip
