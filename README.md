@@ -294,7 +294,7 @@ Below is a breakdown of the different datasets I made and their permissions
 		   </li>
 		   	<ul>
 				 <li> 
-					 <strong>Chromium</strong>
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/chromium">Chromium</a></strong>
 					 This app is my chromium docker container attached to my Gluetun conatiner so I can browse the net through Gluetun which is helpful to prove the tunnel is working correctly. 
 					 <ul>
 				 		<li> 
@@ -304,7 +304,7 @@ Below is a breakdown of the different datasets I made and their permissions
 					 </ul>
 				 </li>
 				<li> 
-					 <strong>Chromiumnormal</strong>
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/chromium">Chromiumnormal</a></strong>
 					 This app is my chromium docker container NOT attached to my Gluetun conatiner so I can browse the net normally. I use this to access the web-interfaces of my 12x security cameras. The security cameras run on a closed VLAN that does not route through my router and this makes management of the cameras very easy. 
 					 <ul>
 				 		<li> 
@@ -314,7 +314,7 @@ Below is a breakdown of the different datasets I made and their permissions
 					 </ul>
 				 </li>
 				<li> 
-					 <strong>ConvertX</strong>
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/convertx">Convertx</a></strong>
 					 This app is used to convert many file types to other file types. 
 					 <ul>
 				 		<li> 
