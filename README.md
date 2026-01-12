@@ -281,128 +281,51 @@ I also suggest this video on creating your disk storage: <a href="https://www.yo
 
 Two useful guides on how to use data sets and their permissions can be found here: <a href="https://www.youtube.com/watch?v=0d4_nvdZdOc">Lawrence Systems - ZFS 101: Leveraging Datasets and Zvols for Better Data Management</a> and  <a href="https://www.youtube.com/watch?v=59NGNZ0kO04">Lawrence Systems - TrueNAS Scale: A Step-by-Step Guide to Dataset, Shares, and App Permissions</a>
 
-<ol>
-<li>For example I my "main" storage pool <strong>volume1</strong></li>
-<li>On <b></b>/mnt/volume1</b> I have the following data sets</li>
+Below are all datasets I created on my machine
+![alt text](https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/datasets.png "Datasets")
+
+Below is a breakdown of the different datasets I made and their permissions
+
    <ul>
-	   <li> <strong>Apps</strong> <small>[Note, only make the data sets / folders as needed for your desired apps]. [Ensure the “Dataset Preset” is set to “Apps”]</small></li>
+	   <li> <strong>Volume1</strong></li>
 	   <ul>
-		<li><ins>Frigate</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>Cache</li>
-      				<li>Config</li>
-			   </ul>
-		   </ul>
-	   	<li><ins>InfluxDB</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>Config</li>
-       				<li>data</li>
-			   </ul>
-		   </ul>
-		<li><ins>Jackett</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>Blackhole</li>
-       				<li>config</li>
-			   </ul>
-		   </ul>
-		<li><ins>Plex</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		   <ul>
-			<li>Then created the following “regular folders”</li>
-			   <ul>
-   				<li>Config</li>
-       				<li>Data</li>
-				<li>logs</li>
-			   </ul>
-		   </ul>
-		<li><ins>Radarr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>GraphiteExporter</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>chromium</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>chromium_normal</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>flaresolverr</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>filebrowser</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>jellyfin</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>sickchill</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>grey_log</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-		<li><ins>nginx_reverse_proxy</ins> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-   		   <ul>
-			   <li>Then created the following additional “regular folders”</li>
-			   <ul>
-			   <li>certs</li> 
-			   <li>config</li> 
-			   </ul>
-		   </ul>
-	   </ul>
-	  <li><strong>Surveillance</strong> <small>[For Frigate to record to] [Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-	  <li><strong>hosting</strong> <small>[for our web hosting] use Unix permissions, set all nine check boxes </small></li>
-	   <ul>
-			   <li>Then created the following additional "normal directories"</li>
-			   <ul>
-			   <li>nginx</li> 
-			   <li>sql</li>
-		           <li>web</li>
-				   <ul>
-					<li>config</li>
-					   <ul>
-						<li>config_files</li>
-					   </ul>
-				   </ul>
-			   </ul>
-		   </ul>
-	  <li> <strong>Users</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-   		   <ul>
-			   <li>Then created the following additional nested data set [And more for other user as needed/desired]</li>
-			   <ul>
-			   <li>John_Doe_User</li> 
-			   </ul>
-		   </ul>
-	   <li> <strong>Video</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-   		   <ul>
-			   <li>Then created the following additional nested data sets</li>
-			   <ul>
-			   <li>4k_Movies</li> 
-			   <li>Home_Video</li> 
-			   <li>Movies</li> 
-		           <li>TV_Shows</li> 
-			   </ul>
-		   </ul>
-	   <li> <strong>Backups</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-   	   <li> <strong>Web</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-   		   <ul>
-			   <li>Then created the following additional nested data sets</li>
-			   <ul> 
-			   <li>logging</li> 
-				   <ul>
-				   <li>notifications</li> 
-				   </ul>
-			   </ul>
-		   </ul>
-	   <li> <strong>torrent</strong> <small>[Ensure the “Dataset Preset” is set to “Apps”]</small></li>
-   		   <ul>
-			   <li>Then created the following additional “regular folders”</li>
-			   <ul>
-				   <li>bt</li>
-				   	<ul>
-					   <li>Then created the following additional “regular folders”</li>
-				   		<ul>
-						   <li>incomplete</li>
-						   <li>torrents</li> 
-      						</ul>
-					</ul>
-				   <li>gluetun_config</li>
-				   <li>gluetun_tmp</li> 
-				   <li>transmission_config</li> 
-			   </ul>
-		   </ul>
-	   <li> <strong>Pictures</strong> <small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
-	   <li> <strong>Veeam</strong> or <strong>UrBackup</strong><small>[Ensure the “Dataset Preset” is set to “SMB” and choose to create share]</small></li>
+		   <li> 
+			   <strong>Apps</strong>
+		   </li>
+		   	<ul>
+				 <li> 
+					 <strong>Chromium</strong>
+					 This app is my chromium docker container attached to my Gluetun conatiner so I can browse the net through Gluetun which is helpful to prove the tunnel is working correctly. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-chromium-permissions.png">Permissions</a></strong><br>
+							The Chromium container has its own dedicated user/group called "chromium" so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong>Chromiumnormal</strong>
+					 This app is my chromium docker container NOT attached to my Gluetun conatiner so I can browse the net normally. I use this to access the web-interfaces of my 12x security cameras. The security cameras run on a closed VLAN that does not route through my router and this makes management of the cameras very easy. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-chromiumnormal-permissions.png">Permissions</a></strong><br>
+							The Chromiumnormal container has its own dedicated user/group called "chromiumnormal" so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong>ConvertX</strong>
+					 This app is used to convert many file types to other file types. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/images/mnt-volume1-apps-convertx-permissions.png">Permissions</a></strong><br>
+							The ConvertX container has its own dedicated user/group called "convertx" so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+			</ul>
+		</ul>
    </ul>
-</ol>
 <br>
 
 ## 8.)  Create new user
