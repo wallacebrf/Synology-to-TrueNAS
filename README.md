@@ -284,13 +284,20 @@ Two useful guides on how to use data sets and their permissions can be found her
 Below are all datasets I created on my machine
 ![alt text](https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/datasets.png "Datasets")
 
-Below is a breakdown of the different datasets I made and their permissions
+Below is a breakdown of the different datasets I made and their permissions. Each dataset required different users to be configured per app to control the granularity of each app's access to my systems. Follow the details in the <a href="#Install_required_Apps">Install required Apps</a> section beginning on generating the needed users for your apps. 
 
    <ul>
 	   <li> <strong>Volume1</strong></li>
 	   <ul>
 		   <li> 
 			   <strong>Apps</strong>
+			   <ul>
+				   <li>
+					   <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/images/mnt-volume1-apps-permissions.png">Permissions</a></strong><br>
+					   The base apps data set needs to be configured for every user created for any apps so that user can access the data sets inside the "apps" data set<br><br>
+					   nearly all users only need to be configiured to "traverse" which will allow them into the "apps" data set and any child data sets within it, but will not allow them access to any other files or directories unless those directories and datas sets also allow that user. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+				   </li>
+			   </ul>
 		   </li>
 		   	<ul>
 				 <li> 
@@ -323,6 +330,77 @@ Below is a breakdown of the different datasets I made and their permissions
 						</li>
 					 </ul>
 				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/doublecommander">Doublecommander</a></strong>
+					 Really useful web based file management tool that as closley performs and looks like windows file explorer. I especially wanted something that would show progress bar, file transfer rate, and time duration information during large copy or move processes. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-doublecommander-permissions.png">Permissions</a></strong><br>
+							The Doublecommander container has its own dedicated user/group called "doublecommander" that is also shared with <a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/filebrowser">FileBrowser</a> so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/dozzel">Dozzel</a></strong>
+					 App that I use to eailly see docker container logs
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-dozzel-permissions.png">Permissions</a></strong><br>
+							The Dozzel container has its own dedicated user/group called "dozzel" so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/frigate">Frigate</a></strong>
+					 I misspelled frigate (figate) when creating the dataset and never noticed until everything was already working so I decided to just leave it as is.<br>
+					Frigate is what i have been using to replace Synology Surrveilance Station and LOVE it. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-frigate-permissions.png">Permissions</a></strong><br>
+							The Frigate container (when using the one available in the TrueNAS apps page) does not allow changing the user or group IDs of the container. I had already created a dedicated user "Frigate" for this container before realizing this. While I have kept that user configured (as i might change to a docker-compose.yml file instead of TrueNAS app in the future), it is not active. Instead the Frigate container is running under the TrueNAS default "apps" user. As such that user is the owner of this dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/filebrowser">FileBrowser</a></strong>
+					 Mostly use this app to easilly perform file uploads and downloads when remote using my phone. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/images/mnt-volume1-apps-filebrowser-permissions.png">Permissions</a></strong><br>
+							The FileBrowser container has its own dedicated user/group called "doublecommander" which it is sharing with the doublecommander container, so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/grafana">Grafana</a></strong>
+					Use this to generate dashboards to visualize the crazy amount of data I log not just from TrueNAS but my network switches, router, APC battery backups, house temperatures and more. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-grafana-permissions.png">Permissions</a></strong><br>
+							The Grafana container has its own dedicated user/group called "Grafana" so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/greylog">Greylog</a></strong>
+					Use this to monitor Syslogs from Truenas, my switches, and my APC UPSs. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-greylog-permissions.png">Permissions</a></strong><br>
+							The Greylog container has its own dedicated user/group called "greylog" so I needed to ensure that user is the owner of the folder and has full control of that dataset. <br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/immich">Immich</a></strong>
+					Use to manage my photos. While I never previously used Synology Photos, it is my understanding that this is a very useful replacement. If interested in leaving Synology, try using immich on your Synology NAS first to see how you like it.
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-greylog-permissions.png">Permissions XXXXXXXNEED PERMISSIONS IMAGESXXXXXXXXX</a></strong><br>
+							The immich container was a little strange for me when configuring permissions. It worked previously using the user/group method I used for basically all other apps. However, Immich is depeciating version 15 of its database program and moving to version 18 (as of 1/13/2026). When using the TrueNAS apps page version of Immich, and you upgrade to database version 18, it will automaticlaly configure a database migration. The weird part is that this database migration process user is mapped to usewr ID 999 (based on the error logs when the migratrion process crashes), not the user I have assigned the Immich app. TrueNAS does have an existing user with that ID called "netdata" so I had to ensure the Immich dataset had full control permissions for that user in additon to the "immich" user i generated. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
 			</ul>
 		</ul>
    </ul>
@@ -330,6 +408,7 @@ Below is a breakdown of the different datasets I made and their permissions
 
 ## 8.)  Create new user
 <div id="Create_new_user"></div>
+Up until this point we have been doing everything using the default "truenas_admin" user (or whatever default user you created when installing truenas) and so we need to create a new admin user and create any normal day-to-day users as required for your system. 
 
 - Create new user `Credentials --> Users`
 - Full Name: Full name of user, for example `John Doe`
