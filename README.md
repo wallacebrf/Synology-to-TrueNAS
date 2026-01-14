@@ -281,10 +281,15 @@ I also suggest this video on creating your disk storage: <a href="https://www.yo
 
 Two useful guides on how to use data sets and their permissions can be found here: <a href="https://www.youtube.com/watch?v=0d4_nvdZdOc">Lawrence Systems - ZFS 101: Leveraging Datasets and Zvols for Better Data Management</a> and  <a href="https://www.youtube.com/watch?v=59NGNZ0kO04">Lawrence Systems - TrueNAS Scale: A Step-by-Step Guide to Dataset, Shares, and App Permissions</a>
 
+Each of the datasets that are tied to apps, when i created the dataset I used the "Apps" dataset preset. When I made a dataset for other things like photos, videos etc, and i KNEW I would be using those over SMB, I used the dataset "SMB" preset. 
+<a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/add%20dataset.png">Example of dataset presets</a>
+
 Below are all datasets I created on my machine
 ![alt text](https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/datasets.png "Datasets")
 
 Below is a breakdown of the different datasets I made and their permissions. Each dataset required different users to be configured per app to control the granularity of each app's access to my systems. Follow the details in the <a href="#Install_required_Apps">Install required Apps</a> section beginning on generating the needed users for your apps. 
+
+Once a dataset is created, the permissions can be edited by single clicking on the dataset, and on the right hand side clicking "edit" <a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/click_permissions.png">on the permissions box</a>
 
    <ul>
 	   <li> <strong>Volume1</strong></li>
@@ -398,6 +403,64 @@ Below is a breakdown of the different datasets I made and their permissions. Eac
 				 		<li> 
 							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-greylog-permissions.png">Permissions XXXXXXXNEED PERMISSIONS IMAGESXXXXXXXXX</a></strong><br>
 							The immich container was a little strange for me when configuring permissions. It worked previously using the user/group method I used for basically all other apps. However, Immich is depeciating version 15 of its database program and moving to version 18 (as of 1/13/2026). When using the TrueNAS apps page version of Immich, and you upgrade to database version 18, it will automaticlaly configure a database migration. The weird part is that this database migration process user is mapped to usewr ID 999 (based on the error logs when the migratrion process crashes), not the user I have assigned the Immich app. TrueNAS does have an existing user with that ID called "netdata" so I had to ensure the Immich dataset had full control permissions for that user in additon to the "immich" user i generated. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins.
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/influxDB">InfluxDB</a></strong>
+					 This app is where i store all collected metrics from TrueNAS, my house temp sensors, UPS, network switches etc so i can use Grafana for nice dashboards. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-influxdb-permissions.png">Permissions</a></strong><br>
+							The Influxdb container has its own dedicated user/group called "influxdb" so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/Jackett">Jackett</a></strong>
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-jackett-permissions.png">Permissions</a></strong><br>
+							The jackett container has its own dedicated user/group called "jackett" (which is shared with all my torrent appps) so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/jellyfin">Jellyfin</a></strong>
+					I parallel app with PLEX to allow me to match my movies and TV shows. I mostly use PLEX, but keep Jellyfin in parallel as a backup. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-jellyfin-permissions.png">Permissions</a></strong><br>
+							The Jellyfin container has its own dedicated user/group called "plex" (that is shaered with PLEX) so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/nginx%20Reverse%20Proxy">NGINX Reverse Proxy</a></strong>
+					Allows me to access all services using my domain name and have SSL certs. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/images/mnt-volume1-apps-nginx-permissions.png">Permissions</a></strong><br>
+							The NGinx Reverse Proxy container has its own dedicated user/group called "nginxreverseproxy" so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/PLEX">PLEX</a></strong>
+					Allow me to match my movies and TV shows. I mostly use PLEX, but keep Jellyfin in parallel as a backup. 
+					 <ul>
+				 		<li> 
+							<strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/blob/main/images/mnt-volume1-apps-plex-permissions.png">Permissions</a></strong><br>
+							The PLEX container has its own dedicated user/group called "plex" (also shared with Jellyfin) so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
+						</li>
+					 </ul>
+				 </li>
+				<li> 
+					 <strong><a href="https://github.com/wallacebrf/Synology-to-TrueNAS/tree/main/prowlarr">Prowlarr</a></strong>
+					 <ul>
+				 		<li> 
+							<strong><a href="https://raw.githubusercontent.com/wallacebrf/Synology-to-TrueNAS/refs/heads/main/images/mnt-volume1-apps-prowlarr-permissions.png">Permissions</a></strong><br>
+							The Prowlarr container has its own dedicated user/group called "jackett" (also shared with all other torrent containers) so I needed to ensure that user is the owner of the folder and has full control of that dataset.<br><br>I have the user "doublecommander" added as full control as this user is shared between the Doublecommander container and my FileBrowser container. This way they can access, add, remove and chown files as needed. <br><br>I have the "builtin_users" group as access to modify only so they cannot chowm and do higher level access commands. <br><br>Builtin-administrators is allowed full access as they are admins. 
 						</li>
 					 </ul>
 				 </li>
