@@ -250,8 +250,8 @@ cameras:
     ui:
       order: 0
       dashboard: true
-    birdseye:
-      order: 0
+#    birdseye:
+#      order: 0
   ###########################
   #FRONT RIGHT CANMERA
   ###########################
@@ -297,8 +297,8 @@ cameras:
         front_right_sub: front_right_sub
     ui:
       order: 1
-    birdseye:
-      order: 1
+#    birdseye:
+#      order: 1
   ###########################
   #DRIVEWAY CANMERA
   ###########################
@@ -327,8 +327,8 @@ cameras:
         drive_sub: drive_sub
     ui:
       order: 2
-    birdseye:
-      order: 2
+#    birdseye:
+#      order: 2
     zones:
       driveway:
         coordinates: 
@@ -376,8 +376,8 @@ cameras:
         patio_sub: patio_sub
     ui:
       order: 3
-    birdseye:
-      order: 3
+#    birdseye:
+#      order: 3
     zones:
       Patio:
         coordinates: 
@@ -422,8 +422,8 @@ cameras:
         garage_sub: garage_sub
     ui:
       order: 4
-    birdseye:
-      order: 4
+#    birdseye:
+#      order: 4
     zones:
       garage_zone:
         coordinates: 0.989,0.013,0.004,0.013,0.003,0.995,0.995,0.991
@@ -467,8 +467,8 @@ cameras:
         shed_sub: shed_sub
     ui:
       order: 5
-    birdseye:
-      order: 5
+#    birdseye:
+#      order: 5
     zones:
       shed_zone:
 #summer:          0.327,0.992,0.999,0.993,0.995,0.857,0.746,0.819,0.733,0.264,0.814,0.279,0.805,0.619,0.949,0.61,0.971,0.3,0.616,0.208,0.522,0.217,0.515,0.372,0.492,0.384,0.485,0.213,0.302,0.233,0.274,0.178,0.176,0.192,0.205,0.611
@@ -522,8 +522,8 @@ cameras:
         north_east_sub: north_east_sub
     ui:
       order: 6
-    birdseye:
-      order: 6
+#    birdseye:
+#      order: 6
     zones:
       northeast_zone:
         coordinates: 
@@ -569,8 +569,8 @@ cameras:
         north_west_sub: north_west_sub
     ui:
       order: 7
-    birdseye:
-      order: 7
+#    birdseye:
+#      order: 7
     zones:
       northwest1:
         coordinates: 
@@ -623,8 +623,8 @@ cameras:
         backyard_sub: backyard_sub
     ui:
       order: 8
-    birdseye:
-      order: 8
+#    birdseye:
+#      order: 8
     zones:
       backyard_zone:
 #summer:0.003,0.006,0.003,0.988,0.994,0.988,0.996,0.393,0.947,0.393,0.932,0.683,0.866,0.666,0.857,0.425,0.761,0.403,0.764,0.68,0.748,0.749,0.688,0.756,0.673,0.894,0.615,0.903,0.617,0.777,0.653,0.298,0.49,0.32,0.321,0.287,0.312,0.252,0.222,0.255,0.234,0.012      
@@ -672,8 +672,8 @@ cameras:
         frontdoor_sub: frontdoor_sub
     ui:
       order: 9
-    birdseye:
-      order: 9
+#    birdseye:
+#      order: 9
     zones:
       front_door_zone:
         coordinates: 
@@ -720,8 +720,8 @@ cameras:
         reardoor_sub: reardoor_sub
     ui:
       order: 10
-    birdseye:
-      order: 10
+#    birdseye:
+#      order: 10
     zones:
       rear_zone:
         coordinates: 
@@ -746,15 +746,12 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://127.0.0.1:8554/apples # <--- the name here must match the name of the camera in restream
-#          input_args: preset-rtsp-restream
-          input_args: preset-http-reolink
-#          output_args: preset-record-generic-audio-copy
+          input_args: preset-rtsp-restream
           roles:
             - record
             - audio
         - path: rtsp://127.0.0.1:8554/apples_sub # <--- the name here must match the name of the camera in restream
-#          input_args: preset-rtsp-restream
-          input_args: preset-http-reolink
+          input_args: preset-rtsp-restream
           roles:
             - detect
     live:
@@ -780,8 +777,8 @@ cameras:
 #      password: ''
     ui:
       order: 11
-    birdseye:
-      order: 11
+#    birdseye:
+#      order: 11
     zones:
       rear_zone:
         coordinates: 
