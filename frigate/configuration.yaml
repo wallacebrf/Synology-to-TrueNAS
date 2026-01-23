@@ -1,0 +1,162 @@
+# yaml-language-server: $schema=http://192.168.1.243:5000/api/config/schema.json
+
+mqtt:
+  enabled: true
+  host: mqtt5
+
+detect:
+  # NOTE: Recommended value of 5. Ideally, try and reduce your FPS on the camera.
+  fps: 5
+  # Optional: enables detection for all cameras (default: True)
+  enabled: true
+
+detectors:
+  ov:
+    type: openvino
+    device: GPU
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+
+objects:
+  # Optional: list of objects to track from labelmap.txt (default: shown below)
+  track:
+    - person
+    - car
+
+#audio:
+#  enabled: true
+#  listen:
+#    - scream
+#    - speech
+#    - yell
+
+review:
+  # Disable alerts. We only care about detections
+  alerts:
+    labels: []
+  detections:
+    labels:
+      - car
+      - person
+      - speech
+
+go2rtc:
+  streams:
+    duo2_wifi_main_stream:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.8:554/h264Preview_01_main
+    duo2_wifi_sub_stream:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.8:554/h264Preview_01_sub
+    rcl_410w_main_stream:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.244:554/h264Preview_01_main
+    rcl_410w_sub_stream:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.244:554/h264Preview_01_sub
+
+cameras:
+  # Reolink RCL_410W
+  rcl_410w:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/rcl_410w_main_stream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/rcl_410w_sub_stream
+          roles:
+            - detect
+      output_args:
+        # reolink: is already AAC (https://support.reolink.com/hc/en-us/articles/900000638523/)
+        # ffmpeg: https://docs.frigate.video/configuration/ffmpeg_presets/#output-args-presets
+        record: preset-record-generic-audio-copy
+    review:
+      alerts:
+        labels: []
+    # From the sub stream we have a resolution: 640x360, fps: 7, bitrate: 512
+    detect:
+      fps: 7
+      enabled: true
+      width: 640
+      height: 360
+    live:
+      stream_name: rcl_410w_main_stream
+  # Reolink Duo 2 Wifi
+  duo2wifi:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/duo2_wifi_main_stream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/duo2_wifi_sub_stream
+          roles:
+            - detect
+      output_args:
+        # reolink: is already AAC (https://support.reolink.com/hc/en-us/articles/900000638523/)
+        # ffmpeg: https://docs.frigate.video/configuration/ffmpeg_presets/#output-args-presets
+        record: preset-record-generic-audio-copy
+    # From the sub stream we have a resolution: 640x360, fps: 7, bitrate: 512
+    detect:
+      fps: 7
+      enabled: true
+      width: 1536
+      height: 576
+    live:
+      stream_name: duo2_wifi_main_stream
+    objects:
+      track:
+        - person
+        - bird
+
+record:
+  sync_recordings: true
+  enabled: true
+  retain:
+    days: 1
+    mode: motion
+  export:
+    timelapse_args: -vf scale=trunc(iw/2)*2:trunc(ih/2)*2 -vf setpts=0.00695*PTS -r 30 -crf 28 -preset veryslow
+  alerts:
+    retain:
+      days: 30
+    pre_capture: 7
+    post_capture: 7
+  detections:
+    retain:
+      days: 30
+    pre_capture: 7
+    post_capture: 7
+
+snapshots:
+  # Optional: Enable writing jpg snapshot to /media/frigate/clips (default: shown below)
+  enabled: true
+  # Optional: save a clean PNG copy of the snapshot image (default: shown below)
+  clean_copy: true
+  # Optional: print a timestamp on the snapshots (default: shown below)
+  timestamp: true
+  # Optional: draw bounding box on the snapshots (default: shown below)
+  bounding_box: true
+  # Optional: crop the snapshot (default: shown below)
+  crop: false
+  # Optional: height to resize the snapshot to (default: original size)
+  #height: 175
+  # Optional: Restrict snapshots to objects that entered any of the listed zones (default: no required zones)
+  #required_zones: []
+  # Optional: Camera override for retention settings (default: global values)
+  retain:
+    # Required: Default retention days (default: shown below)
+    default: 10
+    # Optional: Per object retention days
+    objects:
+      person: 15
+      car: 15
+  # Optional: quality of the encoded jpeg, 0-100 (default: shown below)
+  quality: 70
+version: 0.15-0
