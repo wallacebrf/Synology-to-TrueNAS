@@ -219,7 +219,7 @@ if [ -r "$config_file_location" ]; then
 									explode[$yy]=$(( $filtered * 1024 / 100 ))
 								elif [[ ${explode[$yy]} =~ "k" ]]; then
 									filtered=${explode[$yy]}
-									filtered=$(echo "${filtered::-1}")
+									filtered=$(echo "${filtered::-2}")
 									filtered=$(printf "%.0f\n" "${filtered}e2")
 									explode[$yy]=$(( $filtered * 1024 / 100 ))
 								elif [[ ${explode[$yy]} =~ "K" ]]; then
@@ -260,11 +260,27 @@ if [ -r "$config_file_location" ]; then
 						#echo "containerBlockIO_data_read: \"${explode[10]}\""
 						#echo "containerBlockIO_data_written: \"${explode[12]}\""
 						#echo "containerPID: \"${explode[13]}\""
-						post_url=$post_url"docker_stats,nas_name=$nas_name,containerName=${explode[1]} containerCPU=${explode[2]},containerMemUsage=${explode[3]},containerMemLimit=${explode[5]},containerMemPercent=${explode[6]},containerNetIO_data_received=${explode[7]},containerNetIO_data_transmitted=${explode[9]},containerBlockIO_data_read=${explode[10]},containerBlockIO_data_written=${explode[12]},containerPID=${explode[13]}
+						post_url=$post_url"docker_stats,nas_name=$nas_name,containerName=${explode[1]} ContainerID=\"${explode[0]}\",containerCPU=${explode[2]},containerMemUsage=${explode[3]},containerMemLimit=${explode[5]},containerMemPercent=${explode[6]},containerNetIO_data_received=${explode[7]},containerNetIO_data_transmitted=${explode[9]},containerBlockIO_data_read=${explode[10]},containerBlockIO_data_written=${explode[12]},containerPID=${explode[13]}
 "
 					fi
 					let xx=xx+1
 				done < <(docker stats --no-stream)
+				
+				xx=0
+				while IFS= read -r line; do	
+					if [[ $xx -gt 0 ]]; then
+						explode=(`echo $line | sed 's/,/ /g'`)
+						
+						if [[ ${explode[1]} =~ "bridge" ]] || [[ ${explode[1]} =~ "host" ]] || [[ ${explode[1]} =~ "none" ]]; then
+							echo "skipping none, bridge and host"
+						else
+							#echo "NetworkID: \"${explode[0]}\" || ContainerName: \"${explode[1]}\""
+							post_url=$post_url"docker_network,nas_name=$nas_name,containerName=${explode[1]} NetworkID=\"${explode[0]}\"
+"
+						fi
+					fi
+					let xx=xx+1
+				done < <(docker network ls)
 					
 			if [[ $debug -eq 1 ]]; then
 				echo "$post_url"

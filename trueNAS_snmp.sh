@@ -329,7 +329,51 @@ if [ -r "$config_file_location" ]; then
 				echo "Skipping Zpool Data Collection"
 			fi
 			
+			if [ $capture_zvol -eq 1 ]; then
+				measurement="zvol"
+				zvol_index=()
+				zvol_descr=()
+				zvol_used_bytes=()
+				zvol_available_bytes=()
+				zvol_referenced_bytes=()
+				
+				#get number of and names of every ZFS volume
+				x=0
+				while IFS= read -r line; do	
+					if [[ $x -gt 0 ]]; then
+						raw_data=(`echo $line | sed 's/,/ /g'`)
+						zvol_index+=($x)
+						zvol_descr+=(${raw_data[0]})
+					fi
+					let x=x+1
+				done < <(zpool list)
+				
+				xx=0
+				for xx in "${!zvol_index[@]}"; do
+					x=0
+					while IFS= read -r line; do	
+						if [[ $x -gt 0 ]]; then
+							#echo "line $x is $line"
+							raw_data=(`echo $line | sed 's/,/ /g'`)
+							
+							zvol_used_bytes+=(${raw_data[1]})
+							zvol_available_bytes+=(${raw_data[2]})
+							zvol_referenced_bytes+=(0)
+						fi
+						let x=x+1
+					done < <(zfs list -p ${zvol_descr[$xx]})
+				done
+				
+				xx=0
+				for xx in "${!zvol_index[@]}"; do
+					post_url=$post_url"$measurement,nas_name=$nas_name,zvol_index=${zvol_index[$xx]} zvol_descr=\"${zvol_descr[$xx]}\",zvol_used_bytes=${zvol_used_bytes[$xx]},zvol_available_bytes=${zvol_available_bytes[$xx]},zvol_referenced_bytes=${zvol_referenced_bytes[$xx]}
+"
+				done
+			else
+				echo "Skipping Zvol Data Collection"
+			fi
 			
+			capture_zvol=0
 			if [ $capture_zvol -eq 1 ]; then
 				measurement="zvol"
 				zvol_index=()
